@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BookOpen, Clock, ShieldCheck, ArrowRight, MessageSquare } from 'lucide-react';
+import { BookOpen, Clock, ShieldCheck, ArrowRight, MessageSquare, Download, Lock } from 'lucide-react';
 
 export default function Home() {
   const cards = [
@@ -31,6 +31,20 @@ export default function Home() {
       href: "/forum",
       bg: "hover:border-green-500/50 hover:bg-green-900/10"
     },
+    { 
+      title: "İndir", 
+      desc: "APK ve uygulama dosyaları", 
+      icon: <Download className="w-8 h-8" />, 
+      href: "/download",
+      bg: "hover:border-blue-500/50 hover:bg-blue-900/10"
+    },
+    { 
+      title: "Admin", 
+      desc: "Panel yönetimi", 
+      icon: <Lock className="w-8 h-8" />, 
+      href: "/admin",
+      bg: "hover:border-red-500/50 hover:bg-red-900/10"
+    },
   ];
 
   return (
@@ -40,7 +54,7 @@ export default function Home() {
         <p className="text-xl text-gray-400 font-light">İlker TUNA tarafından dijital dünyaya taşınan manevi miras.</p>
       </div>
 
-      <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {cards.map((card) => (
           <Link 
             key={card.title} 
