@@ -1,39 +1,54 @@
 import Link from 'next/link';
-import { BookOpen, Clock, ShieldCheck } from 'lucide-react';
+import { BookOpen, Clock, ShieldCheck, ArrowRight } from 'lucide-react';
 
 export default function Home() {
-  const apps = [
-    { name: "Mikat-ı Nur", desc: "Dijital Kütüphane", icon: <BookOpen />, path: "/projects/mikatinur" },
-    { name: "Namaz Vakti", desc: "Adhan & SQLite", icon: <Clock />, path: "/projects/namaz-vakti" },
-    { name: "Güvenli Aile", desc: "Firebase Security", icon: <ShieldCheck />, path: "/projects/guvenli-aile" },
+  const cards = [
+    { 
+      title: "Mikat-ı Nur", 
+      desc: "Dijital Kütüphane Sistemi", 
+      icon: <BookOpen className="w-8 h-8" />, 
+      href: "/projects/mikatinur",
+      bg: "hover:border-purple-500/50 hover:bg-purple-900/10"
+    },
+    { 
+      title: "Namaz Vakti", 
+      desc: "SQLite destekli Takvim", 
+      icon: <Clock className="w-8 h-8" />, 
+      href: "/projects/namaz-vakti",
+      bg: "hover:border-indigo-500/50 hover:bg-indigo-900/10"
+    },
+    { 
+      title: "Güvenli Aile", 
+      desc: "Firebase ebeveyn denetimi", 
+      icon: <ShieldCheck className="w-8 h-8" />, 
+      href: "/projects/guvenli-aile",
+      bg: "hover:border-blue-500/50 hover:bg-blue-900/10"
+    },
   ];
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-[#0a0a0a] text-white p-6 pt-24">
-      <div className="max-w-4xl w-full">
-        <h1 className="text-6xl font-extrabold mb-4 tracking-tighter">Mikat-ı Nur</h1>
-        <p className="text-xl text-gray-400 mb-16 border-l-2 border-white pl-4">
-          İlker TUNA tarafından geliştirilen Android tabanlı dijital ekosistem.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-24">
-          {apps.map((app) => (
-            <Link key={app.name} href={app.path} className="group border border-gray-800 p-8 rounded-3xl bg-[#111] hover:bg-[#1a1a1a] hover:border-gray-500 transition-all duration-300">
-              <div className="text-blue-500 mb-4">{app.icon}</div>
-              <h2 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">{app.name}</h2>
-              <p className="text-gray-500 text-sm">{app.desc}</p>
-            </Link>
-          ))}
-        </div>
+    <main className="min-h-screen bg-[#050505] text-gray-100 flex flex-col items-center py-24 px-6">
+      <div className="max-w-4xl w-full mb-20">
+        <h1 className="text-6xl font-black text-white mb-4">Mikat-ı Nur</h1>
+        <p className="text-xl text-gray-400 font-light">İlker TUNA tarafından dijital dünyaya taşınan manevi miras.</p>
       </div>
-      
-      <footer className="w-full max-w-4xl border-t border-gray-800 pt-8 mt-auto mb-12 flex justify-between text-gray-500 text-sm">
-        <p>© 2026 Mikat-ı Nur • İlker TUNA</p>
-        <div className="flex gap-6">
-  <Link href="/contact" className="hover:text-white transition">İletişim</Link>
-  <a href="https://github.com/bytuna" target="_blank" className="hover:text-white transition">GitHub</a>
-</div>
-      </footer>
+
+      <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+        {cards.map((card) => (
+          <Link 
+            key={card.title} 
+            href={card.href}
+            className={`group p-8 rounded-3xl border border-gray-800 bg-gray-900/20 backdrop-blur-sm transition-all hover:scale-[1.02] ${card.bg}`}
+          >
+            <div className="text-gray-400 mb-6 group-hover:text-white transition-colors">{card.icon}</div>
+            <h2 className="text-2xl font-bold text-white mb-2">{card.title}</h2>
+            <p className="text-sm text-gray-400 mb-6">{card.desc}</p>
+            <div className="flex items-center text-sm font-medium text-gray-500 group-hover:text-white">
+              Görüntüle <ArrowRight className="ml-2 w-4 h-4" />
+            </div>
+          </Link>
+        ))}
+      </div>
     </main>
   );
 }
