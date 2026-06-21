@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BookOpen, Clock, ShieldCheck, ArrowRight } from 'lucide-react';
+import { BookOpen, Clock, ShieldCheck, ArrowRight, MessageSquare } from 'lucide-react';
 
 export default function Home() {
   const cards = [
@@ -24,6 +24,13 @@ export default function Home() {
       href: "/projects/guvenli-aile",
       bg: "hover:border-blue-500/50 hover:bg-blue-900/10"
     },
+    { 
+      title: "İletişim", 
+      desc: "Geri bildirim ve mesajlar", 
+      icon: <MessageSquare className="w-8 h-8" />, 
+      href: "/forum",
+      bg: "hover:border-green-500/50 hover:bg-green-900/10"
+    },
   ];
 
   return (
@@ -33,7 +40,7 @@ export default function Home() {
         <p className="text-xl text-gray-400 font-light">İlker TUNA tarafından dijital dünyaya taşınan manevi miras.</p>
       </div>
 
-      <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {cards.map((card) => (
           <Link 
             key={card.title} 
@@ -41,7 +48,7 @@ export default function Home() {
             className={`group p-8 rounded-3xl border border-gray-800 bg-gray-900/20 backdrop-blur-sm transition-all hover:scale-[1.02] ${card.bg}`}
           >
             <div className="text-gray-400 mb-6 group-hover:text-white transition-colors">{card.icon}</div>
-            <h2 className="text-2xl font-bold text-white mb-2">{card.title}</h2>
+            <h2 className="text-xl font-bold text-white mb-2">{card.title}</h2>
             <p className="text-sm text-gray-400 mb-6">{card.desc}</p>
             <div className="flex items-center text-sm font-medium text-gray-500 group-hover:text-white">
               Görüntüle <ArrowRight className="ml-2 w-4 h-4" />
