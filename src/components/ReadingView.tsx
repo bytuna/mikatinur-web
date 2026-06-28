@@ -782,7 +782,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       : 'bg-[#f5e9d3]';
 
   return (
-    <div className="flex flex-col h-full bg-transparent relative">
+    <div className="flex flex-col h-[100dvh] w-full bg-transparent relative overflow-hidden">
       {/* Kitap & Sayfa Üst Bilgi Barı */}
       <div className={`flex items-center justify-between px-6 sm:px-8 py-4 border-b backdrop-blur-md z-10 relative ${headerThemeClass}`}>
         <div className="flex items-center gap-3">
@@ -896,11 +896,14 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       {/* Okuma Alanı (Lazy Loaded Frame - Continuous Scroll) */}
       <div
         ref={containerRef}
-        className={`flex-1 px-4 py-8 md:py-12 overflow-y-auto scroll-smooth relative transition-colors duration-300 touch-pan-y ${containerBgClass}`}
-  style={{ WebkitOverflowScrolling: 'touch' }}
+    className={`flex-1 w-full overflow-y-auto scroll-smooth relative transition-colors duration-300 ${containerBgClass}`}
+    style={{ 
+      WebkitOverflowScrolling: 'touch',
+      overscrollBehaviorY: 'contain' // Kaydırma sıçramasını önler
+    }}
       >
         {loadedPages.length > 0 ? (
-          <div className={`w-full max-w-[820px] mx-auto ${pageBgClass} rounded-xs shadow-[0_4px_30px_rgba(0,0,0,0.12)] md:shadow-[0_12px_60px_rgba(0,0,0,0.18)] flex flex-col gap-16 relative pb-24 pt-12 md:pt-16 px-6 sm:px-12 md:px-20 min-h-full`}>
+          <div className={`w-full max-w-[820px] mx-auto ${pageBgClass} shadow-[0_4px_30px_rgba(0,0,0,0.12)] md:shadow-[0_12px_60px_rgba(0,0,0,0.18)] flex flex-col min-h-0 pb-24 pt-12 md:pt-16 px-6 sm:px-12 md:px-20`}>
             {loadedPages.map(({ pageNum, data }) => {
               const isActive = pageNum === pageNumber;
               const isFocused = focusActive && focusPageNum === pageNum;
