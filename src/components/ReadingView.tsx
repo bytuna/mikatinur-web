@@ -896,7 +896,8 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       {/* Okuma Alanı (Lazy Loaded Frame - Continuous Scroll) */}
       <div
         ref={containerRef}
-        className={`flex-1 overflow-y-auto px-4 py-8 md:py-12 no-scrollbar scroll-smooth relative transition-colors duration-300 ${containerBgClass}`}
+        className={`flex-1 px-4 py-8 md:py-12 overflow-y-auto scroll-smooth relative transition-colors duration-300 touch-pan-y ${containerBgClass}`}
+  style={{ WebkitOverflowScrolling: 'touch' }}
       >
         {loadedPages.length > 0 ? (
           <div className={`w-full max-w-[820px] mx-auto ${pageBgClass} rounded-xs shadow-[0_4px_30px_rgba(0,0,0,0.12)] md:shadow-[0_12px_60px_rgba(0,0,0,0.18)] flex flex-col gap-16 relative pb-24 pt-12 md:pt-16 px-6 sm:px-12 md:px-20 min-h-full`}>
