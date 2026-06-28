@@ -1,4 +1,4 @@
-import { RisaleBook, DictionaryTerm } from '../types';
+import { RisaleBook, DictionaryTerm } from '../../types';
 
 export const DICTIONARY: { [key: string]: DictionaryTerm } = {
   bismillah: { word: 'Bismillah', definition: 'Allah\'ın adıyla. Her hayrın başıdır. Biz dahi başta ona başlarız.', origin: 'Arapça' },
