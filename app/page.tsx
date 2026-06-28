@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import { BookOpen, Clock, ShieldCheck, ArrowRight, MessageSquare, Download, Lock } from 'lucide-react';
+import { BookOpen, Clock, ShieldCheck, ArrowRight, MessageSquare, Download, Lock, Compass } from 'lucide-react';
 
 export default function Home() {
   const cards = [
     { 
       title: "Mikat-ı Nur", 
       desc: "Dijital Kütüphane Sistemi", 
-      icon: <BookOpen className="w-8 h-8" />, 
+      icon: <Compass className="w-8 h-8" />, 
       href: "/projects/mikatinur",
       bg: "hover:border-purple-500/50 hover:bg-purple-900/10"
     },
@@ -18,10 +18,10 @@ export default function Home() {
       bg: "hover:border-indigo-500/50 hover:bg-indigo-900/10"
     },
     { 
-      title: "Güvenli Aile", 
-      desc: "Firebase ebeveyn denetimi", 
-      icon: <ShieldCheck className="w-8 h-8" />, 
-      href: "/projects/guvenli-aile",
+      title: "Risale-i Nur", 
+      desc: "Risale-i Nur Okuma Programı", 
+      icon: <BookOpen className="w-8 h-8" />, 
+      href: "/projects/risaleinur",
       bg: "hover:border-blue-500/50 hover:bg-blue-900/10"
     },
     { 

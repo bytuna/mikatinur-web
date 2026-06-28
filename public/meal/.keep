@@ -1,0 +1,4 @@
+# Risale-i Nur Okuma Platformu - Meal Klasörü
+Lütfen elinizdeki 'tr.json' ve 'tr_0.json' - 'tr_67.json' arasındaki 69 adet meal dosyasını bu klasörün altına yükleyin.
+
+Dosyalar bu klasöre yüklendiğinde; Arapça ayet/hadislerin üzerine tıklandığında anında on-demand olarak ilgili meal dosyasından çekilerek yerinde açılan akıllı popup üzerinde gösterilecektir.

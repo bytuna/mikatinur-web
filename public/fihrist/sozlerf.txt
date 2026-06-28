@@ -1,0 +1,526 @@
+SÖZLER|4%76|17
+	Birinci Söz|5%65362|18
+	Ondördüncü Lem'anın İkinci Makamı|8%65083|11
+		İHTAR|8
+		BİRİNCİ SIR|8
+		İKİNCİ SIR|9
+		ÜÇÜNCÜ SIR|10
+		DÖRDÜNCÜ SIR|12
+		BEŞİNCİ SIR|13
+		ALTINCI SIR|14
+		Elhasıl|15
+	İkinci Söz|16%120|20
+	Üçüncü Söz|18%121|21
+	Dördüncü Söz|20%341|22
+	Beşinci Söz|22%342|23
+	Altıncı Söz|25%204|24
+	Yedinci Söz|30%158|25
+	Sekizinci Söz|34%159|26
+	Dokuzuncu Söz|40%160|27
+		Birinci Nükte|40
+		İkinci Nükte|41
+		Üçüncü Nükte|41
+		Dördüncü Nükte|41
+		Beşinci Nükte|42
+	Onuncu Söz|48%101|28
+		Birinci Suret|50
+		İkinci Suret|50
+		Üçüncü Suret|50
+		Dördüncü Suret|51
+		Beşinci Suret|51
+		Altıncı Suret|52
+		Yedinci Suret|53
+		Sekizinci Suret|54
+		Dokuzuncu Suret|54
+		Onuncu Suret|55
+		Onbirinci Suret|56
+		Onikinci Suret|57
+		Mukaddime|59
+			BİRİNCİ İŞARET|59
+			İKİNCİ İŞARET|61
+			ÜÇÜNCÜ İŞARET|62
+			DÖRDÜNCÜ İŞARET|63
+		Birinci Hakikat|63
+		İkinci Hakikat|63
+		Üçüncü Hakikat|65
+		Dördüncü Hakikat|67
+		Beşinci Hakikat|69
+		Altıncı Hakikat|73
+			Birinci Esas|74
+			İkinci Esas|74
+			Üçüncü Esas|74
+			Dördüncü Esas|75
+			Beşinci Esas|76
+			Altıncı Esas|76
+			Yedinci Esas|76
+			Sekizinci Esas|77
+			Dokuzuncu Esas|77
+		Yedinci Hakikat|77
+		Sekizinci Hakikat|79
+		Dokuzuncu Hakikat|80
+		Onuncu Hakikat|83
+		Onbirinci Hakikat|87
+		Onikinci Hakikat|88
+		Hâtime|90
+		ONUNCU SÖZ'ÜN MÜHİM BİR ZEYLİ VE LÂHİKASININ BİRİNCİ PARÇASI|94
+		Mukaddime|96
+			BİRİNCİ NOKTA|96
+				Birincisi|96
+				İkinci delil|96
+				Üçüncü delil|97
+				Dördüncü delil|97
+			İKİNCİ NOKTA|98
+		Zeylin İkinci Parçası|106
+		Zeylin Üçüncü Parçası|112
+			Birinci mes'ele|112
+			İkinci mes'ele|112
+			Üçüncü mes'ele ki,|113
+			Dördüncü mes'ele|113
+		Zeylin Dördüncü Parçası|114
+		Zeylin Beşinci Parçası|118
+	Onbirinci Söz|120%384|29
+	Onikinci Söz|130%94|30
+		BİRİNCİ ESAS|130
+		İKİNCİ ESAS|132
+		ÜÇÜNCÜ ESAS|132
+		DÖRDÜNCÜ ESAS|133
+	Onüçüncü Söz|137%133|31
+		Onüçüncü Sözün İkinci Makamı|142
+		Meyve Risalesi'nden Altıncı Mes'ele|156
+		Hüve Nüktesi|160
+	Ondördüncü Söz|163%118|32
+		Birincisi|163
+		İkincisi|163
+		Üçüncüsü|164
+		Dördüncüsü|165
+		Beşincisi|166
+		Hâtime|169
+		Ondördüncü Söz'ün Zeyli|171
+	Onbeşinci Söz|176%134|33
+		Birinci Basamak|176
+		İkinci Basamak|177
+		Üçüncü Basamak|177
+		Dördüncü Basamak|179
+		Beşinci Basamak|179
+		Altıncı Basamak|180
+		Yedinci Basamak|181
+		Onbeşinci Söz'ün Zeyli|183
+		ŞEYTANIN İKİNCİ KÜÇÜK BİR İTİRAZI|191
+	Onaltıncı Söz|193%135|34
+		BİRİNCİ ŞUA|193
+		İKİNCİ ŞUA|195
+		ÜÇÜNCÜ ŞUA|197
+		DÖRDÜNCÜ ŞUA|199
+		Küçük bir zeyl|201
+	Onyedinci Söz|202%136|35
+		Onyedinci Söz'ün İkinci Makamı|205
+			Siyah Dutun Bir Meyvesi|206
+			Kalbe Farisî olarak tahattur eden bir münacat|208
+			Birinci Levha|219
+			İkinci Levha|220
+			BARLA YAYLASI; ÇAM, KATRAN, ARDIÇ, KARAKAVAĞIN BİR MEYVESİDİR|222
+			Yıldızları konuşturan bir Yıldızname|228
+	Onsekizinci Söz|230%137|36
+		BİRİNCİ NOKTA|230
+		İKİNCİ NOKTA|231
+		ÜÇÜNCÜ NOKTA|232
+	Ondokuzuncu Söz|235%138|37
+		BİRİNCİ REŞHASI|235
+		İKİNCİ REŞHA|236
+		ÜÇÜNCÜ REŞHA|236
+		DÖRDÜNCÜ REŞHA|236
+		BEŞİNCİ REŞHA|237
+		ALTINCI REŞHA|237
+		YEDİNCİ REŞHA|237
+		SEKİZİNCİ REŞHA|237
+		DOKUZUNCU REŞHA|238
+		ONUNCU REŞHA|238
+		ONBİRİNCİ REŞHA|239
+		ONİKİNCİ REŞHA|239
+		ONÜÇÜNCÜ REŞHA|240
+		ONDÖRDÜNCÜ REŞHA|242
+		İHTAR|244
+	Yirminci Söz|245%139|38
+		Birinci Makam|245
+			Birinci Nükte|246
+			İkinci Nükte|246
+			Üçüncü Nükte|247
+		Yirminci Söz'ün İkinci Makamı|252
+			Mukaddeme|254
+			Bir nükte-i mühimme ve bir sırr-ı ehemm|262
+			İki mühim suale karşı iki mühim cevab|265
+				Birincisi|265
+				İkinci suale cevab|266
+	Yirmibirinci Söz|269%100|39
+		Birinci Makam|269
+			Birinci ikaz|269
+			İkinci ikaz|270
+			Üçüncü ikaz|270
+			Dördüncü ikaz|271
+			Beşinci ikaz|271
+		Yirmibirinci Söz'ün İkinci Makamı|274
+			Birinci Vecih - Birinci Yara|274
+			İkinci Vecih budur ki|275
+			Üçüncü Vecih budur ki|275
+			Dördüncü Vecih|276
+				Birinci merhem|276
+				İkinci merhem|277
+			BEŞİNCİ VECİH|277
+	Yirmiikinci Söz|279%153|40
+		Birinci Makam|279
+			Birinci Bürhan|280
+			İkinci Bürhan|281
+			Üçüncü Bürhan|281
+			Dördüncü Bürhan|282
+			Beşinci Bürhan|282
+			Altıncı Bürhan|283
+			Yedinci Bürhan|284
+			Sekizinci Bürhan|285
+			Dokuzuncu Bürhan|286
+			Onuncu Bürhan|287
+			Onbirinci Bürhan|288
+			Onikinci Bürhan|290
+		Yirmiikinci Söz'ün İkinci Makamı|292
+			Birinci Lem'a|292
+			İkinci Lem'a|294
+			Üçüncü Lem'a|295
+			Dördüncü Lem'a|295
+				Birinci Pencere|297
+				İkinci Pencere|297
+				Üçüncü Pencere|297
+			Beşinci Lem'a|299
+			Altıncı Lem'a|300
+			Yedinci Lem'a|302
+			Sekizinci Lem'a|304
+			Dokuzuncu Lem'a|304
+			Onuncu Lem'a|305
+			Güneşler kuvvetinde Onbirinci Lem'a|307
+			Güneşler kuvvetinde Onikinci Lem'a|308
+		Hâtime|310
+	Yirmiüçüncü Söz|311%152|41
+		Birinci Mebhas|311
+			Birinci Nokta|311
+			İkinci Nokta|312
+			Üçüncü Nokta|314
+			Dördüncü Nokta|315
+			Beşinci Nokta|317
+		İkinci Mebhas|319
+			Birinci Nükte|319
+			İkinci Nükte|321
+			Üçüncü Nükte|323
+			Dördüncü Nükte|327
+			Beşinci Nükte|329
+	Yirmidördüncü Söz|332%117|42
+		BİRİNCİ DAL|332
+		İKİNCİ DAL|335
+		ÜÇÜNCÜ DAL|341
+			Birinci Asıl|341
+			İkinci Asıl|341
+			Üçüncü Asıl|341
+			Dördüncü Asıl|342
+			Beşinci Asıl|342
+			Altıncı Asıl|342
+			Yedinci Asıl|342
+			Sekizinci Asıl|342
+			Dokuzuncu Asıl|345
+			Onuncu Asıl|347
+			Onbirinci Asıl|349
+			Onikinci Asıl|350
+		DÖRDÜNCÜ DAL|351
+		BEŞİNCİ DAL|357
+			Birinci Meyve|357
+			İkinci Meyve|360
+			Üçüncü Meyve|362
+			Dördüncü Meyve|362
+			Beşinci Meyve|363
+	Yirmibeşinci Söz|365%154|43
+		Mu'cizat-ı Kur'aniye Risalesi|366
+			Birinci cüz'|366
+			İkinci cüz' ve tetimme-i tarif|367
+			Üçüncü Cüz'|367
+		BİRİNCİ ŞU'LE|368
+			BİRİNCİ ŞUA|368
+				Birinci Suret|368
+				İkinci Suret|370
+					Birinci Nokta|370
+					İkinci Nokta|372
+					Üçüncü Nokta|374
+					Dördüncü Nokta|378
+					Beşinci Nokta|380
+			İKİNCİ ŞUA|391
+				Birinci Lem'a|391
+				İkinci Lem'a|396
+				Üçüncü Lem'a|396
+				Dördüncü Lem'a|396
+				Beşinci Lem'a|398
+					Birinci Işık|398
+					İkinci Işık|398
+					Üçüncü Işık|398
+					Dördüncü Işık|401
+					Beşinci Işık|403
+			ÜÇÜNCÜ ŞUA|404
+				Birinci Cilve|404
+					Birinci Şavk|404
+					İkinci Şavk|405
+					Üçüncü Şavk|406
+				İkinci Cilve|407
+				Üçüncü Cilve|412
+		İKİNCİ ŞU'LE|413
+			Birinci Nur|413
+			İkinci Nuru|415
+				Birinci Meziyet-i Cezalet|415
+				İkinci Nükte-i Belâgat|416
+				İkincinin misallerinden|417
+				Üçüncü Meziyet-i Cezalet|418
+				Dördüncü Nükte-i Belâgat|419
+				Beşinci Meziyet-i Cezalet|420
+				Altıncı Nükte-i Belâgat|421
+				Yedinci Sırr-ı Belâgat|422
+				Sekizinci Meziyet-i Cezalet|424
+				Dokuzuncu Nükte-i Belâgat|427
+				Onuncu Nükte-i Belâgat|429
+			İkinci Şu'lenin Üçüncü Nuru şudur ki|430
+		ÜÇÜNCÜ ŞU'LE|434
+			BİRİNCİ ZİYA|434
+			İKİNCİ ZİYA|436
+			ÜÇÜNCÜ ZİYA|438
+			Hâtime|443
+		BİRİNCİ ZEYL|445
+			Birinci Nokta|445
+			İkinci Nokta|445
+			Üçüncü Nokta|446
+			Dördüncü Nokta|447
+			Beşinci Nokta|447
+			Altıncı Nokta|448
+		Emirdağı Çiçeği|451
+			Bu Onuncu Mes'eleye bir hâtime olarak iki haşiyedir|461
+				Birincisi|461
+				İkinci Haşiye|461
+	Yirmialtıncı Söz|463%126|44
+		Kader Risalesi|463
+			BİRİNCİ MEBHAS|463
+			İKİNCİ MEBHAS|466
+				Birincisi|466
+				İkincisi|466
+				Üçüncüsü|466
+				Dördüncüsü|466
+				Beşincisi|467
+				Altıncısı|467
+				Yedincisi|468
+			ÜÇÜNCÜ MEBHAS|468
+				Mukaddeme|469
+				Netice-i meram|470
+			DÖRDÜNCÜ MEBHAS|472
+			Hâtime|473
+		Zeyl|476
+			Birinci Hatvede|477
+			İkinci Hatvede|477
+			Üçüncü Hatvede|477
+			Dördüncü Hatvede|478
+		Hâtime|479
+	Yirmiyedinci Söz|480%123|43
+		Birincisi|480
+		İkincisi|480
+		Üçüncüsü|481
+		Dördüncüsü|482
+		Beşincisi|482
+		Altıncısı|484
+		Hâtime|485
+		Yirmiyedinci Söz'ün Zeyli|488
+			Birinci Hikmet|489
+			İkinci Sebeb|489
+			Üçüncü Sebeb|491
+				Birinci Vecih|491
+				İkinci Vecih|492
+				Üçüncü Vecih|493
+					Sual|494
+					İkinci Sual|494
+					Üçüncü Sual|495
+					Dördüncü Sual|495
+	Yirmisekizinci Söz|497%124|46
+		Sual|498
+		Sual|498
+		Sual|499
+		Sual|500
+		Sual|501
+		Sual|502
+		Cennet Sözüne Küçük Bir Zeyl|503
+	Yirmidokuzuncu Söz|504%125|47
+		Mukaddime|504
+		Birinci Maksad|506
+			Birinci Esas|506
+			İkinci Esas|509
+			Üçüncü Esas|511
+			Dördüncü Esas|512
+		İkinci Maksad|515
+			Mukaddime|515
+			Birinci Esas|515
+				Mukaddime|516
+				BİRİNCİ MENBA'|516
+				İKİNCİ MENBA'|517
+				ÜÇÜNCÜ MENBA'|517
+				DÖRDÜNCÜ MENBA'|518
+			İkinci Esas|518
+				BİRİNCİ MEDAR|519
+				İKİNCİ MEDAR|519
+				ÜÇÜNCÜ MEDAR|519
+				DÖRDÜNCÜ MEDAR|520
+				BEŞİNCİ MEDAR|521
+				ALTINCI MEDAR|521
+				YEDİNCİ MEDAR|521
+				SEKİZİNCİ MEDAR|522
+				DOKUZUNCU MEDAR|522
+				ONUNCU MEDAR|522
+			Üçüncü Esas|525
+				Birinci Mes'ele|526
+				İkinci Mes'ele ki;|527
+				Üçüncü Mes'ele ki;|527
+					Birinci Temsil|527
+					İkinci Temsil|527
+					Üçüncü Temsil|528
+					Dördüncü Temsil|528
+					Beşinci Temsil|528
+					Altıncı Temsil|528
+			Dördüncü Esas|529
+				Birinci Mes'ele|529
+				İkinci Mes'ele|531
+				Üçüncü Mes'ele|531
+				Dördüncü Mes'ele|533
+	Otuzuncu Söz|535%122|48
+		Birinci Maksad|535
+		İkinci Maksad|547
+			Mukaddime|547
+			BİRİNCİ NOKTA|549
+				Birinci Mebhas|549
+				İkinci Mebhas|550
+					Birincisi|551
+					İkincisi|551
+					Üçüncüsü|551
+					Dördüncüsü|552
+					Beşincisi|552
+			İKİNCİ NOKTA|553
+			ÜÇÜNCÜ NOKTA|554
+	Otuzbirinci Söz|559%155|49
+		BİRİNCİ ESAS|561
+			Birinci Temsil|561
+			İkinci Temsil|561
+		İKİNCİ ESAS|563
+			Birincisi|563
+			İkinci Temsil|565
+		ÜÇÜNCÜ ESAS|572
+			Birinci temsil|573
+			İkinci Temsil|574
+			Birinci müşkiliniz|576
+			İkinci Müşkil|579
+			Üçüncü Müşkilin|580
+		DÖRDÜNCÜ ESAS|581
+			Birinci Meyve|581
+			İkinci Meyve|581
+			Üçüncü Meyve|582
+			Dördüncü Meyve|583
+			Beşinci Meyve|583
+		ONDOKUZUNCU VE OTUZBİRİNCİ SÖZLER'İN ZEYLİ|586
+			BİRİNCİ NOKTA|586
+			İKİNCİ NOKTA|587
+			ÜÇÜNCÜ NOKTA|587
+			DÖRDÜNCÜ NOKTA|588
+			BEŞİNCİ NOKTA|588
+	Otuzikinci Söz|590%156|50
+		Birinci Mevkıf|590
+			Arabî fıkranın tercümesi|600
+			BİRİNCİ MEVKIF'IN KÜÇÜK BİR ZEYLİ|601
+		İKİNCİ MEVKIF|605
+			BİRİNCİ MAKSAD|605
+			İKİNCİ MAKSAD|609
+				Birinci Temsil|609
+				İkinci Temsil|610
+				İKİNCİ MAKSAD'IN HÂTİMESİ|612
+			ÜÇÜNCÜ MAKSAD|616
+				Elcevab|617
+				BİRİNCİ İŞARET|617
+				İKİNCİ İŞARET|617
+				ÜÇÜNCÜ İŞARET|617
+				DÖRDÜNCÜ İŞARET|618
+				BEŞİNCİ İŞARET|618
+				BİRİNCİ REMİZ|619
+				İKİNCİ REMİZ|619
+				ÜÇÜNCÜ REMİZ|620
+					Birinci Hüccet|620
+					İkinci Hüccet|621
+					Üçüncü Hüccet|621
+					Dördüncü Hüccet|621
+					Beşinci Hüccet|622
+				DÖRDÜNCÜ REMİZ|622
+				BEŞİNCİ REMİZ|625
+		ÜÇÜNCÜ MEVKIF|627
+			BİRİNCİ MEBHAS|627
+			İKİNCİ NOKTANIN İKİNCİ MEBHASI|632
+				MÜHİM BİR SUAL|638
+					BİRİNCİ NÜKTE|638
+					İKİNCİ NÜKTE|638
+					ÜÇÜNCÜ NÜKTE|641
+					DÖRDÜNCÜ NÜKTE|643
+				MUKADDEME|646
+				BİRİNCİ İŞARET|647
+				İKİNCİ İŞARET|647
+				ÜÇÜNCÜ İŞARET|648
+				DÖRDÜNCÜ İŞARET|648
+				BEŞİNCİ İŞARET|648
+				ALTINCI İŞARET|649
+				YEDİNCİ İŞARET|649
+				SEKİZİNCİ İŞARET|649
+				DOKUZUNCU İŞARET|650
+				TENBİH|651
+		MÜNACAT|652
+	Otuzüçüncü Söz|653%130|51
+		Birinci Pencere|654
+		İkinci Pencere|655
+		Üçüncü Pencere|655
+		Dördüncü Pencere|656
+		Beşinci Pencere|656
+		Altıncı Pencere|657
+		Yedinci Pencere|659
+		Sekizinci Pencere|660
+		Dokuzuncu Pencere|660
+		Onuncu Pencere|661
+		Onbirinci Pencere|661
+		Onikinci Pencere|662
+		Onüçüncü Pencere|663
+		Ondördüncü Pencere|663
+		Onbeşinci Pencere|664
+		Onaltıncı Pencere|664
+		Onyedinci Pencere|665
+		Onsekizinci Pencere|667
+		Ondokuzuncu Pencere|668
+		Yirminci Pencere|670
+		Yirmibirinci Pencere|672
+		Yirmiikinci Pencere|673
+		Yirmiüçüncü Pencere|675
+		Yirmidördüncü Pencere|676
+		Yirmibeşinci Pencere|678
+		Yirmialtıncı Pencere|678
+		Yirmiyedinci Pencere|679
+		Yirmisekizinci Pencere|681
+		Yirmidokuzuncu Pencere|682
+		Otuzuncu Pencere|683
+		Otuzbirinci Pencere|686
+			BİRİNCİ NOKTA|686
+			İKİNCİ NOKTA|687
+			ÜÇÜNCÜ NOKTA|688
+		Otuzikinci Pencere|688
+		Otuzüçüncü Pencere|689
+		İHTAR|690
+	Lemaat|691%92|52
+		Çekirdekler Çiçekleri|691
+		EDDÂÎ|694
+	KONFERANS|747%65396|53
+		Birincisi|750
+		İkincisi|750
+		Üçüncüsü|750
+		Dördüncüsü|750
+		Beşincisi|751
+		Altıncısı|751
+		Yedincisi|751
+		Sekizincisi|751
+		Dokuzuncusu|751
+	Fihrist|775

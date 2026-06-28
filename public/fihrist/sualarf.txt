@@ -1,0 +1,315 @@
+ŞUÂLAR|4%79|128
+	İkinci Şua|5%116|129
+		İhtar|5
+		yedinci nükte-i a'zam|6
+		Birinci Makam|7
+			Birinci Makam'ın Birinci Meyvesi|7
+			Tevhidin İkinci Meyvesi|12
+			Üçüncü Meyve|15
+		İkinci Makam|18
+			Birincisi|18
+			Vahdaniyetin ikinci muktezisi|22
+			Tevhidin üçüncü muktezisi|26
+		Üçüncü Makam|28
+			Birinci Alâmet ve Hüccet|28
+			İkinci Alâmet ve Hüccet|29
+				Sualin Birinci Şıkkı|30
+				Sualin ikinci şıkkı|31
+			Üçüncü Hüccet ve Alâmet|32
+		Hâtime|36
+			Birinci Mes'ele|37
+			İkinci Mes'ele|37
+			Üçüncü Mes'ele|37
+			Amma bir dördüncü mes'ele|38
+		Tevhidî bir münacat ve mukaddimesi|41
+	Üçüncü Şua|42%141|130
+		Mukaddime|42
+		Münacat|43
+	Dördüncü Şua|60%142|131
+		Birinci Mertebe-i Nuriye-i Hasbiye|61
+		İkinci Mertebe-i Nuriye-i Hasbiye|64
+		Üçüncü Mertebe-i Nuriye-i Hasbiye|66
+		Dördüncü Mertebe-i Nuriye-i Hasbiye|69
+		Beşinci Mertebe-i Nuriye-i Hasbiye|71
+			Birinci Mes'ele|71
+			İkinci Mes'ele|71
+			Üçüncü Mes'ele|72
+				Birinci Vecih|72
+				İkinci Vecih|72
+				Üçüncü Vecih|72
+			Dördüncü Mes'ele|73
+		Altıncı Mertebe-i Nuriye-i Hasbiye|73
+			Birinci Bürhan|74
+			İkinci Bürhan'ın|75
+				Birinci Nokta|76
+				İkinci Nokta|76
+				Üçüncü Nokta|76
+				Dördüncü Nokta|76
+				Beşinci Nokta|78
+			Üçüncü Bürhan'ın|79
+				Birinci Nükte|79
+				İkinci Nükte|80
+				Üçüncü Nükte|80
+	Altıncı Şua|92%144|132
+		Birinci Sual|92
+		İkinci Sual|95
+			Birinci Cihet|95
+			İkinci Cihet|96
+			Üçüncü Cihet|96
+	Yedinci Şua|98%114|133
+		Mukaddeme|100
+		Âyet-ül Kübra|105
+			1.Mertebe@Bu âyet-i|105
+			2.Mertebe@Sonra, dünya|106
+			3.Mertebe@Sonra o seyahat|110
+			4.Mertebe@Sonra o mütefekkir|111
+			5.Mertebe@Sonra dağlar|113
+			6.Mertebe@Sonra, o yolcu|114
+			7.Mertebe@Sonra, seyahat|116
+			8.Mertebe@Sonra o mütefekkir|117
+			9.Mertebe@Sonra imanın|119
+			10.Mertebe@Sonra, imanın|119
+			11.Mertebe@Sonra kema|120
+			12-13.Mertebe@Sonra, pür|121
+			14-15.Mertebe@Sonra âlem|123
+			16.Mertebe@Sonra o dünya|127
+			17.Mertebe@Sonra, bu|133
+			18.Mertebe@Sonra, bir|140
+			19.Mertebe@Sonra, dünyaya|144
+		İkinci Bâb|150
+			Birinci menzil@Beraber gittiler|150
+				Birinci Hakikat|150
+				İkinci Hakikat|151
+				Üçüncü Hakikat|151
+				Dördüncü Hakikat|152
+			Ef'a ve Âsâr menzili@Sonra o sük|153
+				Birincisi|154
+				İkinci Hakikat|155
+				Üçüncü Hakikat|157
+					Birinci Sır|158
+					İkinci Sır|159
+				Dördüncü Hakikat|161
+				Beşinci Hakikat|162
+			Üçüncü menzil@Sonra, o|166
+				Birinci Hakikat|166
+				İkinci Hakikat|168
+				Üçüncü Hakikat|170
+				Dördüncü Hakikat|172
+	Dokuzuncu Şua|180%146|134
+		Mukaddeme|182
+			Birinci Nokta|182
+				Birincisi|182
+				İkinci delil|182
+				Üçüncü delil|183
+				Dördüncü delil|183
+			İkinci Nokta|184
+	Onbirinci Şua|192%147|136
+		Meyve Risalesi|193
+			Birincisi|193
+			İkinci Mes'elenin Hülâsası|195
+			Üçüncü Mes'ele|198
+			Dördüncü Mes'ele|202
+			Beşinci Mes'ele|204
+			Altıncı Mes'ele|205
+			Yedinci Mes'ele|209
+			Sekizinci Mes'elenin Bir Hülâsası|222
+				Birincisi|222
+				İkinci meyvesi ve hayat-ı şahsiyeye bakan bir faidesi|223
+				Hayat-ı şahsiyeye ait üçüncü bir faidesi|223
+				Dördüncü bir faidesi ki, insanın hayat-ı içtimaiyesine bakıyor|224
+				Birinci Nükte|229
+				İkinci Nükte|230
+			Dokuzuncu Mes'ele|237
+				Birinci Nokta|238
+				İkinci Nokta|241
+				Üçüncü Nokta|242
+			Onuncu Mes'ele|243
+				Bu Onuncu Mes'eleye bir hâtime olarak iki haşiyedir|253
+					Birincisi|253
+					İkinci Haşiye|253
+			Onbirinci Mes'ele|257
+			Hâtime|266
+				Bir İhtar|268
+				Hatıra gelebilen bir sualin cevabıdır|268
+				Onbirinci Mes'elenin Haşiyesinin Bir Lâhikasıdır.|270
+	Onikinci Şua|278%148|137
+		Bu gelen kısım çok ehemmiyetlidir|286
+		Mühim Bir Suale Hakikatlı Bir Cevabdır.|289
+		Bu defaki küçük müdafaatımda demiştim|292
+	Onüçüncü Şua|293%149|138
+	Ondördüncü Şua|347%150|139
+		İfademin Kısacık Bir Tetimmesi|347
+		Afyon Müddeiumumîsi ve Mahkeme Reisi ve A'zâlarına|357
+		Afyon Mahkemesinin bizi ittiham etmesine karşı itiraznamenin tetimmesidir|368
+		Afyon hükûmet ve mahkemesine ve zabıtasına daha birkaç nokta maruzatım var|376
+		Ankara'nın altı makamatına ve Afyon Ağır Ceza Mahkemesine verilen müdafaanın itirazname tetimmesi ve lâhikasıdır|381
+		İddianamede benim hakkımda dört esas var|383
+		İddianamede sebeb-i ittiham İkinci Mes'ele|385
+		Afyon Mahkemesine iddianameye karşı verilen itirazname tetimmesinin bir zeylidir|393
+		Heyet-i Vekile'ye gönderilmiş bir istidadır. Heyet-i Vekile'ye gayet ehemmiyetli bir ricam var|399
+		Ehl-i vukufun insaflı hocalarından üç sualim var|403
+		Hata-Savab Cedvelinin Zeylidir|422
+		Temyiz Mahkemesi Riyasetine|446
+		Risale-i Nur'un hakkaniyetine bir nümune|460
+		Adem-i müracaatımın sebeblerinden sekizincisi|476
+		Gençlik Rehberi'nin küçük bir haşiyesi|479
+		Başta müdür olarak hapsin heyet-i idaresine sureten ehemmiyetsiz, fakat bence çok ehemmiyetli bir maruzatım var.|483
+		Müjdeli ve tabiri çıkmış latif bir rü'ya|488
+		Başbakanlığa, Adliye Bakanlığına, Dâhiliye Bakanlığına|495
+		İkinci kısım tefsir ise|516
+		Bedîüzzaman'ın akıllara hayret veren bir seciyesi|524
+		Mustafa Sungur'un Temyiz Layihasıdır|556
+	Beşinci Şua|578%143|140
+		Birinci Nokta|579
+		İkinci Nokta|579
+		Üçüncü Nokta|579
+			Birincisi|579
+			İkincisi|580
+		Dördüncü Nokta|580
+		Beşinci Nokta|581
+		Beşinci Şua'ın İkinci Makamı ve Mes'eleleri|583
+			Birinci Mes'ele|583
+			İkinci Mes'ele|583
+			Üçüncü Mes'ele|583
+			Dördüncü Mes'ele|584
+			Beşinci Mes'ele|584
+			Altıncı Mes'ele|584
+			Yedinci Mes'ele|585
+			Sekizinci Mes'ele|585
+			Dokuzuncu Mes'ele|585
+			Onuncu Mes'ele|585
+			Onbirinci Mes'ele|586
+			Onikinci Mes'ele|586
+			Onüçüncü Mes'ele|587
+			Ondördüncü Mes'ele|587
+			Onbeşinci Mes'ele|588
+			Onaltıncı Mes'ele|588
+			Onyedinci Mes'ele|589
+			Onsekizinci Mes'ele|589
+			Ondokuzuncu Mes'ele|590
+			Yirminci Mes'ele|591
+			bir tetimme olarak üç küçük mes'eledir.|593
+				Birinci Mes'ele|593
+				İkinci Mes'ele|593
+				Üçüncü Küçük Mes'ele|595
+	Onbeşinci Şua|597%151|141
+		Elhüccetüzzehra|597
+			Birinci Makam|597
+				Üç Kısımdır|597
+					Birinci Kelime|598
+					İkinci Kelime|599
+					Üçüncü Kelime|599
+					Dördüncü Kelime|600
+					Beşinci Kelime|600
+					Altıncı Kelime|601
+					Yedinci Kelime|601
+					Sekizinci Kelime|602
+					Dokuzuncu Kelime|603
+					Onuncu Kelime|605
+					Onbirinci Kelime|606
+				Fatiha-i Şerife'nin Bir Muhtasar Hülâsası|608
+					Birinci Kelime|608
+					İkinci Kelime|609
+					Üçüncü Kelime|609
+					Dördüncü Kelime|611
+					Beşinci Kelime|612
+					Altıncı Kelime|615
+					Yedinci Kelime|615
+					Sekizinci Kelime|617
+					Dokuzuncu Kelime|618
+				Üçüncü Medrese-i Yusufiye'nin tek bir dersinin Üçüncü Kısmı|620
+					Mukaddime|620
+					Birinci İşaret|621
+					İkinci İşaret|621
+					Birincisi|622
+					İkinci Şehadet|623
+					Üçüncü Küllî Şehadet|623
+					Dördüncü Şehadet|624
+					Beşinci, Altıncı, Yedinci, Sekizinci Küllî Şehadetler|625
+					Dokuzuncusu|627
+					Onuncusu|627
+					Onbirincisi|627
+					Onikincisi|628
+					Onüçüncü Şehadet|628
+					Ondördüncü Şehadet|629
+					Onbeşinci Şehadet|631
+			Elhüccetüzzehra'nın İkinci Makamı|635
+				Onbeş Delilden Birincisi|646
+				İkinci Delil|646
+				Üçüncü Delil|647
+				Dördüncü Delil|647
+				İhtar|648
+				Beşinci ve Altıncı Delil|648
+				Yedinci, Sekizinci Delil|649
+				Dokuzuncu, Onuncu Delil|650
+				Onbirinci Delil|651
+	Birinci Şua|685%140|142
+		Birinci Sual|685
+		İkinci Sual|685
+			Birincisi|687
+				Risale-i Nur'a bakan Birinci Cümlesi|687
+				İkinci cümlesi|688
+				Üçüncü Cümlesi|688
+				Dördüncü Cümlesi|688
+				Beşinci Cümlesi|689
+				Tenbih|691
+			Resail-in Nur'a işaret eden İkinci Âyet|692
+			Üçüncü Âyet-i Meşhure|693
+			Dördüncü Âyet-i Meşhure|693
+			Beşinci Âyet|694
+			Altıncı Âyet|698
+			Yedinci Âyet|699
+			Sekizinci Âyet|699
+			Dokuzuncu Âyet|700
+			Onuncu Âyet|700
+			Onbirinci Âyet|700
+			Onikinci Âyet|700
+			Onüçüncü Âyet|701
+			Ondördüncü Âyet|701
+			Onbeşinci Âyet|703
+			Onaltıncı Âyet|703
+			Onyedinci Âyet|704
+			Onsekizinci Âyet|705
+			Ondokuzuncu Âyet|705
+			Yirminci Âyet|706
+			Yirmibirinci Âyet veya Âyetler|706
+			Yirmiikinci Âyet ve Âyetler|709
+			Yirmiüçüncü Âyet|710
+			Yirmidördüncü Âyet ve Âyetler|710
+			Yirmibeşinci Âyet|714
+			Yirmialtıncı Âyet|716
+			Yirmiyedinci Âyet|718
+			Yirmisekizinci Âyet|719
+			Yirmidokuzuncu Âyet|720
+			Yirmidokuzuncu Âyetin sehvine dair tafsilât|723
+				Üçüncü Âyet|724
+				Dördüncü Âyetin|725
+				Beşinci Âyette|726
+	Sekizinci Şua|727%145|143
+		Birincisi|728
+		İkinci Remz|731
+		Üçüncü Remz|733
+			Birincisi|734
+			İkincisi|734
+			Üçüncüsü|734
+		Dördüncü Remz|737
+		Beşinci Remz|740
+		Altıncı Remz|742
+		Yedinci Remz|744
+		Sekizinci Remz|748
+			Birinci Sual|748
+			İkinci Sual|749
+			Birincisi|749
+			İkincisi|750
+			Üçüncüsü|750
+		Yirmidokuzuncu Lem'adan İkinci Bâb|753
+			Birinci Nokta|753
+			İkinci Nokta|755
+			Üçüncü Nokta|756
+			Dördüncü Nokta|756
+			Beşinci Nokta|757
+			Altıncı Nokta|757
+			Yedinci Nokta|758
+			Sekizinci Nokta|759
+			Dokuzuncu Nokta|760
+	İÇİNDEKİLER|763

@@ -1,0 +1,62 @@
+MUHAKEMAT|4%88|204
+	Bedîüzzaman'ın Muhakematı|5
+	Mukaddeme|12
+	Birinci Makale|12
+		Birinci Mukaddeme|12
+			Birincisi|13
+			İkincisi|13
+			Üçüncüsü|13
+			Dördüncüsü|14
+		İkinci Mukaddeme|16
+		Üçüncü Mukaddeme|18
+		Dördüncü Mukaddeme|23
+		Beşinci Mukaddeme|25
+		Altıncı Mukaddeme|28
+		Yedinci Mukaddeme|31
+		Sekizinci Mukaddeme|35
+		Dokuzuncu Mukaddeme|40
+		Onuncu Mukaddeme|44
+		Onbirinci Mukaddeme|48
+		Onikinci Mukaddeme|49
+		Birinci Mes'ele|56
+		İkinci Mes'ele|59
+		Üçüncü Mes'ele|63
+		Dördüncü Mes'ele|66
+		Beşinci Mes'ele|70
+		Altıncı Mes'ele|72
+		Yedinci Mes'ele|74
+		Sekizinci Mes'ele|75
+	İkinci Makale|86
+		Birinci Mes'ele|86
+		İkinci Mes'ele|89
+		Üçüncü Mes'ele|90
+		Dördüncü Mes'ele|93
+		Beşinci Mes'ele|94
+		Altıncı Mes'ele|97
+		Yedinci Mes'ele|102
+		Sekizinci Mes'ele|103
+		Dokuzuncu Mes'ele|104
+		Onuncu Mes'ele|107
+		Onbirinci Mes'ele|108
+		Onikinci Mes'ele|109
+	Üçüncü Makale|115
+		İşaret|116
+		Mukaddeme|117
+		Birinci Maksad|117
+			İşaret|118
+			Tenbih|118
+			Vehim ve tenbih|123
+			Vehim ve Tenbih|126
+			Vehim ve Tenbih|127
+		İkinci Maksad|135
+			Mukaddeme|135
+			İşaret|137
+			İşaret ve İrşad|143
+			Mukaddeme|144
+			Birinci Meslek|145
+			İkinci Meslek|148
+			Üçüncü Meslek|150
+			Hâtime|158
+			Beşinci Meslek|164
+			Tenbih|165
+		Üçüncü Maksad|167

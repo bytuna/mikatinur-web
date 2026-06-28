@@ -1,0 +1,115 @@
+MESNEVİ-İ NURİYE|4%80|146
+	İtizar|5%65398|147
+	Mukaddime|7%65397|148
+		Birinci Nokta|7
+		İkinci Nokta|7
+		Üçüncü Nokta|8
+		Dördüncü Nokta|8
+		Beşinci Nokta|9
+	Lem'alar|10%345|149
+		TENBİH|11
+		BİRİNCİ LEM'A|12
+		İKİNCİ LEM'A|12
+		ÜÇÜNCÜ LEM'A|13
+		DÖRDÜNCÜ LEM'A|14
+		BEŞİNCİ LEM'A|14
+		ALTINCI LEM'A|15
+		YEDİNCİ LEM'A|16
+		SEKİZİNCİ LEM'A|17
+		DOKUZUNCU LEM'A|17
+		ONUNCU LEM'A|17
+		ONBİRİNCİ LEM'A|18
+		ONİKİNCİ LEM'A|19
+		ONÜÇÜNCÜ LEM'A|19
+		ONDÖRDÜNCÜ LEM'A|20
+	Reşhalar|21%346|150
+		BİRİNCİ REŞHA|21
+		İKİNCİ REŞHA|22
+		ÜÇÜNCÜ REŞHA|23
+		DÖRDÜNCÜ REŞHA|23
+		BEŞİNCİ REŞHA|24
+		ALTINCI REŞHA|25
+		YEDİNCİ REŞHA|25
+		SEKİZİNCİ REŞHA|26
+		DOKUZUNCU REŞHA|26
+		ONUNCU REŞHA|27
+		ONBİRİNCİ REŞHA|28
+		ONİKİNCİ REŞHA|29
+	Lâsiyyemalar|33%347|151
+	Katre|50%348|152
+		İFADE-İ MERAM|50
+		Mukaddeme|51
+			Birinci Kelâm|52
+			İkinci Kelâm|52
+			Üçüncü Kelâm|52
+			Dördüncü Kelâm|52
+		Birinci Bâb|53
+		TAKRİZ|64
+		Hâtime|65
+			Birinci Hastalık|65
+			İkinci Hastalık|65
+			Üçüncü Hastalık|66
+			Dördüncü Hastalık|66
+			Birinci Hakikat|67
+			İkinci Hakikat|67
+			Üçüncü Hakikat|68
+			Dördüncü Hakikat|68
+	Katre'nin Zeyli|76%402|153
+	Hubab|84%349|154
+	Zeyl-ül Hubab|107%403|155
+	Habbe|116%350|156
+	Zeyl-ül Habbe|134%404|157
+	Zeyl-üz Zeyl|143%405|158
+	Zühre|149%351|159
+		Mukaddeme|149
+		BİRİNCİ NOTA|150
+		İKİNCİ NOTA|150
+		ÜÇÜNCÜ NOTA|150
+		DÖRDÜNCÜ NOTA|151
+		BEŞİNCİ NOTA|151
+		ALTINCI NOTA|158
+		YEDİNCİ NOTA|159
+		SEKİZİNCİ NOTA|161
+		DOKUZUNCU NOTA|165
+		ONUNCU NOTA|166
+		ONBİRİNCİ NOTA|167
+		ONİKİNCİ NOTA|168
+		ONÜÇÜNCÜ NOTA|170
+			Birincisi|170
+			İkinci Mes'ele|171
+			Üçüncü Mes'ele|172
+			Dördüncü Mes'ele|173
+			Beşinci Mes'ele|175
+		ONDÖRDÜNCÜ NOTA|175
+			Birinci Remiz|175
+			İkinci Remiz|176
+			Üçüncü Remiz|177
+			Dördüncü Remiz|177
+		ONBEŞİNCİ NOTA|178
+			Birinci Mes'ele|178
+	Zerre|180%352|160
+	Şemme|192%353|161
+	Onuncu Risale|204%354|162
+	ONDÖRDÜNCÜ REŞHA|230%65399|163
+		BİRİNCİ KATRE|230
+		İKİNCİ KATRE|230
+		ÜÇÜNCÜ KATRE|230
+			Birinci Nokta|230
+			İkinci Nokta|231
+			Üçüncü Nokta|231
+			Dördüncü Nokta|231
+			Beşinci Nokta|232
+			Altıncı Nokta|232
+		DÖRDÜNCÜ KATRE|232
+		ALTINCI KATRE|234
+	Şu'le|236%355|164
+	Şu'le'nin Zeyli|243%406|165
+	Nokta|245%356|166
+		İFADE-İ MERAM|245
+		Birinci Bürhan|246
+		İkinci Bürhan|246
+		Üçüncü Bürhan|246
+		Dördüncü Bürhan|246
+	TENVİR|257
+	MÜNDERECAT HAKKINDA|259
+	Fihrist|260
