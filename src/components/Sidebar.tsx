@@ -15,7 +15,7 @@ interface SidebarProps {
   dictionary: Record<string, DictionaryTerm>;
   onSelectWord: (term: DictionaryTerm) => void;
   theme: ReadingTheme;
-}
+  }
 
 interface FihristNodeItemProps {
   node: FihristItem;
@@ -356,7 +356,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           expandedNodes={expandedNodes}
                           onToggleExpand={handleToggleExpand}
                           searchActive={!!state.searchQuery}
-                          theme={theme}
+                          theme='light'
                         />
                       ))
                     ) : (

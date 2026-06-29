@@ -389,6 +389,7 @@ export default function RisaleInurPage() {
     }
   }, [state]);
 
+ // Tema Yönetimi (Global Theme Context)
   useEffect(() => {
     const root = document.documentElement;
     root.classList.remove('dark', 'bg-white', 'bg-sepia-100', 'bg-stone-950');
@@ -603,6 +604,7 @@ export default function RisaleInurPage() {
         onGoToLibrary={() => setViewMode('library')}
         dictionary={dictionary}
         onSelectWord={handleSelectWord}
+
       />
 
       {/* Mobil Sidebar Karartma Perdesi (Overlay Backdrop) */}
@@ -637,7 +639,7 @@ export default function RisaleInurPage() {
           </div>
           
           <div className="flex items-center gap-1.5">
-            <span className="font-display font-bold text-sm tracking-tight">Külliyat-ı Nur</span>
+            <span className="font-display font-bold text-sm tracking-tight">Risale-i Nur</span>
           </div>
 
           <button
