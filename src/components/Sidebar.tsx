@@ -162,7 +162,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onGoToLibrary,
   dictionary,
   onSelectWord,
-  theme,
+  theme = 'light'
 }) => {
   const activeTab = 'fihrist';
   const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({});

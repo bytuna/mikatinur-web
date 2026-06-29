@@ -781,142 +781,147 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       ? 'bg-[#1c1917]'
       : 'bg-[#f5e9d3]';
 
-  return (
-    <div className="flex flex-col h-full bg-transparent relative">
-      {/* Kitap & Sayfa Üst Bilgi Barı */}
-      <div className={`flex items-center justify-between px-4 sm:px-6 md:px-8 py-3 sm:py-4 border-b backdrop-blur-md z-10 relative ${headerThemeClass}`}>
-        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
-          {onToggleSidebar && (
-            <button
-              onClick={onToggleSidebar}
-              className={`flex items-center gap-1.5 py-1.5 px-2.5 sm:px-3 rounded-full border text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer flex-shrink-0 ${
-                sidebarOpen
-                  ? 'border-sepia-accent bg-sepia-accent/10 text-sepia-accent'
-                  : 'border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-sepia-200/50 dark:hover:bg-stone-800'
-              }`}
-              title={sidebarOpen ? "Fihristi Kapat (Tam Ekran Okuma)" : "Fihrist Paneli Aç"}
-            >
-              <Menu className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Fihrist</span>
-            </button>
-          )}
-          {onGoToLibrary && (
-            <button
-              onClick={onGoToLibrary}
-              className="flex items-center gap-1.5 py-1.5 px-2.5 sm:px-3 rounded-full border border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-sepia-200/50 dark:hover:bg-stone-800 text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer flex-shrink-0"
-              title="Kütüphaneye Geri Dön"
-            >
-              <Library className="w-3 h-3 text-sepia-accent" />
-              <span className="hidden sm:inline">Kütüphane</span>
-            </button>
-          )}
-          <BookOpen className="w-4 h-4 text-sepia-accent hidden sm:inline flex-shrink-0" />
-          <span className={`font-serif font-extrabold text-sm sm:text-base md:text-lg lg:text-xl tracking-tight truncate max-w-[80px] xs:max-w-[120px] sm:max-w-none ${titleThemeClass}`}>
-            {book.title}
-          </span>
-          <span className="text-[10px] sm:text-xs text-stone-400 dark:text-stone-500 font-mono whitespace-nowrap flex-shrink-0">
-            / s. {pageNumber}
-          </span>
-        </div>
+  // src/components/ReadingView.tsx dosyası içindeki Header Alanı:
 
-        {/* Masaüstü Ortalanmış Otomatik Akış Kumandası */}
-        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 md:gap-2 z-20">
+return (
+  <div className="flex flex-col h-full bg-transparent relative">
+    {/* Kitap & Sayfa Üst Bilgi Barı */}
+    <div className={`flex items-center justify-between px-4 sm:px-6 md:px-8 py-3 sm:py-4 border-b backdrop-blur-md z-10 relative ${headerThemeClass}`}>
+      <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
+        {onToggleSidebar && (
+          <button
+            onClick={onToggleSidebar}
+            className={`flex items-center gap-1.5 py-1.5 px-2.5 sm:px-3 rounded-full border text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer flex-shrink-0 ${
+              sidebarOpen
+                ? 'border-sepia-accent bg-sepia-accent/10 text-sepia-accent'
+                : 'border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-sepia-200/50 dark:hover:bg-stone-800'
+            }`}
+            title={sidebarOpen ? "Fihristi Kapat (Tam Ekran Okuma)" : "Fihrist Paneli Aç"}
+          >
+            <Menu className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Fihrist</span>
+          </button>
+        )}
+        {onGoToLibrary && (
+          <button
+            onClick={onGoToLibrary}
+            className="flex items-center gap-1.5 py-1.5 px-2.5 sm:px-3 rounded-full border border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-sepia-200/50 dark:hover:bg-stone-800 text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer flex-shrink-0"
+            title="Kütüphaneye Geri Dön"
+          >
+            <Library className="w-3 h-3 text-sepia-accent" />
+          </button>
+        )}
+        <BookOpen className="w-4 h-4 text-sepia-accent hidden sm:inline flex-shrink-0" />
+        <span className={`font-serif font-extrabold text-sm sm:text-base md:text-lg lg:text-xl tracking-tight truncate max-w-[80px] xs:max-w-[120px] sm:max-w-none ${titleThemeClass}`}>
+          {book.title}
+        </span>
+        <span className="text-[10px] sm:text-xs text-stone-400 dark:text-stone-500 font-mono whitespace-nowrap flex-shrink-0">
+          / s. {pageNumber}
+        </span>
+      </div>
+
+      {/* Masaüstü Ortalanmış Otomatik Akış Kumandası */}
+      <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 md:gap-2 z-20">
+        <button
+          onClick={() => setIsAutoScrolling(!isAutoScrolling)}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            isAutoScrolling
+              ? 'bg-sepia-accent text-white border border-sepia-accent'
+              : 'border border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 bg-white/40 dark:bg-stone-900/40 hover:bg-sepia-200/50'
+          }`}
+          title={isAutoScrolling ? "Otomatik akışı durdur" : "Otomatik akışı başlat"}
+        >
+          {isAutoScrolling ? (
+            <>
+              <Pause className="w-3 h-3" />
+              <span className="text-[9px] tracking-widest">Akıyor</span>
+            </>
+          ) : (
+            <>
+              <Play className="w-3 h-3 fill-current" />
+              <span className="text-[9px] tracking-widest">Akıt</span>
+            </>
+          )}
+        </button>
+
+        {isAutoScrolling && (
+          <div className="flex items-center bg-sepia-200/50 dark:bg-stone-900 border border-sepia-300 dark:border-stone-800 p-0.5 rounded-full shadow-xs gap-0.5">
+            {([1, 1.25, 1.5, 2] as const).map((speed) => (
+              <button
+                key={speed}
+                onClick={() => setScrollSpeed(speed)}
+                className={`px-2.5 py-0.5 text-[8px] font-sans font-bold rounded-full transition-all cursor-pointer whitespace-nowrap ${
+                  scrollSpeed === speed
+                    ? 'bg-sepia-accent text-white shadow-xs'
+                    : 'text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200'
+                }`}
+              >
+                {speed === 1 ? (
+                  <span className="inline-flex items-center gap-1">
+                    <span className="sm:hidden">0.25x</span>
+                    <span className="hidden sm:inline">0.25x (Ergonomik yavaş okuma)</span>
+                  </span>
+                ) : speed === 1.25 ? '1.25x' : speed === 1.5 ? '1.5x' : '2x'}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Sağ Panel: Yer İmi ve Mobil Otomatik Akış Kumandası */}
+      <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+        {/* Mobil Akış Kumandası (Sadece mobilde görünür, asla üst üste binmez) */}
+        <div className="md:hidden flex items-center gap-1.5">
           <button
             onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            className={`flex items-center justify-center p-1.5 rounded-full border transition-all cursor-pointer ${
               isAutoScrolling
-                ? 'bg-sepia-accent text-white border border-sepia-accent'
-                : 'border border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 bg-white/40 dark:bg-stone-900/40 hover:bg-sepia-200/50'
+                ? 'bg-sepia-accent text-white border-sepia-accent'
+                : 'border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 bg-white/45 dark:bg-stone-900/45 hover:bg-sepia-200/30'
             }`}
             title={isAutoScrolling ? "Otomatik akışı durdur" : "Otomatik akışı başlat"}
           >
             {isAutoScrolling ? (
-              <>
-                <Pause className="w-3 h-3 fill-current" />
-                <span className="text-[9px] tracking-widest">Akıyor</span>
-              </>
+              <Pause className="w-3.5 h-3.5" />
             ) : (
-              <>
-                <Play className="w-3 h-3 fill-current" />
-                <span className="text-[9px] tracking-widest">Akıt</span>
-              </>
+              <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
             )}
           </button>
 
           {isAutoScrolling && (
-            <div className="flex items-center bg-sepia-200/50 dark:bg-stone-900 border border-sepia-300 dark:border-stone-800 p-0.5 rounded-full shadow-xs gap-0.5">
-              {([1, 1.25, 1.5, 2] as const).map((speed) => (
-                <button
-                  key={speed}
-                  onClick={() => setScrollSpeed(speed)}
-                  className={`px-2.5 py-0.5 text-[8px] font-sans font-bold rounded-full transition-all cursor-pointer whitespace-nowrap ${
-                    scrollSpeed === speed
-                      ? 'bg-sepia-accent text-white shadow-xs'
-                      : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-200'
-                  }`}
-                >
-                  {speed === 1 ? (
-                    <>
-                      <span className="sm:hidden">0.25 px</span>
-                      <span className="hidden sm:inline">0.25 px (Ergonomik yavaş okuma)</span>
-                    </>
-                  ) : speed === 1.25 ? '1.25x' : speed === 1.5 ? '1.5x' : '2x'}
-                </button>
-              ))}
-            </div>
+            <button
+              onClick={() => {
+                if (scrollSpeed === 1) setScrollSpeed(1.25);
+                else if (scrollSpeed === 1.25) setScrollSpeed(1.5);
+                else if (scrollSpeed === 1.5) setScrollSpeed(2);
+                else setScrollSpeed(1);
+              }}
+              className="px-2 py-1 text-[9px] font-sans font-bold rounded-full border border-sepia-300 dark:border-stone-850 bg-white/70 dark:bg-stone-900/70 text-stone-700 dark:text-stone-300 cursor-pointer transition-all hover:bg-sepia-200/50"
+              title="Akış hızını değiştir"
+            >
+              {scrollSpeed === 1 ? '0.25x' : scrollSpeed === 1.25 ? '1.25x' : scrollSpeed === 1.5 ? '1.5x' : '2x'}
+            </button>
           )}
         </div>
 
-        {/* Sağ Panel: Yer İmi ve Mobil Otomatik Akış Kumandası */}
-        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-          {/* Mobil Akış Kumandası (Sadece mobilde görünür, asla üst üste binmez) */}
-          <div className="md:hidden flex items-center gap-1.5">
-            <button
-              onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-              className={`flex items-center justify-center p-1.5 rounded-full border transition-all cursor-pointer ${
-                isAutoScrolling
-                  ? 'bg-sepia-accent text-white border-sepia-accent'
-                  : 'border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 bg-white/45 dark:bg-stone-900/45 hover:bg-sepia-200/30'
-              }`}
-              title={isAutoScrolling ? "Otomatik akışı durdur" : "Otomatik akışı başlat"}
-            >
-              {isAutoScrolling ? (
-                <Pause className="w-3.5 h-3.5 fill-current" />
-              ) : (
-                <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
-              )}
-            </button>
-
-            {isAutoScrolling && (
-              <button
-                onClick={() => {
-                  if (scrollSpeed === 1) setScrollSpeed(1.25);
-                  else if (scrollSpeed === 1.25) setScrollSpeed(1.5);
-                  else if (scrollSpeed === 1.5) setScrollSpeed(2);
-                  else setScrollSpeed(1);
-                }}
-                className="px-2 py-1 text-[9px] font-sans font-bold rounded-full border border-sepia-300 dark:border-stone-850 bg-white/70 dark:bg-stone-900/70 text-stone-700 dark:text-stone-300 cursor-pointer transition-all hover:bg-sepia-200/50"
-                title="Akış hızını değiştir"
-              >
-                {scrollSpeed === 1 ? '0.25x' : scrollSpeed === 1.25 ? '1.25x' : scrollSpeed === 1.5 ? '1.5x' : '2x'}
-              </button>
-            )}
-          </div>
-
-          {/* Yer İmi Butonu */}
-          <button
-            onClick={() => onToggleBookmark(book.id, pageNumber)}
-            className={`p-2 rounded-full border transition-all cursor-pointer ${
-              isBookmarked
-                ? 'border-sepia-accent bg-sepia-accent/10 text-sepia-accent'
-                : 'border-sepia-300 dark:border-stone-800 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-900/50'
-            }`}
-            title={isBookmarked ? "Kayıtlı sayfayı kaldır" : "Kaldığım yeri kaydet"}
-          >
-            {isBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
-          </button>
-        </div>
+        {/* Yer İmi Butonu */}
+        <button
+          onClick={() => onToggleBookmark(book.id, pageNumber)}
+          className={`p-2 rounded-full border transition-all cursor-pointer ${
+            bookmarks.some((b) => b.bookId === book.id && b.page === pageNumber)
+              ? 'border-sepia-accent bg-sepia-accent/10 text-sepia-accent'
+              : 'border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 bg-white/45 dark:bg-stone-900/45 hover:bg-sepia-200/50 dark:hover:bg-stone-800/50'
+          }`}
+          title={bookmarks.some((b) => b.bookId === book.id && b.page === pageNumber) ? "Yer imini kaldır" : "Kaldığım yeri işaretle"}
+        >
+          {bookmarks.some((b) => b.bookId === book.id && b.page === pageNumber) ? (
+            <BookmarkCheck className="w-3.5 h-3.5" />
+          ) : (
+            <Bookmark className="w-3.5 h-3.5" />
+          )}
+        </button>
       </div>
+    </div>
 
       {/* Dikey Sanatsal Etiket (Vertical Label for Artistic Flair) */}
       <div
