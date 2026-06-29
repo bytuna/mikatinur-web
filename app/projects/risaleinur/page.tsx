@@ -604,7 +604,6 @@ export default function RisaleInurPage() {
         onGoToLibrary={() => setViewMode('library')}
         dictionary={dictionary}
         onSelectWord={handleSelectWord}
-
       />
 
       {/* Mobil Sidebar Karartma Perdesi (Overlay Backdrop) */}

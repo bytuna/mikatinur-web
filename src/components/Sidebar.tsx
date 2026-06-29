@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RisaleBook, ReadingState, DictionaryTerm, FihristItem, ReadingTheme } from '../types';
+import { RisaleBook, ReadingState, DictionaryTerm, FihristItem } from '../types';
 import { BookOpen, Search, X, Compass, Library, ChevronRight } from 'lucide-react';
 
 interface SidebarProps {
@@ -14,7 +14,7 @@ interface SidebarProps {
   onGoToLibrary: () => void;
   dictionary: Record<string, DictionaryTerm>;
   onSelectWord: (term: DictionaryTerm) => void;
-  theme: ReadingTheme;
+  theme?: 'light' | 'sepia' | 'dark';
   }
 
 interface FihristNodeItemProps {
@@ -24,7 +24,7 @@ interface FihristNodeItemProps {
   expandedNodes: Record<string, boolean>;
   onToggleExpand: (id: string) => void;
   searchActive: boolean;
-  theme: ReadingTheme;
+  theme?: 'light' | 'sepia' | 'dark';
 }
 
 const FihristNodeItem: React.FC<FihristNodeItemProps> = ({
@@ -34,7 +34,7 @@ const FihristNodeItem: React.FC<FihristNodeItemProps> = ({
   expandedNodes,
   onToggleExpand,
   searchActive,
-  theme,
+  theme = 'light'
 }) => {
   const hasChildren = node.children && node.children.length > 0;
   const isExpanded = searchActive || !!expandedNodes[node.id];
