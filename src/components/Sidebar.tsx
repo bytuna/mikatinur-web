@@ -14,7 +14,8 @@ interface SidebarProps {
   onGoToLibrary: () => void;
   dictionary: Record<string, DictionaryTerm>;
   onSelectWord: (term: DictionaryTerm) => void;
-  theme?: 'light' | 'sepia' | 'dark';
+  theme?: 'light' | 'sepia' | 'dark' | string;
+  preferences?: { theme: 'light' | 'sepia' | 'dark' | string; [key: string]: any };
   }
 
 interface FihristNodeItemProps {
@@ -162,11 +163,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onGoToLibrary,
   dictionary,
   onSelectWord,
-  theme = 'light'
+  theme: themeProp,
+  preferences,
 }) => {
   const activeTab = 'fihrist';
   const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({});
-
+  const theme = themeProp || preferences?.theme || 'light';
+ 
   const handleToggleExpand = (id: string) => {
     setExpandedNodes((prev) => ({
       ...prev,
