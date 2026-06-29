@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RisaleBook, ReadingState, DictionaryTerm, FihristItem } from '../types';
+import { RisaleBook, ReadingState, DictionaryTerm, FihristItem, UserPreferences  } from '../types';
 import { BookOpen, Search, X, Compass, Library, ChevronRight } from 'lucide-react';
 
 interface SidebarProps {
@@ -15,7 +15,7 @@ interface SidebarProps {
   dictionary: Record<string, DictionaryTerm>;
   onSelectWord: (term: DictionaryTerm) => void;
   theme?: 'light' | 'sepia' | 'dark' | string;
-  preferences?: { theme: 'light' | 'sepia' | 'dark' | string; [key: string]: any };
+  preferences?: UserPreferences;
   }
 
 interface FihristNodeItemProps {

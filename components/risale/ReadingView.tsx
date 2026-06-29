@@ -826,15 +826,15 @@ return (
           onClick={() => setIsAutoScrolling(!isAutoScrolling)}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
             isAutoScrolling
-              ? 'bg-sepia-accent text-white border border-sepia-accent'
+              ? 'bg-sepia-accent text-stone-950 border-sepia-accent'
               : 'border border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 bg-white/40 dark:bg-stone-900/40 hover:bg-sepia-200/50'
           }`}
           title={isAutoScrolling ? "Otomatik akışı durdur" : "Otomatik akışı başlat"}
         >
           {isAutoScrolling ? (
             <>
-              <Pause className="w-3 h-3" />
-              <span className="text-[9px] tracking-widest">Akıyor</span>
+              <Pause className="w-3.5 h-3.5 text-stone-950" />
+              <span className="text-[9px] tracking-widest text-stone-950">Akıyor</span>
             </>
           ) : (
             <>
@@ -852,7 +852,7 @@ return (
                 onClick={() => setScrollSpeed(speed)}
                 className={`px-2.5 py-0.5 text-[8px] font-sans font-bold rounded-full transition-all cursor-pointer whitespace-nowrap ${
                   scrollSpeed === speed
-                    ? 'bg-sepia-accent text-white shadow-xs'
+                    ? 'bg-sepia-accent text-stone-950 shadow-xs'
                     : 'text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200'
                 }`}
               >
@@ -876,7 +876,7 @@ return (
             onClick={() => setIsAutoScrolling(!isAutoScrolling)}
             className={`flex items-center justify-center p-1.5 rounded-full border transition-all cursor-pointer ${
               isAutoScrolling
-                ? 'bg-sepia-accent text-white border-sepia-accent'
+                ? 'bg-sepia-accent text-stone-950 border border-sepia-accent'
                 : 'border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 bg-white/45 dark:bg-stone-900/45 hover:bg-sepia-200/30'
             }`}
             title={isAutoScrolling ? "Otomatik akışı durdur" : "Otomatik akışı başlat"}
