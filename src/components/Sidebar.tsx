@@ -356,7 +356,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           expandedNodes={expandedNodes}
                           onToggleExpand={handleToggleExpand}
                           searchActive={!!state.searchQuery}
-                          theme='light'
+                          theme='dark'
                         />
                       ))
                     ) : (
