@@ -605,7 +605,18 @@ export default function RisaleInurPage() {
         onSelectWord={handleSelectWord}
       />
 
+      {/* Mobil Sidebar Karartma Perdesi (Overlay Backdrop) */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 bg-black/50 backdrop-blur-[1px] z-30 lg:hidden cursor-pointer transition-all duration-300"
+        />
+      )}
+
+      {/* Ana Çalışma Paneli */}
       <main className="flex-1 flex flex-col min-w-0 relative">
+        
+        {/* Mobil Header Üst Menü */}
         <header className="lg:hidden flex items-center justify-between px-6 py-3 border-b border-sepia-300 dark:border-stone-900 bg-white/80 dark:bg-stone-950/80 backdrop-blur-md">
           <div className="flex items-center gap-2">
             <button
@@ -614,6 +625,8 @@ export default function RisaleInurPage() {
             >
               <Menu className="w-5 h-5" />
             </button>
+            
+            {/* Mobil Geri Dön Butonu */}
             <button
               onClick={() => setViewMode('library')}
               className="p-1.5 rounded-lg text-sepia-accent hover:bg-sepia-200 dark:hover:bg-stone-900 cursor-pointer flex items-center gap-1 text-xs font-sans font-bold uppercase tracking-wider"
@@ -622,9 +635,11 @@ export default function RisaleInurPage() {
               <span>Kütüphane</span>
             </button>
           </div>
+          
           <div className="flex items-center gap-1.5">
             <span className="font-display font-bold text-sm tracking-tight">Külliyat-ı Nur</span>
           </div>
+
           <button
             onClick={() => setSettingsOpen(!settingsOpen)}
             className="p-1.5 rounded-lg text-[#2c2621] dark:text-stone-400 hover:bg-sepia-200 dark:hover:bg-stone-900 cursor-pointer"
@@ -633,6 +648,7 @@ export default function RisaleInurPage() {
           </button>
         </header>
 
+        {/* Masaüstü Ekstra Kontroller - Artistic design style button */}
         <div className="hidden lg:flex absolute top-4 right-8 z-20 gap-2">
           <button
             onClick={() => setSettingsOpen(!settingsOpen)}
@@ -647,7 +663,10 @@ export default function RisaleInurPage() {
           </button>
         </div>
 
+        {/* Esnek Okuma Grid / Alanı */}
         <div className="flex-1 flex flex-col md:flex-row min-h-0">
+          
+          {/* Okuma Ekranı */}
           <div className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden">
             <ReadingView
               book={activeBook}
@@ -667,11 +686,13 @@ export default function RisaleInurPage() {
             />
           </div>
 
+          {/* Sağ Panel: Tefekkür Ayarları */}
           <div
             className={`w-full md:w-80 border-t md:border-t-0 md:border-l border-sepia-300 dark:border-stone-900 p-6 overflow-y-auto no-scrollbar space-y-6 bg-[#ede8df]/35 dark:bg-stone-950/20 backdrop-blur-md transition-all duration-300 ${
               settingsOpen ? 'block' : 'hidden'
             }`}
           >
+            {/* Tefekkür Ayarları Paneli */}
             {settingsOpen && (
               <TefekkurSettings
                 preferences={preferences}

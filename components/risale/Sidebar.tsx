@@ -193,7 +193,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="flex items-start justify-between">
             <div>
               <h2 className="text-[10px] tracking-[0.2em] uppercase font-sans font-bold opacity-45 mb-1 dark:text-stone-400">
-                MikatiNur Okuma
+                Bediüzzaman Said Nursî
               </h2>
               <h1 className="text-xl font-display font-light italic leading-tight text-sepia-900 dark:text-amber-50">
                 Risale-i Nur Külliyatı
