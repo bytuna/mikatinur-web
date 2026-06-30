@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RisaleBook, ReadingState, DictionaryTerm, FihristItem, UserPreferences  } from '../types';
+import { RisaleBook, ReadingState, DictionaryTerm, FihristItem, UserPreferences } from '../types';
 import { BookOpen, Search, X, Compass, Library, ChevronRight } from 'lucide-react';
 
 interface SidebarProps {
@@ -16,7 +16,7 @@ interface SidebarProps {
   onSelectWord: (term: DictionaryTerm) => void;
   theme?: 'light' | 'sepia' | 'dark' | string;
   preferences?: UserPreferences;
-  }
+}
 
 interface FihristNodeItemProps {
   node: FihristItem;
@@ -25,7 +25,7 @@ interface FihristNodeItemProps {
   expandedNodes: Record<string, boolean>;
   onToggleExpand: (id: string) => void;
   searchActive: boolean;
-  theme?: 'light' | 'sepia' | 'dark';
+  theme?: 'light' | 'sepia' | 'dark' | string;
 }
 
 const FihristNodeItem: React.FC<FihristNodeItemProps> = ({
@@ -35,7 +35,7 @@ const FihristNodeItem: React.FC<FihristNodeItemProps> = ({
   expandedNodes,
   onToggleExpand,
   searchActive,
-  theme = 'light'
+  theme = 'light',
 }) => {
   const hasChildren = node.children && node.children.length > 0;
   const isExpanded = searchActive || !!expandedNodes[node.id];
@@ -166,10 +166,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   theme: themeProp,
   preferences,
 }) => {
+  const theme = themeProp || preferences?.theme || 'light';
   const activeTab = 'fihrist';
   const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({});
-  const theme = themeProp || preferences?.theme || 'light';
- 
+
   const handleToggleExpand = (id: string) => {
     setExpandedNodes((prev) => ({
       ...prev,
@@ -359,7 +359,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           expandedNodes={expandedNodes}
                           onToggleExpand={handleToggleExpand}
                           searchActive={!!state.searchQuery}
-                          theme='dark'
+                          theme={theme}
                         />
                       ))
                     ) : (

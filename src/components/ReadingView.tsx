@@ -1,4 +1,3 @@
-"use client";
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { RisaleBook, UserPreferences, RisalePage, DictionaryTerm } from '../types';
 import { ChevronLeft, ChevronRight, Bookmark, BookmarkCheck, HelpCircle, BookOpen, Play, Pause, Square, Library, Menu, X } from 'lucide-react';
@@ -662,10 +661,18 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
     if (!scrollContainer) return;
 
     let scrollY = scrollContainer.scrollTop;
+    let lastProgrammaticScroll = Math.round(scrollY);
 
     // Manual scroll sync: if the user scrolls, update our internal accumulator
     const handleScrollSync = () => {
-      scrollY = scrollContainer.scrollTop;
+      const currentScrollTop = scrollContainer.scrollTop;
+      // If the scroll is exactly what we programmatically set, or within 1.5 pixels, it's ours.
+      if (Math.abs(currentScrollTop - lastProgrammaticScroll) <= 1.5) {
+        return;
+      }
+      // Otherwise, the user scrolled manually!
+      scrollY = currentScrollTop;
+      lastProgrammaticScroll = currentScrollTop;
     };
     scrollContainer.addEventListener('scroll', handleScrollSync, { passive: true });
 
@@ -674,6 +681,8 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       if (!isAutoScrolling) return;
 
       const delta = time - lastTime;
+      lastTime = time;
+
       // Calculate speed factor (base pixels per frame at 60fps)
       let speedFactor = 0.25; // 0.25 px (Ergonomik yavaş okuma)
       if (scrollSpeed === 1.25) speedFactor = 0.65; // 1.25x
@@ -685,12 +694,9 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       const frameRatio = Math.min(delta / 16.67, 3); // cap it so it doesn't jump too far on lag
       scrollY += speedFactor * frameRatio;
       
-      // Temporary remove the sync listener during programmatic update to avoid feedback loop
-      scrollContainer.removeEventListener('scroll', handleScrollSync);
-      scrollContainer.scrollTop = Math.round(scrollY);
-      scrollContainer.addEventListener('scroll', handleScrollSync, { passive: true });
+      lastProgrammaticScroll = Math.round(scrollY);
+      scrollContainer.scrollTop = lastProgrammaticScroll;
 
-      lastTime = time;
       animationFrameId = requestAnimationFrame(scrollStep);
     };
 
@@ -782,14 +788,14 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       : 'bg-[#f5e9d3]';
 
   return (
-    <div className="flex flex-col h-[100dvh] w-full bg-transparent relative overflow-hidden">
+    <div className="flex flex-col h-full bg-transparent relative">
       {/* Kitap & Sayfa Üst Bilgi Barı */}
-      <div className={`flex items-center justify-between px-6 sm:px-8 py-4 border-b backdrop-blur-md z-10 relative ${headerThemeClass}`}>
-        <div className="flex items-center gap-3">
+      <div className={`flex items-center justify-between px-4 sm:px-6 md:px-8 py-3 sm:py-4 border-b backdrop-blur-md z-10 relative ${headerThemeClass}`}>
+        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
           {onToggleSidebar && (
             <button
               onClick={onToggleSidebar}
-              className={`flex items-center gap-1.5 py-1.5 px-3 rounded-full border text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 py-1.5 px-2.5 sm:px-3 rounded-full border text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer flex-shrink-0 ${
                 sidebarOpen
                   ? 'border-sepia-accent bg-sepia-accent/10 text-sepia-accent'
                   : 'border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-sepia-200/50 dark:hover:bg-stone-800'
@@ -797,43 +803,43 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
               title={sidebarOpen ? "Fihristi Kapat (Tam Ekran Okuma)" : "Fihrist Paneli Aç"}
             >
               <Menu className="w-3.5 h-3.5" />
-              <span>Fihrist</span>
+              <span className="hidden sm:inline">Fihrist</span>
             </button>
           )}
           {onGoToLibrary && (
             <button
               onClick={onGoToLibrary}
-              className="flex items-center gap-1.5 py-1.5 px-3 rounded-full border border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-sepia-200/50 dark:hover:bg-stone-800 text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer"
+              className="flex items-center gap-1.5 py-1.5 px-2.5 sm:px-3 rounded-full border border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 hover:bg-sepia-200/50 dark:hover:bg-stone-800 text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer flex-shrink-0"
               title="Kütüphaneye Geri Dön"
             >
               <Library className="w-3 h-3 text-sepia-accent" />
               <span className="hidden sm:inline">Kütüphane</span>
             </button>
           )}
-          <BookOpen className="w-4 h-4 text-sepia-accent" />
-          <span className={`font-serif font-extrabold text-base sm:text-lg md:text-xl tracking-tight ${titleThemeClass}`}>
+          <BookOpen className="w-4 h-4 text-sepia-accent hidden sm:inline flex-shrink-0" />
+          <span className={`font-serif font-extrabold text-sm sm:text-base md:text-lg lg:text-xl tracking-tight truncate max-w-[80px] xs:max-w-[120px] sm:max-w-none ${titleThemeClass}`}>
             {book.title}
           </span>
-          <span className="text-xs text-stone-400 dark:text-stone-500 font-mono">
+          <span className="text-[10px] sm:text-xs text-stone-400 dark:text-stone-500 font-mono whitespace-nowrap flex-shrink-0">
             / s. {pageNumber}
           </span>
         </div>
 
-        {/* Ortalanmış Otomatik Akış Kumandası */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5 md:gap-2 z-20">
+        {/* Masaüstü Ortalanmış Otomatik Akış Kumandası */}
+        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 md:gap-2 z-20">
           <button
             onClick={() => setIsAutoScrolling(!isAutoScrolling)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
               isAutoScrolling
-                ? 'bg-sepia-accent text-white border border-sepia-accent'
+                ? 'bg-sepia-accent text-stone-950 border border-sepia-accent'
                 : 'border border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 bg-white/40 dark:bg-stone-900/40 hover:bg-sepia-200/50'
             }`}
             title={isAutoScrolling ? "Otomatik akışı durdur" : "Otomatik akışı başlat"}
           >
             {isAutoScrolling ? (
               <>
-                <Pause className="w-3 h-3 fill-current" />
-                <span className="text-[9px] tracking-widest">Akıyor</span>
+                <Pause className="w-3 h-3 text-stone-950" />
+                <span className="text-[9px] tracking-widest text-stone-950">Akıyor</span>
               </>
             ) : (
               <>
@@ -847,13 +853,13 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
             <div className="flex items-center bg-sepia-200/50 dark:bg-stone-900 border border-sepia-300 dark:border-stone-800 p-0.5 rounded-full shadow-xs gap-0.5">
               {([1, 1.25, 1.5, 2] as const).map((speed) => (
                 <button
-                  key={speed}
-                  onClick={() => setScrollSpeed(speed)}
-                  className={`px-2.5 py-0.5 text-[8px] font-sans font-bold rounded-full transition-all cursor-pointer whitespace-nowrap ${
-                    scrollSpeed === speed
-                      ? 'bg-sepia-accent text-white shadow-xs'
-                      : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-200'
-                  }`}
+                   key={speed}
+                   onClick={() => setScrollSpeed(speed)}
+                   className={`px-2.5 py-0.5 text-[8px] font-sans font-bold rounded-full transition-all cursor-pointer whitespace-nowrap ${
+                     scrollSpeed === speed
+                       ? 'bg-sepia-accent text-stone-950 shadow-xs'
+                       : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-200'
+                   }`}
                 >
                   {speed === 1 ? (
                     <>
@@ -867,8 +873,43 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
           )}
         </div>
 
-        {/* Sağ Panel: Yer İmi */}
-        <div className="flex items-center gap-2">
+        {/* Sağ Panel: Yer İmi ve Mobil Otomatik Akış Kumandası */}
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          {/* Mobil Akış Kumandası (Sadece mobilde görünür, asla üst üste binmez) */}
+          <div className="md:hidden flex items-center gap-1.5">
+            <button
+              onClick={() => setIsAutoScrolling(!isAutoScrolling)}
+              className={`flex items-center justify-center p-1.5 rounded-full border transition-all cursor-pointer ${
+                isAutoScrolling
+                  ? 'bg-sepia-accent text-stone-950 border-sepia-accent'
+                  : 'border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 bg-white/45 dark:bg-stone-900/45 hover:bg-sepia-200/30'
+              }`}
+              title={isAutoScrolling ? "Otomatik akışı durdur" : "Otomatik akışı başlat"}
+            >
+              {isAutoScrolling ? (
+                <Pause className="w-3.5 h-3.5 text-stone-950" />
+              ) : (
+                <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+              )}
+            </button>
+
+            {isAutoScrolling && (
+              <button
+                onClick={() => {
+                  if (scrollSpeed === 1) setScrollSpeed(1.25);
+                  else if (scrollSpeed === 1.25) setScrollSpeed(1.5);
+                  else if (scrollSpeed === 1.5) setScrollSpeed(2);
+                  else setScrollSpeed(1);
+                }}
+                className="px-2 py-1 text-[9px] font-sans font-bold rounded-full border border-sepia-300 dark:border-stone-850 bg-white/70 dark:bg-stone-900/70 text-stone-700 dark:text-stone-300 cursor-pointer transition-all hover:bg-sepia-200/50"
+                title="Akış hızını değiştir"
+              >
+                {scrollSpeed === 1 ? '0.25x' : scrollSpeed === 1.25 ? '1.25x' : scrollSpeed === 1.5 ? '1.5x' : '2x'}
+              </button>
+            )}
+          </div>
+
+          {/* Yer İmi Butonu */}
           <button
             onClick={() => onToggleBookmark(book.id, pageNumber)}
             className={`p-2 rounded-full border transition-all cursor-pointer ${
@@ -896,14 +937,10 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       {/* Okuma Alanı (Lazy Loaded Frame - Continuous Scroll) */}
       <div
         ref={containerRef}
-    className={`flex-1 w-full overflow-y-auto scroll-smooth relative transition-colors duration-300 ${containerBgClass}`}
-    style={{ 
-      WebkitOverflowScrolling: 'touch',
-      overscrollBehaviorY: 'contain' // Kaydırma sıçramasını önler
-    }}
+        className={`flex-1 overflow-y-auto px-4 py-8 md:py-12 no-scrollbar scroll-smooth relative transition-colors duration-300 ${containerBgClass}`}
       >
         {loadedPages.length > 0 ? (
-          <div className={`w-full max-w-[820px] mx-auto ${pageBgClass} shadow-[0_4px_30px_rgba(0,0,0,0.12)] md:shadow-[0_12px_60px_rgba(0,0,0,0.18)] flex flex-col min-h-0 pb-24 pt-12 md:pt-16 px-6 sm:px-12 md:px-20`}>
+          <div className={`w-full max-w-[820px] mx-auto ${pageBgClass} rounded-xs shadow-[0_4px_30px_rgba(0,0,0,0.12)] md:shadow-[0_12px_60px_rgba(0,0,0,0.18)] flex flex-col gap-16 relative pb-24 pt-12 md:pt-16 px-6 sm:px-12 md:px-20 min-h-full`}>
             {loadedPages.map(({ pageNum, data }) => {
               const isActive = pageNum === pageNumber;
               const isFocused = focusActive && focusPageNum === pageNum;

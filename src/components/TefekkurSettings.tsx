@@ -1,4 +1,3 @@
-"use client";
 import React from 'react';
 import { UserPreferences, FontSize, FontStyle, ReadingTheme } from '../types';
 import { Sun, Moon, Eye, Type, AlignLeft, RefreshCw, HelpCircle } from 'lucide-react';
