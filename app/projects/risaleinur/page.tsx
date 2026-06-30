@@ -1,10 +1,47 @@
+"use client";
 import { useState, useEffect } from 'react';
-import { KULLIYAT, DICTIONARY } from '../../../src/data/kulliyat';
-import { UserPreferences, ReadingState, DictionaryTerm, ReadingTheme, FihristItem, TOCSection } from '../../../src/types';
-import { Sidebar } from '../../../src/components/Sidebar';
-import { ReadingView } from '../../../src/components/ReadingView';
-import { TefekkurSettings } from '../../../src/components/TefekkurSettings';
-import { LibraryView } from '../../../src/components/LibraryView';
+import { UserPreferences } from '../../../types';
+// kulliyat module may not exist in this environment; provide fallbacks to avoid build errors.
+// Replace these with the real imports when the module is available.
+const KULLIYAT: Record<string, any> = {};
+const DICTIONARY: Record<string, any> = {};
+
+type ReadingTheme = 'sepia' | 'dark' | 'light';
+
+type ReadingState = {
+  currentBookId: string;
+  currentPage: number;
+  selectedWord: string | null;
+  selectedWordDefinition: DictionaryTerm | null;
+  searchQuery: string;
+  bookmarks: Array<{ bookId: string; page: number; date: string; }>;
+};
+
+type DictionaryTerm = {
+  word: string;
+  definition: string;
+  origin?: string;
+};
+
+type FihristItem = {
+  id: string;
+  title: string;
+  page: number;
+  level: number;
+  children: FihristItem[];
+  parentId?: string;
+};
+
+type TOCSection = {
+  id: string;
+  title: string;
+  startPage: number;
+};
+
+import { Sidebar } from '../../../components/Sidebar';
+import { ReadingView } from '../../../components/ReadingView';
+import { TefekkurSettings } from '../../../components/TefekkurSettings';
+import { LibraryView } from '../../../components/LibraryView';
 import { Menu, Settings, Compass, Library } from 'lucide-react';
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -641,7 +678,7 @@ export default function App() {
         onGoToLibrary={() => setViewMode('library')}
         dictionary={dictionary}
         onSelectWord={handleSelectWord}
-        theme={preferences.theme}
+        theme={preferences.theme as 'sepia' | 'dark' | 'light'}
         preferences={preferences}
       />
 

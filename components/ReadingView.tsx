@@ -1,3 +1,4 @@
+"use client";
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { RisaleBook, UserPreferences, RisalePage, DictionaryTerm } from '../types';
 import { ChevronLeft, ChevronRight, Bookmark, BookmarkCheck, HelpCircle, BookOpen, Play, Pause, Square, Library, Menu, X } from 'lucide-react';
