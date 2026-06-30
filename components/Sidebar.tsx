@@ -26,8 +26,75 @@ interface FihristNodeItemProps {
   expandedNodes: Record<string, boolean>;
   onToggleExpand: (id: string) => void;
   searchActive: boolean;
+  searchQuery?: string;
   theme?: 'light' | 'sepia' | 'dark' | string;
 }
+
+const simplifyChar = (char: string): string => {
+  const lower = char.toLowerCase();
+  switch (lower) {
+    case 'â': return 'a';
+    case 'î': case 'ı': case 'i': return 'i';
+    case 'û': case 'ü': return 'u';
+    case 'ö': return 'o';
+    case 'ç': return 'c';
+    case 'ğ': return 'g';
+    case 'ş': return 's';
+    default: return lower;
+  }
+};
+
+const simplifyString = (str: string): string => {
+  return Array.from(str).map(simplifyChar).join('');
+};
+
+const getHighlightRanges = (text: string, query: string) => {
+  const trimmed = query ? query.trim() : '';
+  if (!trimmed) return [];
+  const simpleText = simplifyString(text);
+  const simpleQuery = simplifyString(trimmed);
+  const ranges: Array<{ start: number; end: number }> = [];
+  let index = simpleText.indexOf(simpleQuery);
+  while (index !== -1) {
+    ranges.push({ start: index, end: index + simpleQuery.length });
+    index = simpleText.indexOf(simpleQuery, index + Math.max(1, simpleQuery.length));
+  }
+  return ranges;
+};
+
+const getFihristHighlightClass = (theme: 'light' | 'dark' | 'sepia' | string) => {
+  if (theme === 'dark') {
+    return 'bg-amber-500/35 text-amber-100 border-b border-amber-500 font-bold px-0.5 rounded-sm';
+  } else if (theme === 'sepia') {
+    return 'bg-[#f4cf8a] text-[#422402] border-b border-[#bc872e] font-bold px-0.5 rounded-sm';
+  } else {
+    return 'bg-amber-200 text-stone-950 border-b border-amber-500 font-bold px-0.5 rounded-sm';
+  }
+};
+
+const renderTextWithHighlight = (text: string, query: string, highlightClass: string) => {
+  if (!query) return text;
+  const ranges = getHighlightRanges(text, query);
+  if (ranges.length === 0) return text;
+
+  const result: React.ReactNode[] = [];
+  let lastIndex = 0;
+  ranges.forEach((range, idx) => {
+    if (range.start > lastIndex) {
+      result.push(text.substring(lastIndex, range.start));
+    }
+    result.push(
+      <mark key={idx} className={highlightClass}>
+        {text.substring(range.start, range.end)}
+      </mark>
+    );
+    lastIndex = range.end;
+  });
+  if (lastIndex < text.length) {
+    result.push(text.substring(lastIndex));
+  }
+  return <>{result}</>;
+};
 
 const FihristNodeItem: React.FC<FihristNodeItemProps> = ({
   node,
@@ -36,6 +103,7 @@ const FihristNodeItem: React.FC<FihristNodeItemProps> = ({
   expandedNodes,
   onToggleExpand,
   searchActive,
+  searchQuery = '',
   theme = 'light',
 }) => {
   const hasChildren = node.children && node.children.length > 0;
@@ -64,6 +132,7 @@ const FihristNodeItem: React.FC<FihristNodeItemProps> = ({
             expandedNodes={expandedNodes}
             onToggleExpand={onToggleExpand}
             searchActive={searchActive}
+            searchQuery={searchQuery}
             theme={theme}
           />
         ))}
@@ -105,7 +174,11 @@ const FihristNodeItem: React.FC<FihristNodeItemProps> = ({
           ) : (
             <div className="w-4 flex-shrink-0" />
           )}
-          <span className="truncate pr-2">{node.title}</span>
+          <span className="truncate pr-2">
+            {searchQuery 
+              ? renderTextWithHighlight(node.title, searchQuery, getFihristHighlightClass(theme))
+              : node.title}
+          </span>
         </div>
         <span className="text-[9px] font-mono opacity-60 flex-shrink-0">
           S. {node.page}
@@ -123,6 +196,7 @@ const FihristNodeItem: React.FC<FihristNodeItemProps> = ({
               expandedNodes={expandedNodes}
               onToggleExpand={onToggleExpand}
               searchActive={searchActive}
+              searchQuery={searchQuery}
               theme={theme}
             />
           ))}
@@ -135,11 +209,11 @@ const FihristNodeItem: React.FC<FihristNodeItemProps> = ({
 // Recursive tree filter
 const filterFihristTree = (nodes: FihristItem[], query: string): FihristItem[] => {
   if (!query) return nodes;
-  const lowerQuery = query.toLowerCase();
+  const simpleQuery = simplifyString(query);
   return nodes
     .map((node) => {
       const filteredChildren = node.children ? filterFihristTree(node.children, query) : [];
-      const matchesThisNode = node.title.toLowerCase().includes(lowerQuery);
+      const matchesThisNode = simplifyString(node.title).includes(simpleQuery);
       const hasMatchingChildren = filteredChildren.length > 0;
       if (matchesThisNode || hasMatchingChildren) {
         return {
@@ -182,17 +256,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   // Arama filtrelemesi
   const filteredSections = currentBook.sections.filter((sec) =>
-    sec.title.toLowerCase().includes(state.searchQuery.toLowerCase())
+    simplifyString(sec.title).includes(simplifyString(state.searchQuery))
   );
 
   const filteredBooks = books.filter((book) =>
-    book.title.toLowerCase().includes(state.searchQuery.toLowerCase())
+    simplifyString(book.title).includes(simplifyString(state.searchQuery))
   );
 
   const filteredTerms = (Object.values(dictionary) as DictionaryTerm[])
     .filter((term) =>
-      term.word.toLowerCase().includes(state.searchQuery.toLowerCase()) ||
-      term.definition.toLowerCase().includes(state.searchQuery.toLowerCase())
+      simplifyString(term.word).includes(simplifyString(state.searchQuery)) ||
+      simplifyString(term.definition).includes(simplifyString(state.searchQuery))
     )
     .slice(0, 50); // Performans için 50 kelime ile sınırla
 
@@ -360,6 +434,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           expandedNodes={expandedNodes}
                           onToggleExpand={handleToggleExpand}
                           searchActive={!!state.searchQuery}
+                          searchQuery={state.searchQuery}
                           theme={theme}
                         />
                       ))
@@ -388,7 +463,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                               : 'text-stone-500 hover:text-stone-900'
                           }`}
                         >
-                          <span className="truncate pr-2">{sec.title}</span>
+                          <span className="truncate pr-2">
+                            {state.searchQuery 
+                              ? renderTextWithHighlight(sec.title, state.searchQuery, getFihristHighlightClass(theme))
+                              : sec.title}
+                          </span>
                           <span className="text-[9px] opacity-45 font-mono flex-shrink-0">
                             S. {sec.startPage}
                           </span>
