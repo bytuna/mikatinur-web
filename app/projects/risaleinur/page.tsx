@@ -1,13 +1,11 @@
-"use client";
-
-import React, { useState, useEffect } from 'react';
-import { Menu, Settings, Library } from 'lucide-react';
-import { Sidebar } from '@/components/risale/Sidebar';
-import { ReadingView } from '@/components/risale/ReadingView';
-import { TefekkurSettings } from '@/components/risale/TefekkurSettings';
-import { LibraryView } from '@/components/risale/LibraryView';
-import { KULLIYAT, DICTIONARY } from '@/components/risale/kulliyat';
-import { UserPreferences, ReadingState, DictionaryTerm, ReadingTheme, FihristItem, TOCSection } from '@/components/risale/types';
+import { useState, useEffect } from 'react';
+import { KULLIYAT, DICTIONARY } from '../../../src/data/kulliyat';
+import { UserPreferences, ReadingState, DictionaryTerm, ReadingTheme, FihristItem, TOCSection } from '../../../src/types';
+import { Sidebar } from '../../../src/components/Sidebar';
+import { ReadingView } from '../../../src/components/ReadingView';
+import { TefekkurSettings } from '../../../src/components/TefekkurSettings';
+import { LibraryView } from '../../../src/components/LibraryView';
+import { Menu, Settings, Compass, Library } from 'lucide-react';
 
 const DEFAULT_PREFERENCES: UserPreferences = {
   theme: 'sepia',
@@ -15,7 +13,7 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   fontStyle: 'serif',
   lineHeight: 'relaxed',
   showFootnotes: true,
-  showTefekkurHighlights: true,
+  showTefekkurHighlights: true, // "Renk Aç" modu varsayılan olarak aktif
 };
 
 const DEFAULT_STATE: ReadingState = {
@@ -25,7 +23,7 @@ const DEFAULT_STATE: ReadingState = {
   selectedWordDefinition: null,
   searchQuery: '',
   bookmarks: [
-    { bookId: 'sozler', page: 5, date: new Date().toLocaleDateString('tr-TR') }
+    { bookId: 'sozler', page: 5, date: '28.06.2026' }
   ],
 };
 
@@ -80,6 +78,7 @@ const parseFihristText = (text: string): FihristItem[] => {
     const trimmed = line.trim();
     if (!trimmed) return;
 
+    // Split by '|'
     const parts = trimmed.split('|');
     let title = parts[0].trim();
     
@@ -139,24 +138,37 @@ const flattenFihrist = (items: FihristItem[]): TOCSection[] => {
   return flat;
 };
 
-export default function RisaleInurPage() {
+export default function App() {
   const [viewMode, setViewMode] = useState<'library' | 'reader'>('library');
+  const [isHydrated, setIsHydrated] = useState(false);
   
-  // SSR Uyumlu State İlklendirmesi (Next.js için window kontrolü)
-  const [preferences, setPreferences] = useState<UserPreferences>(() => {
+  // LocalStorage Kalıcılık (State Persistence) - SSR Uyumlu Başlangıç Değerleri
+  const [preferences, setPreferences] = useState<UserPreferences>(DEFAULT_PREFERENCES);
+  const [state, setState] = useState<ReadingState>(DEFAULT_STATE);
+
+  // Mount anında localStorage'dan verileri çek
+  useEffect(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('mikatinur_preferences');
-      return saved ? JSON.parse(saved) : DEFAULT_PREFERENCES;
+      const savedPrefs = localStorage.getItem('mikatinur_preferences');
+      if (savedPrefs) {
+        try {
+          setPreferences(JSON.parse(savedPrefs));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      const savedState = localStorage.getItem('mikatinur_reading_state');
+      if (savedState) {
+        try {
+          setState(JSON.parse(savedState));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      setIsHydrated(true);
     }
-    return DEFAULT_PREFERENCES;
-  });
-    const [state, setState] = useState<ReadingState>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('mikatinur_reading_state');
-      return saved ? JSON.parse(saved) : DEFAULT_STATE;
-    }
-    return DEFAULT_STATE;
-  });
+  }, []);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [fihristClickTrigger, setFihristClickTrigger] = useState<number>(0);
@@ -170,6 +182,7 @@ export default function RisaleInurPage() {
   }>>({});
   const [isLoadingDynamic, setIsLoadingDynamic] = useState(false);
 
+  // Fihrist yükleme ve ayrıştırma mantığı
   const [fihristNodes, setFihristNodes] = useState<FihristItem[]>([]);
 
   useEffect(() => {
@@ -210,6 +223,7 @@ export default function RisaleInurPage() {
         if (active) {
           const parsed = parseFihristText(text);
           setFihristNodes(parsed);
+          console.log(`Successfully loaded and parsed hierarchical fihrist with ${parsed.length} root items.`);
         }
       } catch (err) {
         console.warn(`Error loading fihrist for ${state.currentBookId}:`, err);
@@ -223,17 +237,22 @@ export default function RisaleInurPage() {
     };
   }, [state.currentBookId]);
 
+  // Dinamik Lügat (Dictionary) Yükleme ve Birleştirme
   const [dictionary, setDictionary] = useState<Record<string, DictionaryTerm>>(DICTIONARY);
 
   useEffect(() => {
     const loadCustomDictionary = async () => {
       try {
         const response = await fetch('/lugat/tr.json');
-        if (!response.ok) return;
+        if (!response.ok) {
+          console.log('Custom dictionary tr.json not found, using default static DICTIONARY');
+          return;
+        }
         const data = await response.json();
         const loadedDict: Record<string, DictionaryTerm> = { ...DICTIONARY };
 
         if (Array.isArray(data)) {
+          // Array of objects
           data.forEach((item: any) => {
             if (item && typeof item === 'object' && item.word) {
               const key = item.word.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '').trim();
@@ -245,6 +264,7 @@ export default function RisaleInurPage() {
             }
           });
         } else if (typeof data === 'object' && data !== null) {
+          // Map of objects or strings
           Object.entries(data).forEach(([key, value]) => {
             const cleanKey = key.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '').trim();
             if (typeof value === 'string') {
@@ -265,16 +285,19 @@ export default function RisaleInurPage() {
         }
 
         setDictionary(loadedDict);
+        console.log('Successfully loaded custom dictionary with', Object.keys(loadedDict).length, 'terms.');
       } catch (err) {
-        console.warn('Error loading custom dictionary:', err);
+        console.warn('Error loading custom dictionary, fallback to default static DICTIONARY:', err);
       }
     };
 
     loadCustomDictionary();
   }, []);
 
+  // Harf bazlı raw dosyalarını arka planda yükleme takibi
   const [loadedLetters, setLoadedLetters] = useState<Record<string, boolean>>({});
 
+  // Belirli bir harf/önek dosyasını yükleyen fonksiyon
   const loadLetterDictionary = async (prefix: string) => {
     if (loadedLetters[prefix]) return;
     setLoadedLetters((prev) => ({ ...prev, [prefix]: true }));
@@ -293,19 +316,22 @@ export default function RisaleInurPage() {
           });
           return next;
         });
+        console.log(`Arka planda '${prefix}' harfi lügat kayıtları başarıyla yüklendi.`);
       }
     } catch (err) {
-      console.warn(`Error loading raw dictionary for ${prefix}:`, err);
+      console.warn(`Harf dosyası yüklenirken hata oluştu (${prefix}):`, err);
     }
   };
 
+  // 1. Aktif sayfadaki kelimelerin baş harflerini tarayıp lügati yükleme
   useEffect(() => {
-    const activeBookObj = KULLIYAT.find((b) => b.id === state.currentBookId);
+    const activeBookObj = KULLIYAT.find((b: { id: string }) => b.id === state.currentBookId);
     const dynamicBook = dynamicBooks[state.currentBookId];
     const pageData = dynamicBook?.pages[state.currentPage] || activeBookObj?.pages[state.currentPage];
     
     if (!pageData || !pageData.text) return;
 
+    // Kelimeleri ayırt edip ilk harflerini topla
     const words = pageData.text.split(/\s+/);
     const prefixesToLoad = new Set<string>();
 
@@ -324,6 +350,7 @@ export default function RisaleInurPage() {
     });
   }, [state.currentPage, state.currentBookId, dynamicBooks]);
 
+  // 2. Lügat arama kelimesine göre dinamik harf yükleme
   useEffect(() => {
     if (!state.searchQuery) return;
     const cleaned = state.searchQuery.replace(/^[^a-zA-ZçğışöüÇĞİŞÖÜ]+/, '');
@@ -335,9 +362,11 @@ export default function RisaleInurPage() {
     }
   }, [state.searchQuery]);
 
+  // Dinamik kitap verilerini yükle (Örn: /books/sozler.json)
   useEffect(() => {
     let active = true;
 
+    // Eğer kitap zaten yüklüyse tekrar çekme (hızlanma ve anında geçiş sağlar)
     if (dynamicBooks[state.currentBookId]) {
       return;
     }
@@ -345,6 +374,7 @@ export default function RisaleInurPage() {
     const fetchPages = async () => {
       setIsLoadingDynamic(true);
       try {
+        // Cache bust the fetch query to avoid cached old files
         const response = await fetch(`/books/${state.currentBookId}.json?t=${refreshTrigger}`);
         if (response.ok) {
           const data = await response.json();
@@ -365,7 +395,7 @@ export default function RisaleInurPage() {
           }
         }
       } catch (err) {
-        console.warn(`Dynamic pages fetch failed for ${state.currentBookId}.`);
+        console.warn(`Dynamic pages fetch failed for ${state.currentBookId}. Fallback to static code pages.`);
       } finally {
         if (active) setIsLoadingDynamic(false);
       }
@@ -377,19 +407,20 @@ export default function RisaleInurPage() {
     };
   }, [state.currentBookId, refreshTrigger]);
 
+  // Tercihleri ve Okuma Durumunu Kaydet (Yalnızca yüklendikten sonra kaydet)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (isHydrated && typeof window !== 'undefined') {
       localStorage.setItem('mikatinur_preferences', JSON.stringify(preferences));
     }
-  }, [preferences]);
+  }, [preferences, isHydrated]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (isHydrated && typeof window !== 'undefined') {
       localStorage.setItem('mikatinur_reading_state', JSON.stringify(state));
     }
-  }, [state]);
+  }, [state, isHydrated]);
 
- // Tema Yönetimi (Global Theme Context)
+  // Tema Yönetimi (Global Theme Context)
   useEffect(() => {
     const root = document.documentElement;
     root.classList.remove('dark', 'bg-white', 'bg-sepia-100', 'bg-stone-950');
@@ -400,13 +431,14 @@ export default function RisaleInurPage() {
     } else if (preferences.theme === 'sepia') {
       root.style.backgroundColor = '#d8ccb6'; 
     } else {
-      root.style.backgroundColor = '#dfd4be';
+      root.style.backgroundColor = '#dfd4be'; // Saman kağıdı/parşömen uyumlu sıcak arka plan
     }
   }, [preferences.theme]);
 
-  const staticBook = KULLIYAT.find((b) => b.id === state.currentBookId) || KULLIYAT[0];
+  const staticBook = KULLIYAT.find((b: typeof KULLIYAT[number]) => b.id === state.currentBookId) || KULLIYAT[0];
   const dynamicBook = dynamicBooks[state.currentBookId];
   
+  // Kitap sayfalarını birleştirip doğru sayfa sınırlarını dinamik olarak hesaplayalım (sayfa karışıklıklarını gider)
   const combinedPages = (dynamicBook && Object.keys(dynamicBook.pages).length > 0)
     ? dynamicBook.pages
     : staticBook.pages;
@@ -440,11 +472,12 @@ export default function RisaleInurPage() {
     pages: combinedPages,
   };
 
+  // Dinamik olarak yüklenen kitabın sayfa sınırlarına göre aktif sayfayı düzeltme
   useEffect(() => {
     const minPage = activeBook.startingPage;
     const maxPage = minPage + activeBook.totalPages - 1;
     if (state.currentPage < minPage || state.currentPage > maxPage) {
-      setState((prev) => ({
+      setState((prev: ReadingState) => ({
         ...prev,
         currentPage: minPage,
       }));
@@ -452,9 +485,10 @@ export default function RisaleInurPage() {
   }, [activeBook.startingPage, activeBook.totalPages]);
 
   const handleSelectBook = (bookId: string, pageNumber?: number) => {
-    const book = KULLIYAT.find((b) => b.id === bookId) || KULLIYAT[0];
+    const book = KULLIYAT.find((b: any) => b.id === bookId) || KULLIYAT[0];
     const dynBook = dynamicBooks[bookId];
     
+    // Kitap değişiminde doğru başlangıç sayfasını dinamik sayfa anahtarlarına göre hesaplayalım
     const combined = (dynBook && Object.keys(dynBook.pages).length > 0) ? dynBook.pages : book.pages;
     const pageKeys = Object.keys(combined).map(Number).filter(n => !isNaN(n));
     let minPage = book.startingPage;
@@ -471,10 +505,10 @@ export default function RisaleInurPage() {
       targetPage = minPage;
     }
     
-    setState((prev) => ({
+    setState((prev: ReadingState) => ({
       ...prev,
       currentBookId: bookId,
-      currentPage: targetPage,
+      currentPage: targetPage, // Kitap değişiminde kitap başlangıç sayfası veya belirtilen sayfa
       selectedWord: null,
       selectedWordDefinition: null,
     }));
@@ -484,7 +518,7 @@ export default function RisaleInurPage() {
   };
 
   const handleSelectPage = (pageNumber: number, isFromFihrist = false) => {
-    setState((prev) => ({
+    setState((prev: ReadingState) => ({
       ...prev,
       currentPage: pageNumber,
       selectedWord: null,
@@ -496,7 +530,7 @@ export default function RisaleInurPage() {
   };
 
   const handleSelectWord = (term: DictionaryTerm) => {
-    setState((prev) => ({
+    setState((prev: ReadingState) => ({
       ...prev,
       selectedWord: term.word,
       selectedWordDefinition: term,
@@ -504,19 +538,19 @@ export default function RisaleInurPage() {
   };
 
   const handleSearchChange = (query: string) => {
-    setState((prev) => ({
+    setState((prev: ReadingState) => ({
       ...prev,
       searchQuery: query,
     }));
   };
 
   const handleToggleBookmark = (bookId: string, page: number) => {
-    setState((prev) => {
-      const isBookmarked = prev.bookmarks.some((b) => b.bookId === bookId && b.page === page);
+    setState((prev: ReadingState) => {
+      const isBookmarked = prev.bookmarks.some((b: ReadingState['bookmarks'][number]) => b.bookId === bookId && b.page === page);
       let nextBookmarks;
       
       if (isBookmarked) {
-        nextBookmarks = prev.bookmarks.filter((b) => !(b.bookId === bookId && b.page === page));
+        nextBookmarks = prev.bookmarks.filter((b: ReadingState['bookmarks'][number]) => !(b.bookId === bookId && b.page === page));
       } else {
         nextBookmarks = [
           ...prev.bookmarks,
@@ -535,6 +569,7 @@ export default function RisaleInurPage() {
     setPreferences(DEFAULT_PREFERENCES);
   };
 
+  // Temanın renk kombinasyonlarını dinamik belirleme
   const getThemeLayoutClasses = (theme: ReadingTheme) => {
     switch (theme) {
       case 'dark':
@@ -547,7 +582,7 @@ export default function RisaleInurPage() {
     }
   };
 
-  const booksWithDynamicData = KULLIYAT.map((book) => {
+  const booksWithDynamicData = KULLIYAT.map((book: typeof KULLIYAT[number]) => {
     const dynBook = dynamicBooks[book.id];
     const combinedPages = (dynBook && Object.keys(dynBook.pages).length > 0)
       ? dynBook.pages
@@ -592,6 +627,8 @@ export default function RisaleInurPage() {
 
   return (
     <div className={`flex h-screen overflow-hidden ${getThemeLayoutClasses(preferences.theme)}`}>
+      
+      {/* Sol Sidebar (Fihrist & Arama & Lügat) */}
       <Sidebar
         books={booksWithDynamicData}
         fihristNodes={fihristNodes}
@@ -604,6 +641,8 @@ export default function RisaleInurPage() {
         onGoToLibrary={() => setViewMode('library')}
         dictionary={dictionary}
         onSelectWord={handleSelectWord}
+        theme={preferences.theme}
+        preferences={preferences}
       />
 
       {/* Mobil Sidebar Karartma Perdesi (Overlay Backdrop) */}
@@ -638,7 +677,7 @@ export default function RisaleInurPage() {
           </div>
           
           <div className="flex items-center gap-1.5">
-            <span className="font-display font-bold text-sm tracking-tight">Risale-i Nur</span>
+            <span className="font-display font-bold text-sm tracking-tight">Külliyat-ı Nur</span>
           </div>
 
           <button
@@ -701,17 +740,24 @@ export default function RisaleInurPage() {
                 onReset={handleResetPreferences}
               />
             )}
+            
+            {/* Bilgilendirme Kartı - Beautiful and refined */}
             <div className="p-4 bg-sepia-200/50 border border-sepia-300 dark:border-stone-800/30 rounded-lg text-xs text-stone-600 dark:text-stone-400 space-y-2 leading-relaxed">
               <div className="font-sans font-bold uppercase tracking-widest text-[10px] text-sepia-accent flex items-center gap-1">
                 Mütalaa Kılavuzu
               </div>
-              <p>Risale metninde anlamını merak ettiğiniz kelimelerin üzerine tıklayarak anında lügat karşılığına erişebilirsiniz.</p>
-              <p>Lügat açıklaması kelimenin hemen üzerinde şık bir balon (popup) olarak belirecektir.</p>
+              <p>
+                Risale metninde anlamını merak ettiğiniz kelimelerin üzerine tıklayarak anında lügat karşılığına erişebilirsiniz.
+              </p>
+              <p>
+                Lügat açıklaması kelimenin hemen üzerinde şık bir balon (popup) olarak belirecektir.
+              </p>
             </div>
           </div>
         </div>
       </main>
 
+      {/* Arka Plan Overlay (Mobil Sidebar için) */}
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
