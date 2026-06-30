@@ -74,7 +74,7 @@ const cleanTextForPreview = (text: string): string => {
 interface LibraryViewProps {
   books: RisaleBook[];
   readingState: ReadingState;
-  onSelectBook: (bookId: string, pageNumber?: number) => void;
+  onSelectBook: (bookId: string, pageNumber?: number, searchQuery?: string) => void;
   theme: 'light' | 'dark' | 'sepia';
 }
 
@@ -537,7 +537,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                             return (
                               <div
                                 key={result.id}
-                                onClick={() => onSelectBook(result.bookId, result.pageNumber)}
+                                onClick={() => onSelectBook(result.bookId, result.pageNumber, searchQuery)}
                                 className="p-5 rounded-xl border border-sepia-300/30 dark:border-stone-900 bg-white/50 dark:bg-stone-950/40 hover:bg-white/85 dark:hover:bg-stone-950/75 hover:scale-[1.005] hover:shadow-sm transition-all duration-300 cursor-pointer flex flex-col gap-3 group relative overflow-hidden"
                               >
                                 {/* Kart Sol Zarif Şerit */}

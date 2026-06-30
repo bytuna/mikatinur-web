@@ -142,6 +142,72 @@ const cleanDisplayToken = (token: string): string => {
   return cleaned;
 };
 
+const simplifyChar = (char: string): string => {
+  const lower = char.toLowerCase();
+  switch (lower) {
+    case 'â': return 'a';
+    case 'î': case 'ı': case 'i': return 'i';
+    case 'û': case 'ü': return 'u';
+    case 'ö': return 'o';
+    case 'ç': return 'c';
+    case 'ğ': return 'g';
+    case 'ş': return 's';
+    default: return lower;
+  }
+};
+
+const simplifyString = (str: string): string => {
+  return Array.from(str).map(simplifyChar).join('');
+};
+
+const getHighlightRanges = (text: string, query: string) => {
+  const trimmed = query ? query.trim() : '';
+  if (!trimmed) return [];
+  const simpleText = simplifyString(text);
+  const simpleQuery = simplifyString(trimmed);
+  const ranges: Array<{ start: number; end: number }> = [];
+  let index = simpleText.indexOf(simpleQuery);
+  while (index !== -1) {
+    ranges.push({ start: index, end: index + simpleQuery.length });
+    index = simpleText.indexOf(simpleQuery, index + Math.max(1, simpleQuery.length));
+  }
+  return ranges;
+};
+
+const getSearchHighlightClass = (theme: 'light' | 'dark' | 'sepia') => {
+  if (theme === 'dark') {
+    return 'bg-amber-500/35 text-amber-100 border-b-2 border-amber-500 font-extrabold px-0.5 rounded-sm shadow-xs';
+  } else if (theme === 'sepia') {
+    return 'bg-[#f4cf8a] text-[#422402] border-b-2 border-[#bc872e] font-extrabold px-0.5 rounded-sm shadow-xs';
+  } else {
+    return 'bg-amber-200 text-stone-950 border-b-2 border-amber-500 font-extrabold px-0.5 rounded-sm shadow-xs';
+  }
+};
+
+const renderTextWithHighlight = (text: string, query: string, highlightClass: string) => {
+  if (!query) return text;
+  const ranges = getHighlightRanges(text, query);
+  if (ranges.length === 0) return text;
+
+  const result: React.ReactNode[] = [];
+  let lastIndex = 0;
+  ranges.forEach((range, idx) => {
+    if (range.start > lastIndex) {
+      result.push(text.substring(lastIndex, range.start));
+    }
+    result.push(
+      <mark key={idx} className={highlightClass}>
+        {text.substring(range.start, range.end)}
+      </mark>
+    );
+    lastIndex = range.end;
+  });
+  if (lastIndex < text.length) {
+    result.push(text.substring(lastIndex));
+  }
+  return <>{result}</>;
+};
+
 export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(({
   text,
   preferences,
@@ -180,8 +246,10 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
 
       const isLookupable = !!dictionary[cleanKey];
       const isActive = selectedWord?.toLowerCase() === cleanKey;
-      const hasSearchMatch = searchQuery && cleanKey.includes(searchQuery.toLowerCase());
       const displayValue = cleanDisplayToken(token);
+
+      const hasSearchMatch = searchQuery && getHighlightRanges(displayValue, searchQuery).length > 0;
+      const highlightClass = getSearchHighlightClass(preferences.theme);
 
       let renderedToken = null;
 
@@ -196,14 +264,16 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
             }`}
             title={`${displayValue} - Lügatte bakmak için tıkla`}
           >
-            {displayValue}
+            {hasSearchMatch 
+              ? renderTextWithHighlight(displayValue, searchQuery, highlightClass)
+              : displayValue}
           </span>
         );
       } else if (hasSearchMatch) {
         renderedToken = (
-          <mark className="bg-amber-500/40 px-0.5 rounded font-semibold text-stone-900">
-            {displayValue}
-          </mark>
+          <span className={wordColorClass}>
+            {renderTextWithHighlight(displayValue, searchQuery, highlightClass)}
+          </span>
         );
       } else {
         renderedToken = <React.Fragment>{displayValue}</React.Fragment>;

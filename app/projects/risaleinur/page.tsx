@@ -518,38 +518,27 @@ export default function App() {
     }
   }, [activeBook.startingPage, activeBook.totalPages]);
 
-  const handleSelectBook = (bookId: string, pageNumber?: number) => {
-    const book = KULLIYAT.find((b: any) => b.id === bookId) || KULLIYAT[0];
-    const dynBook = dynamicBooks[bookId];
-    
-    // Kitap değişiminde doğru başlangıç sayfasını dinamik sayfa anahtarlarına göre hesaplayalım
-    const combined = (dynBook && Object.keys(dynBook.pages).length > 0) ? dynBook.pages : book.pages;
-    const pageKeys = Object.keys(combined).map(Number).filter(n => !isNaN(n));
-    let minPage = book.startingPage;
-    if (bookId === 'mektubat' || bookId === 'lemalar') {
-      minPage = 5;
-    } else if (pageKeys.length > 0) {
-      minPage = Math.min(...pageKeys);
-    } else if (dynBook?.startingPage !== undefined) {
-      minPage = dynBook.startingPage;
-    }
-    
-    let targetPage = pageNumber || minPage;
-    if (targetPage < minPage) {
-      targetPage = minPage;
-    }
-    
-    setState((prev: ReadingState) => ({
-      ...prev,
-      currentBookId: bookId,
-      currentPage: targetPage, // Kitap değişiminde kitap başlangıç sayfası veya belirtilen sayfa
-      selectedWord: null,
-      selectedWordDefinition: null,
-    }));
-    setViewMode('reader');
-    setSidebarOpen(true);
-    setFihristClickTrigger(Date.now());
-  };
+  const handleSelectBook = (bookId: string, pageNumber?: number, searchQuery?: string) => {
+  const book = KULLIYAT.find((b) => b.id === bookId) || KULLIYAT[0];
+  const dynBook = dynamicBooks[bookId];
+  
+  let targetPage = book.startingPage;
+  if (pageNumber !== undefined) {
+    targetPage = pageNumber;
+  }
+
+  setState((prev) => ({
+    ...prev,
+    currentBookId: bookId,
+    currentPage: targetPage,
+    selectedWord: null,
+    selectedWordDefinition: null,
+    // Eğer dışarıdan bir arama sorgusu ile gelindiyse state'e aktar, aksi halde mevcut sorguyu koru
+    searchQuery: searchQuery !== undefined ? searchQuery : prev.searchQuery,
+  }));
+  setViewMode('reader');
+  setSidebarOpen(true);
+};
 
   const handleSelectPage = (pageNumber: number, isFromFihrist = false) => {
     setState((prev: ReadingState) => ({
