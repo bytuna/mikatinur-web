@@ -284,44 +284,44 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
   return (
     <div className={`min-h-screen ${bgClass} ${textClass} flex flex-col transition-colors duration-300 overflow-y-auto no-scrollbar pb-16`}>
       {/* Üst Zarif Header */}
-      <header className="border-b border-sepia-300/60 dark:border-stone-900 bg-white/40 dark:bg-stone-950/40 backdrop-blur-md px-6 py-4 sm:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 sticky top-0 z-30">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-sepia-accent/15 flex items-center justify-center border border-sepia-accent/30 shadow-xs">
-            <Compass className="w-5 h-5 text-sepia-accent" />
+      <header className="border-b border-sepia-300/60 dark:border-stone-900 bg-white/40 dark:bg-stone-950/40 backdrop-blur-md px-4 py-3 md:px-8 md:py-4 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-0 z-30">
+        <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto justify-center md:justify-start">
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-sepia-accent/15 flex items-center justify-center border border-sepia-accent/30 shadow-xs shrink-0">
+            <Compass className="w-4 h-4 md:w-5 md:h-5 text-sepia-accent" />
           </div>
-          <div>
-            <h1 className="font-serif font-extrabold text-2xl tracking-tight text-sepia-accent tracking-wide">
+          <div className="text-center md:text-left">
+            <h1 className="font-serif font-extrabold text-xl md:text-2xl tracking-tight text-sepia-accent">
               Risale-i Nur
             </h1>
-            <p className="text-[10px] font-sans font-bold tracking-widest text-stone-400 dark:text-stone-500 uppercase">
+            <p className="text-[9px] md:text-[10px] font-sans font-bold tracking-widest text-stone-400 dark:text-stone-500 uppercase">
               Risale-i Nur Külliyatı Okuma ve Mütalaa Platformu
             </p>
           </div>
         </div>
 
         {/* Canlı Arama Kutusu ve Eylemler */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto justify-end">
           {/* Arama Kapsamı Seçici */}
-          <div className="flex bg-stone-200/50 dark:bg-stone-900/50 border border-sepia-300/30 dark:border-stone-800 p-0.5 rounded-full select-none text-[10px] font-sans font-bold uppercase tracking-wider">
+          <div className="flex bg-stone-200/50 dark:bg-stone-900/50 border border-sepia-300/30 dark:border-stone-800 p-0.5 rounded-full select-none text-[10px] font-sans font-bold uppercase tracking-wider w-full sm:w-auto justify-center shrink-0">
             <button
               onClick={() => {
                 setSearchScope('titles');
                 setHasSearched(false);
               }}
-              className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
+              className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-full transition-all cursor-pointer text-center ${
                 searchScope === 'titles'
-                  ? 'bg-sepia-accent text-stone-950 shadow-xs'
-                  : 'text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'
+                  ? 'bg-sepia-accent text-stone-950 shadow-xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
               }`}
             >
               📁 Kitap Adları
             </button>
             <button
               onClick={() => setSearchScope('corpus')}
-              className={`px-3 py-1 rounded-full transition-all cursor-pointer ${
+              className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-full transition-all cursor-pointer text-center ${
                 searchScope === 'corpus'
-                  ? 'bg-sepia-accent text-stone-950 shadow-xs'
-                  : 'text-stone-500 hover:text-stone-700 dark:hover:text-stone-300'
+                  ? 'bg-sepia-accent text-stone-950 shadow-xs font-bold'
+                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
               }`}
             >
               🔍 Tüm Külliyat
@@ -330,7 +330,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
 
           {/* Gelişmiş Giriş Alanı */}
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <div className="relative w-full sm:w-72">
+            <div className="relative flex-1 sm:flex-initial sm:w-64 lg:w-72">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
               <input
                 type="text"
@@ -344,7 +344,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                     }
                   }
                 }}
-                className="w-full pl-9 pr-8 py-2 text-xs font-sans font-medium rounded-full border border-sepia-300 dark:border-stone-800 bg-white/60 dark:bg-stone-900/60 focus:outline-none focus:ring-2 focus:ring-sepia-accent/20 focus:border-sepia-accent transition-all text-stone-800 dark:text-stone-200"
+                className="w-full pl-9 pr-8 py-2 text-xs font-sans font-medium rounded-full border border-sepia-300 dark:border-stone-800 bg-white/60 dark:bg-stone-900/60 focus:outline-none focus:ring-2 focus:ring-sepia-accent/20 focus:border-sepia-accent transition-all text-stone-800 dark:text-stone-200 placeholder-stone-400 dark:placeholder-stone-500"
               />
               {searchQuery && (
                 <button
@@ -366,7 +366,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
               <button
                 onClick={() => handleCorpusSearch(searchQuery)}
                 disabled={isSearchingCorpus || searchQuery.trim().length < 3}
-                className={`px-4 py-2 text-xs font-sans font-bold uppercase tracking-wider rounded-full transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`px-4 py-2 text-xs font-sans font-bold uppercase tracking-wider rounded-full transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
                   searchQuery.trim().length >= 3 && !isSearchingCorpus
                     ? 'bg-sepia-accent text-stone-950 hover:bg-sepia-accent/90 shadow-xs'
                     : 'bg-stone-200 dark:bg-stone-800 text-stone-400 dark:text-stone-600 cursor-not-allowed'
