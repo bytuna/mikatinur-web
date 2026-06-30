@@ -1,10 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { UserPreferences } from '../../../types';
-// kulliyat module may not exist in this environment; provide fallbacks to avoid build errors.
-// Replace these with the real imports when the module is available.
-const KULLIYAT: Record<string, any> = {};
-const DICTIONARY: Record<string, any> = {};
+import { KULLIYAT, DICTIONARY } from '../../../kulliyat';
 
 type ReadingTheme = 'sepia' | 'dark' | 'light';
 
