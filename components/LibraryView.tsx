@@ -71,6 +71,69 @@ const cleanTextForPreview = (text: string): string => {
     .trim();
 };
 
+const getNormalizedAndMapped = (str: string) => {
+  let normalized = '';
+  const indexMap: number[] = [];
+  
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    
+    // 1. Skip characters ignored by normalizeForSearch: ['’`\-\.]
+    if (/['’`\-\.]/.test(char)) {
+      continue;
+    }
+    
+    // 2. Handle whitespace collapsing (multiple spaces -> single space)
+    if (/\s/.test(char)) {
+      if (normalized.length > 0 && normalized[normalized.length - 1] === ' ') {
+        continue;
+      }
+      normalized += ' ';
+      indexMap.push(i);
+    } else {
+      // 3. Normalize single non-space character (with Turkish and diacritic folding)
+      let normChar = char.toLowerCase();
+      if (char === 'İ') {
+        normChar = 'i';
+      } else if (char === 'I') {
+        normChar = 'ı';
+      }
+      
+      switch (normChar) {
+        case 'â': normChar = 'a'; break;
+        case 'î': normChar = 'i'; break;
+        case 'û': normChar = 'u'; break;
+        case 'ç': normChar = 'c'; break;
+        case 'ğ': normChar = 'g'; break;
+        case 'ı': normChar = 'i'; break;
+        case 'i': normChar = 'i'; break;
+        case 'ö': normChar = 'o'; break;
+        case 'ş': normChar = 's'; break;
+        case 'ü': normChar = 'u'; break;
+        default: break;
+      }
+      normalized += normChar;
+      indexMap.push(i);
+    }
+  }
+  
+  // Trim the normalized string and adjust map accordingly
+  let startTrim = 0;
+  while (startTrim < normalized.length && normalized[startTrim] === ' ') {
+    startTrim++;
+  }
+  
+  let endTrim = normalized.length;
+  while (endTrim > startTrim && normalized[endTrim - 1] === ' ') {
+    endTrim--;
+  }
+  
+  const trimmedNormalized = normalized.substring(startTrim, endTrim);
+  const trimmedMap = indexMap.slice(startTrim, endTrim);
+  
+  return { normalized: trimmedNormalized, indexMap: trimmedMap };
+};
+
 interface LibraryViewProps {
   books: RisaleBook[];
   readingState: ReadingState;
@@ -154,34 +217,39 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
 
             const rawText = pageObj.text;
             const cleanedText = cleanTextForPreview(rawText);
-            const normalizedPageText = normalizeForSearch(cleanedText);
+            const { normalized: normalizedPageText, indexMap } = getNormalizedAndMapped(cleanedText);
 
             let matchIdx = normalizedPageText.indexOf(normalizedQuery);
             const occurrences: number[] = [];
 
             while (matchIdx !== -1 && occurrences.length < 3) {
               occurrences.push(matchIdx);
-              matchIdx = normalizedPageText.indexOf(normalizedQuery, matchIdx + normalizedQuery.length);
+              matchIdx = normalizedPageText.indexOf(normalizedQuery, matchIdx + 1);
             }
 
-            occurrences.forEach((idx) => {
-              const start = Math.max(0, idx - 80);
-              const end = Math.min(cleanedText.length, idx + normalizedQuery.length + 90);
+            occurrences.forEach((mIdx) => {
+              const trueStart = indexMap[mIdx];
+              const trueEnd = indexMap[mIdx + normalizedQuery.length - 1] + 1;
+              const matchLength = trueEnd - trueStart;
+
+              const start = Math.max(0, trueStart - 80);
+              const end = Math.min(cleanedText.length, trueEnd + 90);
               let snippet = cleanedText.substring(start, end);
 
               if (start > 0) snippet = '...' + snippet;
               if (end < cleanedText.length) snippet = snippet + '...';
 
-              // Snippet içindeki yeni indeks ayarlaması
-              const adjustedIdx = idx - start + (start > 0 ? 3 : 0);
+              // Snippet içindeki tam indeks ayarlaması
+              const adjustedIdx = trueStart - start + (start > 0 ? 3 : 0);
 
               bookResults.push({
-                id: `${book.id}-${pageNumStr}-${idx}`,
+                id: `${book.id}-${pageNumStr}-${mIdx}`,
                 bookId: book.id,
                 bookTitle: book.title,
                 pageNumber: parseInt(pageNumStr, 10),
                 snippet: snippet,
                 matchIndex: adjustedIdx,
+                matchLength: matchLength,
                 queryLength: normalizedQuery.length
               });
             });
@@ -466,7 +534,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                         setSelectedBookFilter('all');
                         setVisibleResultsCount(20);
                       }}
-                      className={`px-3 py-1.5 text-xs font-sans font-medium rounded-lg text-left transition-all cursor-pointer flex items-center justify-between w-full ${
+                      className={`px-3 py-1.5 text-xs font-sans font-medium rounded-lg text-left transition-all cursor-pointer flex items-center justify-between w-full sm:w-auto lg:w-full gap-3 ${
                         selectedBookFilter === 'all'
                           ? 'bg-sepia-accent text-stone-950 font-bold shadow-xs'
                           : 'bg-white/40 dark:bg-stone-950/40 hover:bg-white/80 dark:hover:bg-stone-950/80 text-stone-600 dark:text-stone-300 border border-sepia-300/20 dark:border-stone-800/40'
@@ -493,7 +561,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                             setSelectedBookFilter(bId);
                             setVisibleResultsCount(20);
                           }}
-                          className={`px-3 py-1.5 text-xs font-sans font-medium rounded-lg text-left transition-all cursor-pointer flex items-center justify-between w-full ${
+                          className={`px-3 py-1.5 text-xs font-sans font-medium rounded-lg text-left transition-all cursor-pointer flex items-center justify-between w-full sm:w-auto lg:w-full gap-3 ${
                             selectedBookFilter === bId
                               ? 'bg-sepia-accent text-stone-950 font-bold shadow-xs'
                               : 'bg-white/40 dark:bg-stone-950/40 hover:bg-white/80 dark:hover:bg-stone-950/80 text-stone-600 dark:text-stone-300 border border-sepia-300/20 dark:border-stone-800/40'
@@ -530,9 +598,10 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                       <>
                         <div className="space-y-4">
                           {sliceResults.map((result) => {
+                            const lengthToUse = result.matchLength || result.queryLength;
                             const beforeMatch = result.snippet.substring(0, result.matchIndex);
-                            const matchText = result.snippet.substring(result.matchIndex, result.matchIndex + result.queryLength);
-                            const afterMatch = result.snippet.substring(result.matchIndex + result.queryLength);
+                            const matchText = result.snippet.substring(result.matchIndex, result.matchIndex + lengthToUse);
+                            const afterMatch = result.snippet.substring(result.matchIndex + lengthToUse);
 
                             return (
                               <div
