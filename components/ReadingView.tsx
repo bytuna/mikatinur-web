@@ -45,6 +45,34 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
   // Fihrist/Yer iminden gelen odaklanma/zoom durumları
   const [focusPageNum, setFocusPageNum] = useState<number | null>(null);
   const [focusActive, setFocusActive] = useState(false);
+
+  // Arama sonucuna tıklandığında ilgili kelimeye otomatik odaklanma (scroll)
+  useEffect(() => {
+    if (!searchQuery || searchQuery.trim().length < 2) return;
+
+    let attempts = 0;
+    const maxAttempts = 15; // 1.5 saniye boyunca elementin render edilmesini bekler
+
+    const scrollToHighlight = () => {
+      if (!containerRef.current) return;
+      
+      const highlightElement = containerRef.current.querySelector('.search-highlight');
+      
+      if (highlightElement) {
+        highlightElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      } else if (attempts < maxAttempts) {
+        attempts++;
+        setTimeout(scrollToHighlight, 100);
+      }
+    };
+
+    const timer = setTimeout(scrollToHighlight, 150);
+
+    return () => clearTimeout(timer);
+  }, [pageNumber, searchQuery, loadedPages]);
   
   // Yüzen Popup (Floating Tooltip/Popover) State
   const [activePopup, setActivePopup] = useState<{

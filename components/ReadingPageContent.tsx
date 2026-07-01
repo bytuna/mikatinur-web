@@ -196,7 +196,7 @@ const renderTextWithHighlight = (text: string, query: string, highlightClass: st
       result.push(text.substring(lastIndex, range.start));
     }
     result.push(
-      <mark key={idx} className={highlightClass}>
+      <mark key={idx} className={`${highlightClass} search-highlight`}>
         {text.substring(range.start, range.end)}
       </mark>
     );
