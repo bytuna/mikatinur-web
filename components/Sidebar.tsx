@@ -27,7 +27,7 @@ interface FihristNodeItemProps {
   onToggleExpand: (id: string) => void;
   searchActive: boolean;
   searchQuery?: string;
-  theme?: 'light' | 'sepia' | 'dark' | string;
+  theme?: 'light' | 'sepia' | 'dark';
 }
 
 const simplifyChar = (char: string): string => {
@@ -94,6 +94,60 @@ const renderTextWithHighlight = (text: string, query: string, highlightClass: st
     result.push(text.substring(lastIndex));
   }
   return <>{result}</>;
+};
+
+interface InBookSearchResult {
+  pageNumber: number;
+  snippet: string;
+}
+
+const cleanTextForPreview = (text: string): string => {
+  return text
+    .replace(/\|\d+@/g, '') // |1@, |882@ gibi dipnot işaretlerini temizle
+    .replace(/[\\[\]{}()<>~*&]/g, '') // \, &, >, <, ~ gibi biçimlendirme elemanlarını temizle
+    .replace(/\s+/g, ' ') // Boşlukları düzenle
+    .trim();
+};
+
+const searchInBookPages = (
+  pages: { [pageNumber: number]: any } | undefined,
+  query: string
+): InBookSearchResult[] => {
+  if (!pages || !query || query.trim().length < 2) return [];
+  const normalizedQuery = simplifyString(query);
+  const results: InBookSearchResult[] = [];
+
+  // Sayfaları sayısal sıraya göre sıralayalım
+  const sortedPageNumbers = Object.keys(pages)
+    .map(Number)
+    .filter((n) => !isNaN(n))
+    .sort((a, b) => a - b);
+
+  for (const pageNum of sortedPageNumbers) {
+    const page = pages[pageNum];
+    if (!page || !page.text) continue;
+
+    const cleanedText = cleanTextForPreview(page.text);
+    const simplifiedText = simplifyString(cleanedText);
+    const index = simplifiedText.indexOf(normalizedQuery);
+
+    if (index !== -1) {
+      // Eşleşen kelimenin etrafında güzel bir kesit oluşturalım
+      const start = Math.max(0, index - 45);
+      const end = Math.min(cleanedText.length, index + normalizedQuery.length + 55);
+      let snippet = cleanedText.substring(start, end);
+
+      if (start > 0) snippet = '...' + snippet;
+      if (end < cleanedText.length) snippet = snippet + '...';
+
+      results.push({
+        pageNumber: pageNum,
+        snippet: snippet,
+      });
+    }
+  }
+
+  return results;
 };
 
 const FihristNodeItem: React.FC<FihristNodeItemProps> = ({
@@ -254,21 +308,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const currentBook = books.find((b) => b.id === state.currentBookId) || books[0];
 
-  // Arama filtrelemesi
-  const filteredSections = currentBook.sections.filter((sec) =>
-    simplifyString(sec.title).includes(simplifyString(state.searchQuery))
-  );
-
-  const filteredBooks = books.filter((book) =>
-    simplifyString(book.title).includes(simplifyString(state.searchQuery))
-  );
-
-  const filteredTerms = (Object.values(dictionary) as DictionaryTerm[])
-    .filter((term) =>
-      simplifyString(term.word).includes(simplifyString(state.searchQuery)) ||
-      simplifyString(term.definition).includes(simplifyString(state.searchQuery))
-    )
-    .slice(0, 50); // Performans için 50 kelime ile sınırla
+  // Kitap içi arama sonuçları hesaplaması
+  const bookSearchResults = searchInBookPages(currentBook.pages, state.searchQuery);
 
   const getSidebarThemeClasses = () => {
     switch (theme) {
@@ -378,7 +419,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 text-stone-400 dark:text-stone-500" />
             <input
               type="text"
-              placeholder="Fihristte bölüm ara..."
+              placeholder="Kitap içinde ara..."
               value={state.searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
               className={`w-full pl-9 pr-8 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 font-sans ${getInputClasses()}`}
@@ -409,23 +450,76 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <p className="text-[10px] font-sans opacity-50 mt-0.5">{currentBook.author}</p>
             </div>
 
-            {/* Bölümler Listesi */}
+            {/* Arama Sonuçları veya Fihrist Listesi */}
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <label className="block text-[10px] font-sans font-bold uppercase tracking-[0.15em] opacity-45">
-                  Fihrist / İçindekiler
-                </label>
-                <span className="text-[9px] text-stone-400 dark:text-stone-500 font-mono">
-                  {fihristNodes.length > 0 ? 'Dinamik Fihrist' : `${filteredSections.length} Bölüm`}
-                </span>
-              </div>
+              {state.searchQuery.trim().length >= 2 ? (
+                // Kitap İçi Arama Sonuçları Modu
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="block text-[10px] font-sans font-bold uppercase tracking-[0.15em] opacity-45">
+                      Kitap İçi Arama Sonuçları
+                    </label>
+                    <span className="text-[9px] text-sepia-accent font-sans font-bold">
+                      {bookSearchResults.length} Eşleşme
+                    </span>
+                  </div>
 
-              <div className="space-y-1">
-                {fihristNodes.length > 0 ? (
-                  (() => {
-                    const filteredNodes = filterFihristTree(fihristNodes, state.searchQuery);
-                    return filteredNodes.length > 0 ? (
-                      filteredNodes.map((node) => (
+                  <div className="space-y-3">
+                    {bookSearchResults.length > 0 ? (
+                      bookSearchResults.map((result) => {
+                        const isCurrent = state.currentPage === result.pageNumber;
+                        return (
+                          <button
+                            key={result.pageNumber}
+                            onClick={() => onSelectPage(result.pageNumber, true)}
+                            className={`w-full text-left p-3 rounded-lg border transition-all text-xs flex flex-col gap-1.5 cursor-pointer ${
+                              isCurrent
+                                ? 'border-sepia-accent/60 bg-sepia-100/30 dark:bg-amber-950/10'
+                                : theme === 'dark'
+                                ? 'bg-stone-900/30 border-stone-800/80 hover:bg-stone-900/60 hover:border-stone-700'
+                                : theme === 'sepia'
+                                ? 'bg-[#ede8df]/30 border-sepia-300/40 hover:bg-[#ede8df]/60 hover:border-sepia-300/80'
+                                : 'bg-stone-50 border-stone-200 hover:bg-stone-100 hover:border-stone-300'
+                            }`}
+                          >
+                            <div className="flex justify-between items-center w-full">
+                              <span className={`font-sans font-bold text-[10px] uppercase tracking-wider ${
+                                isCurrent ? 'text-sepia-accent' : 'text-stone-400 dark:text-stone-500'
+                              }`}>
+                                Sayfa {result.pageNumber}
+                              </span>
+                              <span className="text-[9px] font-mono opacity-40">Git &rarr;</span>
+                            </div>
+                            <p className={`font-serif text-xs leading-relaxed line-clamp-3 ${
+                              theme === 'dark' ? 'text-stone-300' : 'text-stone-600'
+                            }`}>
+                              {renderTextWithHighlight(result.snippet, state.searchQuery, getFihristHighlightClass(theme))}
+                            </p>
+                          </button>
+                        );
+                      })
+                    ) : (
+                      <div className="text-stone-400 text-xs py-3 text-center font-sans">
+                        Bu kitapta "{state.searchQuery}" kelimesi geçmiyor.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                // Standart Fihrist Modu
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="block text-[10px] font-sans font-bold uppercase tracking-[0.15em] opacity-45">
+                      Fihrist / İçindekiler
+                    </label>
+                    <span className="text-[9px] text-stone-400 dark:text-stone-500 font-mono">
+                      {fihristNodes.length > 0 ? 'Dinamik Fihrist' : `${currentBook.sections.length} Bölüm`}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1">
+                    {fihristNodes.length > 0 ? (
+                      fihristNodes.map((node) => (
                         <FihristNodeItem
                           key={node.id}
                           node={node}
@@ -433,53 +527,44 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           onSelectPage={onSelectPage}
                           expandedNodes={expandedNodes}
                           onToggleExpand={handleToggleExpand}
-                          searchActive={!!state.searchQuery}
-                          searchQuery={state.searchQuery}
-                          theme={theme}
+                          searchActive={false}
+                          searchQuery=""
+                          theme={theme as 'sepia' | 'dark' | 'light' | undefined}
                         />
                       ))
                     ) : (
-                      <div className="text-stone-400 text-xs py-2">Fihristte sonuç bulunamadı.</div>
-                    );
-                  })()
-                ) : (
-                  <div className={`space-y-1 pl-3 border-l ${theme === 'dark' ? 'border-stone-800' : theme === 'sepia' ? 'border-sepia-300' : 'border-stone-250'}`}>
-                    {filteredSections.map((sec) => {
-                      const isCurrentSection = state.currentPage >= sec.startPage && 
-                        (!currentBook.sections.find((s) => s.startPage > sec.startPage) ||
-                          state.currentPage < (currentBook.sections.find((s) => s.startPage > sec.startPage)?.startPage || 999));
-                      
-                      return (
-                        <button
-                          key={sec.id}
-                          onClick={() => onSelectPage(sec.startPage, true)}
-                          className={`w-full flex items-center justify-between py-1.5 text-left transition-all text-xs font-sans cursor-pointer ${
-                            isCurrentSection
-                              ? 'text-sepia-accent font-semibold tracking-wide'
-                              : theme === 'dark'
-                              ? 'text-stone-400 hover:text-stone-200'
-                              : theme === 'sepia'
-                              ? 'text-[#453c35] hover:text-[#854d0e]'
-                              : 'text-stone-500 hover:text-stone-900'
-                          }`}
-                        >
-                          <span className="truncate pr-2">
-                            {state.searchQuery 
-                              ? renderTextWithHighlight(sec.title, state.searchQuery, getFihristHighlightClass(theme))
-                              : sec.title}
-                          </span>
-                          <span className="text-[9px] opacity-45 font-mono flex-shrink-0">
-                            S. {sec.startPage}
-                          </span>
-                        </button>
-                      );
-                    })}
-                    {filteredSections.length === 0 && (
-                      <div className="text-stone-400 text-xs py-2">Bölüm bulunamadı.</div>
+                      <div className={`space-y-1 pl-3 border-l ${theme === 'dark' ? 'border-stone-800' : theme === 'sepia' ? 'border-sepia-300' : 'border-stone-250'}`}>
+                        {currentBook.sections.map((sec) => {
+                          const isCurrentSection = state.currentPage >= sec.startPage && 
+                            (!currentBook.sections.find((s) => s.startPage > sec.startPage) ||
+                              state.currentPage < (currentBook.sections.find((s) => s.startPage > sec.startPage)?.startPage || 999));
+                          
+                          return (
+                            <button
+                              key={sec.id}
+                              onClick={() => onSelectPage(sec.startPage, true)}
+                              className={`w-full flex items-center justify-between py-1.5 text-left transition-all text-xs font-sans cursor-pointer ${
+                                isCurrentSection
+                                  ? 'text-sepia-accent font-semibold tracking-wide'
+                                  : theme === 'dark'
+                                  ? 'text-stone-400 hover:text-stone-200'
+                                  : theme === 'sepia'
+                                  ? 'text-[#453c35] hover:text-[#854d0e]'
+                                  : 'text-stone-500 hover:text-stone-900'
+                              }`}
+                            >
+                              <span className="truncate pr-2">{sec.title}</span>
+                              <span className="text-[9px] opacity-45 font-mono flex-shrink-0">
+                                S. {sec.startPage}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
                     )}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
 
             {/* Kaldığım Yerler (Bookmarks) */}

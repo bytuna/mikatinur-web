@@ -646,6 +646,7 @@ export default function App() {
       startingPage: bookStartingPage,
       totalPages: bookTotalPages,
       sections: dynBook?.sections && dynBook.sections.length > 0 ? dynBook.sections : book.sections,
+      pages: combinedPages,
     };
   });
 
