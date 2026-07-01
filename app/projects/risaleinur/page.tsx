@@ -202,6 +202,7 @@ export default function App() {
       }
       setIsHydrated(true);
     }
+  
   }, []);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -518,6 +519,28 @@ export default function App() {
     }
   }, [activeBook.startingPage, activeBook.totalPages]);
 
+  // Mobil & Tarayıcı Geri Tuşu ile Kütüphaneye Dönme Yönetimi (popstate)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (viewMode === 'reader') {
+      if (window.history.state?.view !== 'reader') {
+        window.history.pushState({ view: 'reader' }, '');
+      }
+    }
+
+    const handlePopState = () => {
+      if (viewMode === 'reader') {
+        setViewMode('library');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [viewMode]);
+
   const handleSelectBook = (bookId: string, pageNumber?: number, searchQuery?: string) => {
     const book = KULLIYAT.find((b) => b.id === bookId) || KULLIYAT[0];
     const dynBook = dynamicBooks[bookId];
@@ -604,6 +627,18 @@ export default function App() {
     setPreferences(DEFAULT_PREFERENCES);
   };
 
+  const handleGoToLibrary = () => {
+    if (viewMode === 'reader') {
+      if (typeof window !== 'undefined' && window.history.state?.view === 'reader') {
+        window.history.back();
+      } else {
+        setViewMode('library');
+      }
+    } else {
+      setViewMode('library');
+    }
+  };
+
   // Temanın renk kombinasyonlarını dinamik belirleme
   const getThemeLayoutClasses = (theme: ReadingTheme) => {
     switch (theme) {
@@ -674,7 +709,7 @@ export default function App() {
         onSearchChange={handleSearchChange}
         isOpen={sidebarOpen}
         onToggleSidebar={() => setSidebarOpen(false)}
-        onGoToLibrary={() => setViewMode('library')}
+        onGoToLibrary={handleGoToLibrary}
         dictionary={dictionary}
         onSelectWord={handleSelectWord}
         theme={preferences.theme}
@@ -704,7 +739,7 @@ export default function App() {
             
             {/* Mobil Geri Dön Butonu */}
             <button
-              onClick={() => setViewMode('library')}
+              onClick={handleGoToLibrary}
               className="p-1.5 rounded-lg text-sepia-accent hover:bg-sepia-200 dark:hover:bg-stone-900 cursor-pointer flex items-center gap-1 text-xs font-sans font-bold uppercase tracking-wider"
             >
               <Library className="w-4 h-4" />
@@ -754,7 +789,7 @@ export default function App() {
               searchQuery={state.searchQuery}
               bookmarks={state.bookmarks}
               onToggleBookmark={handleToggleBookmark}
-              onGoToLibrary={() => setViewMode('library')}
+              onGoToLibrary={handleGoToLibrary}
               sidebarOpen={sidebarOpen}
               onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
               dictionary={dictionary}
