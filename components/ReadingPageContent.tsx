@@ -208,6 +208,51 @@ const renderTextWithHighlight = (text: string, query: string, highlightClass: st
   return <>{result}</>;
 };
 
+const renderTokenWithParentMatches = (
+  token: string,
+  tokenStart: number,
+  matchRanges: Array<{ start: number; end: number }>,
+  highlightClass: string
+): React.ReactNode => {
+  const tokenEnd = tokenStart + token.length;
+  
+  // Find all overlaps
+  const overlaps: Array<{ start: number; end: number }> = [];
+  matchRanges.forEach((range) => {
+    const overlapStart = Math.max(tokenStart, range.start);
+    const overlapEnd = Math.min(tokenEnd, range.end);
+    if (overlapStart < overlapEnd) {
+      overlaps.push({
+        start: overlapStart - tokenStart,
+        end: overlapEnd - tokenStart,
+      });
+    }
+  });
+
+  if (overlaps.length === 0) {
+    return token;
+  }
+
+  // Render token characters with overlaps highlighted
+  const result: React.ReactNode[] = [];
+  let lastIndex = 0;
+  overlaps.forEach((overlap, idx) => {
+    if (overlap.start > lastIndex) {
+      result.push(token.substring(lastIndex, overlap.start));
+    }
+    result.push(
+      <mark key={idx} className={`${highlightClass} search-highlight`}>
+        {token.substring(overlap.start, overlap.end)}
+      </mark>
+    );
+    lastIndex = overlap.end;
+  });
+  if (lastIndex < token.length) {
+    result.push(token.substring(lastIndex));
+  }
+  return <>{result}</>;
+};
+
 export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(({
   text,
   preferences,
@@ -229,9 +274,24 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
   let standardParagraphCount = 0;
 
   const renderTokensList = (tokensArray: string[], startIdx: number) => {
+    // Construct the parentText by mapping each token to its display value and joining them
+    const displayTokens = tokensArray.map((t) => (/^\s+$/.test(t) ? t : cleanDisplayToken(t)));
+    const parentText = displayTokens.join('');
+    
+    // Find all ranges where searchQuery matches in this parentText
+    const matchRanges = searchQuery ? getHighlightRanges(parentText, searchQuery) : [];
+    const highlightClass = getSearchHighlightClass(preferences.theme);
+
+    let currentOffset = 0;
+
     return tokensArray.map((token, tokenIdx) => {
       const uniqueIdx = startIdx + tokenIdx;
+      const displayValue = /^\s+$/.test(token) ? token : cleanDisplayToken(token);
       
+      const tokenStart = currentOffset;
+      const tokenEnd = currentOffset + displayValue.length;
+      currentOffset += displayValue.length + (token.length - displayValue.length); // keep original whitespace or special chars count for accurate alignment
+
       if (/^\s+$/.test(token)) {
         return <React.Fragment key={uniqueIdx}>{token}</React.Fragment>;
       }
@@ -246,10 +306,11 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
 
       const isLookupable = !!dictionary[cleanKey];
       const isActive = selectedWord?.toLowerCase() === cleanKey;
-      const displayValue = cleanDisplayToken(token);
-
-      const hasSearchMatch = searchQuery && getHighlightRanges(displayValue, searchQuery).length > 0;
-      const highlightClass = getSearchHighlightClass(preferences.theme);
+      
+      // Determine if there is an overlap match
+      const hasOverlapMatch = matchRanges.some(
+        (range) => Math.max(tokenStart, range.start) < Math.min(tokenEnd, range.end)
+      );
 
       let renderedToken = null;
 
@@ -264,15 +325,15 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
             }`}
             title={`${displayValue} - Lügatte bakmak için tıkla`}
           >
-            {hasSearchMatch 
-              ? renderTextWithHighlight(displayValue, searchQuery, highlightClass)
+            {hasOverlapMatch
+              ? renderTokenWithParentMatches(displayValue, tokenStart, matchRanges, highlightClass)
               : displayValue}
           </span>
         );
-      } else if (hasSearchMatch) {
+      } else if (hasOverlapMatch) {
         renderedToken = (
           <span className={wordColorClass}>
-            {renderTextWithHighlight(displayValue, searchQuery, highlightClass)}
+            {renderTokenWithParentMatches(displayValue, tokenStart, matchRanges, highlightClass)}
           </span>
         );
       } else {
@@ -291,6 +352,7 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
       return <React.Fragment key={uniqueIdx}>{renderedToken}</React.Fragment>;
     });
   };
+
 
   return (
     <div className={`${fontSizeClass} ${lineHeightClass} ${fontStyleClass} ${textThemeClass} tracking-wide`}>

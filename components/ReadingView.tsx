@@ -59,6 +59,12 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       const highlightElement = containerRef.current.querySelector('.search-highlight');
       
       if (highlightElement) {
+        // Tüm eşleşen vurgu elemanlarına animasyonlu parlama sınıfını ekleyelim
+        const allHighlights = containerRef.current.querySelectorAll('.search-highlight');
+        allHighlights.forEach((el) => {
+          el.classList.add('search-highlight-active');
+        });
+
         highlightElement.scrollIntoView({
           behavior: 'smooth',
           block: 'center',
@@ -1140,3 +1146,6 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
     </div>
   );
 };
+
+export default ReadingView;
+
