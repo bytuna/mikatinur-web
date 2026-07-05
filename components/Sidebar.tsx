@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useMemo } from 'react';
 import { RisaleBook, ReadingState, DictionaryTerm, FihristItem, UserPreferences, UserNote } from '../types';
-import { BookOpen, Search, X, Compass, Library, ChevronRight, Plus, Trash2, ChevronDown, BookMarked, FileText } from 'lucide-react';
+import { BookOpen, Search, X, Compass, Library, ChevronRight, Plus, Trash2, ChevronDown, BookMarked, FileText, Check, Edit2 } from 'lucide-react';
 import { BOOK_CONTENTS } from '../bookContents';
 import { turkishToLower } from '../kulliyat';
 
@@ -369,6 +369,39 @@ export const Sidebar: React.FC<SidebarProps> = ({
     setNewNoteText('');
   };
 
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editingText, setEditingText] = useState('');
+  const [editingColor, setEditingColor] = useState<'yellow' | 'blue' | 'green' | 'red'>('yellow');
+
+  const handleStartEdit = (note: UserNote) => {
+    setEditingNoteId(note.id);
+    setEditingText(note.text);
+    setEditingColor(note.color || 'yellow');
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingText.trim()) return;
+    const updatedNotes = notes.map((n) => {
+      if (n.id === editingNoteId) {
+        return {
+          ...n,
+          text: editingText.trim(),
+          color: editingColor,
+        };
+      }
+      return n;
+    });
+    onNotesChange(updatedNotes);
+    localStorage.setItem('mikatinur_notes', JSON.stringify(updatedNotes));
+    setEditingNoteId(null);
+    setEditingText('');
+  };
+
+  const handleCancelEdit = () => {
+    setEditingNoteId(null);
+    setEditingText('');
+  };
+
   const handleDeleteNote = (id: string) => {
     const updatedNotes = notes.filter((n) => n.id !== id);
     onNotesChange(updatedNotes);
@@ -732,44 +765,125 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   {/* Kayıtlı Notlar Listesi */}
                   <div className="space-y-2.5 max-h-60 overflow-y-auto pr-0.5 no-scrollbar">
                     {filteredNotes.length > 0 ? (
-                      filteredNotes.map((note) => (
-                        <div
-                          key={note.id}
-                          className={`p-3 rounded-lg border flex flex-col gap-2 relative group/item transition-all ${
-                            note.color ? getNoteColorStyles(note.color) : getNoteItemClasses()
-                          }`}
-                        >
-                          {/* Sil Butonu */}
-                          <button
-                            onClick={() => handleDeleteNote(note.id)}
-                            className="absolute right-2 top-2 p-1 rounded-md text-stone-400 hover:text-red-500 hover:bg-red-500/10 transition-colors opacity-0 group-hover/item:opacity-100 focus:opacity-100 cursor-pointer"
-                            title="Notu Sil"
+                      filteredNotes.map((note) => {
+                        const isEditing = editingNoteId === note.id;
+                        return isEditing ? (
+                          <div
+                            key={note.id}
+                            className={`p-3 rounded-lg border flex flex-col gap-2 relative transition-all ${
+                              editingColor ? getNoteColorStyles(editingColor) : getNoteItemClasses()
+                            }`}
                           >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
+                            <textarea
+                              value={editingText}
+                              onChange={(e) => setEditingText(e.target.value)}
+                              className={`w-full p-2 text-xs rounded border focus:outline-none focus:ring-1 font-sans resize-none h-20 ${getInputClasses()}`}
+                              placeholder="Notunuz..."
+                            />
 
-                          <div className="text-xs font-serif leading-relaxed break-words whitespace-pre-wrap pr-4">
-                            {note.text}
+                            {/* Düzenleme Esnasında Renk Seçici */}
+                            <div className="flex items-center justify-between gap-2 py-0.5 select-none">
+                              <div className="flex items-center gap-1">
+                                <span className="text-[9px] font-sans opacity-70">Renk:</span>
+                                <div className="flex items-center gap-1">
+                                  {(['yellow', 'blue', 'green', 'red'] as const).map((color) => {
+                                    const bgClasses = {
+                                      yellow: 'bg-amber-400 border-amber-500 dark:bg-amber-500 dark:border-amber-600',
+                                      blue: 'bg-blue-400 border-blue-500 dark:bg-blue-500 dark:border-blue-600',
+                                      green: 'bg-emerald-500 border-emerald-600 dark:bg-emerald-600 dark:border-emerald-700',
+                                      red: 'bg-rose-500 border-rose-600 dark:bg-rose-600 dark:border-rose-700',
+                                    };
+                                    const isSelected = editingColor === color;
+                                    return (
+                                      <button
+                                        key={color}
+                                        type="button"
+                                        onClick={() => setEditingColor(color)}
+                                        className={`w-3 h-3 rounded-full border transition-all duration-200 cursor-pointer ${bgClasses[color]} ${
+                                          isSelected
+                                            ? 'scale-110 border-stone-950 dark:border-white shadow-xs'
+                                            : 'opacity-50 border-transparent hover:opacity-100'
+                                        }`}
+                                        title={
+                                          color === 'yellow' ? 'Sarı (Tefekkür)' :
+                                          color === 'blue' ? 'Mavi (Araştırma)' :
+                                          color === 'green' ? 'Yeşil (İlham)' :
+                                          'Kırmızı (Önemli)'
+                                        }
+                                      />
+                                    );
+                                  })}
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-1.5">
+                                <button
+                                  type="button"
+                                  onClick={handleCancelEdit}
+                                  className="px-2 py-1 text-[10px] rounded hover:bg-stone-500/15 text-stone-400 transition-all font-sans font-bold cursor-pointer"
+                                >
+                                  İptal
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={handleSaveEdit}
+                                  disabled={!editingText.trim()}
+                                  className="flex items-center gap-1 px-2.5 py-1 text-[10px] rounded bg-sepia-accent text-white hover:bg-sepia-accent/90 disabled:opacity-50 transition-all font-sans font-bold cursor-pointer"
+                                >
+                                  <Check className="w-2.5 h-2.5" />
+                                  Kaydet
+                                </button>
+                              </div>
+                            </div>
                           </div>
-
-                          <div className="flex flex-wrap items-center justify-between gap-2 mt-1 border-t border-stone-400/10 pt-1.5">
-                            <span className="text-[9px] font-mono opacity-40">
-                              {note.createdAt}
-                            </span>
-                            
-                            {note.reference && (
+                        ) : (
+                          <div
+                            key={note.id}
+                            className={`p-3 rounded-lg border flex flex-col gap-2 relative group/item transition-all ${
+                              note.color ? getNoteColorStyles(note.color) : getNoteItemClasses()
+                            }`}
+                          >
+                            {/* Kontroller */}
+                            <div className="absolute right-2 top-2 flex items-center gap-1 opacity-0 group-hover/item:opacity-100 focus-within:opacity-100 transition-opacity">
                               <button
-                                onClick={() => onSelectBook(note.reference!.bookId, note.reference!.page)}
-                                className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-sans font-semibold tracking-wide border border-sepia-accent/30 bg-sepia-accent/5 hover:bg-sepia-accent/15 text-sepia-accent transition-colors cursor-pointer"
-                                title={`${note.reference.bookTitle} Sayfa ${note.reference.page} sayfasına git`}
+                                onClick={() => handleStartEdit(note)}
+                                className="p-1 rounded-md text-stone-400 hover:text-sepia-accent hover:bg-sepia-accent/10 transition-colors cursor-pointer"
+                                title="Notu Düzenle"
                               >
-                                <BookMarked className="w-2.5 h-2.5" />
-                                {note.reference.bookTitle} s. {note.reference.page}
+                                <Edit2 className="w-3 h-3" />
                               </button>
-                            )}
+                              <button
+                                onClick={() => handleDeleteNote(note.id)}
+                                className="p-1 rounded-md text-stone-400 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                                title="Notu Sil"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
+                            </div>
+
+                            <div className="text-xs font-serif leading-relaxed break-words whitespace-pre-wrap pr-10">
+                              {note.text}
+                            </div>
+
+                            <div className="flex flex-wrap items-center justify-between gap-2 mt-1 border-t border-stone-400/10 pt-1.5">
+                              <span className="text-[9px] font-mono opacity-40">
+                                {note.createdAt}
+                              </span>
+                              
+                              {note.reference && (
+                                <button
+                                  onClick={() => onSelectBook(note.reference!.bookId, note.reference!.page)}
+                                  className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-sans font-semibold tracking-wide border border-sepia-accent/30 bg-sepia-accent/5 hover:bg-sepia-accent/15 text-sepia-accent transition-colors cursor-pointer"
+                                  title={`${note.reference.bookTitle} Sayfa ${note.reference.page} sayfasına git`}
+                                >
+                                  <BookMarked className="w-2.5 h-2.5" />
+                                  {note.reference.bookTitle} s. {note.reference.page}
+                                </button>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))
+                        );
+                      })
                     ) : notes.length > 0 ? (
                       <div className="text-center py-4 text-[10px] font-sans opacity-50 italic">
                         Arama kriterlerine uygun not bulunamadı.
