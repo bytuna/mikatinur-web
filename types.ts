@@ -63,6 +63,12 @@ export interface RisaleBook {
   coverImage?: string; // Kitap kapak resmi URL'si
 }
 
+export interface BookProgress {
+  currentPage: number;
+  pointerY?: number; // Dikey yüzde pozisyonu (0-100)
+  showPointer?: boolean; // Gezen işaretçi görünürlüğü
+}
+
 export interface ReadingState {
   currentBookId: string;
   currentPage: number;
@@ -70,4 +76,5 @@ export interface ReadingState {
   selectedWordDefinition: DictionaryTerm | null;
   searchQuery: string;
   bookmarks: { bookId: string; page: number; date: string }[];
+  bookProgress?: Record<string, BookProgress>; // Her kitap için bağımsız okuma ilerlemesi ve işaretçi pozisyonu
 }

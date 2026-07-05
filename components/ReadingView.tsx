@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { RisaleBook, UserPreferences, RisalePage, DictionaryTerm, TOCSection } from '../types';
-import { ChevronLeft, ChevronRight, Bookmark, BookmarkCheck, HelpCircle, BookOpen, Play, Pause, Square, Library, Menu, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Bookmark, BookmarkCheck, HelpCircle, BookOpen, Play, Pause, Square, Library, Menu, X, Pin } from 'lucide-react';
 import { ReadingPageContent } from './ReadingPageContent';
 
 interface ReadingViewProps {
@@ -20,6 +20,9 @@ interface ReadingViewProps {
   dictionary: Record<string, DictionaryTerm>;
   fihristClickTrigger?: number;
   sections?: TOCSection[];
+  savedPointerY?: number;
+  savedShowPointer?: boolean;
+  onUpdatePointer?: (pointerY: number, showPointer: boolean) => void;
 }
 
 export const ReadingView: React.FC<ReadingViewProps> = ({
@@ -38,6 +41,9 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
   dictionary,
   fihristClickTrigger = 0,
   sections,
+  savedPointerY,
+  savedShowPointer,
+  onUpdatePointer,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isProgrammaticScrollRef = useRef<boolean>(false);
@@ -115,6 +121,89 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
     const sorted = [...activeSections].sort((a, b) => b.startPage - a.startPage);
     return sorted[0].title;
   })();
+
+  // 4. Okuma İşaretçisi (Gezen İşaretçi / Okuma Kılavuzu) State ve Mantığı
+  const [showPointer, setShowPointer] = useState<boolean>(savedShowPointer ?? false);
+  const [pointerY, setPointerY] = useState<number>(savedPointerY ?? 30); // varsayılan olarak sayfanın %30 dikey pozisyonu
+  const isDraggingRef = useRef(false);
+
+  // Kitap değiştiğinde işaretçi durumlarını güncelle
+  useEffect(() => {
+    setShowPointer(savedShowPointer ?? false);
+    setPointerY(savedPointerY ?? 30);
+  }, [book.id, savedShowPointer, savedPointerY]);
+
+  const handleUpdatePointerRef = useRef(onUpdatePointer);
+  useEffect(() => {
+    handleUpdatePointerRef.current = onUpdatePointer;
+  }, [onUpdatePointer]);
+
+  // Pozisyon değişikliklerini ve görünürlüğü App.tsx'e raporla (lokal olarak kaydetmesi için)
+  const savePointerState = useCallback((newY: number, nextShow: boolean) => {
+    if (handleUpdatePointerRef.current) {
+      handleUpdatePointerRef.current(newY, nextShow);
+    }
+  }, []);
+
+  const togglePointer = () => {
+    const nextShow = !showPointer;
+    setShowPointer(nextShow);
+    savePointerState(pointerY, nextShow);
+  };
+
+  const adjustPointer = (amount: number) => {
+    setPointerY((prev) => {
+      const next = Math.max(2, Math.min(98, prev + amount));
+      savePointerState(next, showPointer);
+      return next;
+    });
+  };
+
+  const handleDragStart = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    isDraggingRef.current = true;
+    
+    const pageBlock = document.getElementById(`page-block-${pageNumber}`);
+    if (!pageBlock) return;
+
+    const onDrag = (moveEvent: MouseEvent | TouchEvent) => {
+      if (!isDraggingRef.current) return;
+      
+      // Mobil kaydırmayı engelle (işaretçiyi taşırken sayfanın hareket etmemesi için)
+      if (moveEvent.cancelable) {
+        moveEvent.preventDefault();
+      }
+
+      const clientY = 'touches' in moveEvent 
+        ? moveEvent.touches[0].clientY 
+        : moveEvent.clientY;
+
+      const rect = pageBlock.getBoundingClientRect();
+      const relativeY = clientY - rect.top;
+      const percentage = Math.max(2, Math.min(98, (relativeY / rect.height) * 100));
+      
+      setPointerY(parseFloat(percentage.toFixed(1)));
+    };
+
+    const onDragEnd = () => {
+      if (isDraggingRef.current) {
+        isDraggingRef.current = false;
+        setPointerY((finalY) => {
+          savePointerState(finalY, true);
+          return finalY;
+        });
+      }
+      window.removeEventListener('mousemove', onDrag);
+      window.removeEventListener('mouseup', onDragEnd);
+      window.removeEventListener('touchmove', onDrag);
+      window.removeEventListener('touchend', onDragEnd);
+    };
+
+    window.addEventListener('mousemove', onDrag);
+    window.addEventListener('mouseup', onDragEnd);
+    window.addEventListener('touchmove', onDrag, { passive: false });
+    window.addEventListener('touchend', onDragEnd);
+  };
 
   // Arama sonucuna tıklandığında ilgili kelimeye otomatik odaklanma (scroll)
   useEffect(() => {
@@ -1014,6 +1103,19 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
             )}
           </div>
 
+          {/* Okuma İşaretçisi (Gezen İşaretçi) Butonu */}
+          <button
+            onClick={togglePointer}
+            className={`p-2 rounded-full border transition-all cursor-pointer ${
+              showPointer
+                ? 'border-amber-500 bg-amber-500/10 text-amber-600 dark:text-amber-400 shadow-sm'
+                : 'border-sepia-300 dark:border-stone-800 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-900/50'
+            }`}
+            title={showPointer ? "Okuma kılavuzunu kapat" : "Okuma kılavuzunu aç (Gezen İşaretçi)"}
+          >
+            <Pin className={`w-4 h-4 ${showPointer ? 'rotate-45 text-amber-600 dark:text-amber-400' : ''} transition-transform duration-300`} />
+          </button>
+
           {/* Yer İmi Butonu */}
           <button
             onClick={() => onToggleBookmark(book.id, pageNumber)}
@@ -1057,6 +1159,49 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                   data-page-num={pageNum}
                   className="relative pb-16 last:pb-0 rounded-lg p-2 md:p-4"
                 >
+                  {/* Okuma İşaretçisi (Gezen İşaretçi) */}
+                  {isActive && showPointer && (
+                    <div
+                      style={{ top: `${pointerY}%` }}
+                      className="absolute left-0 right-0 h-[2px] bg-amber-500/80 dark:bg-amber-400/80 z-20 pointer-events-auto flex items-center justify-between group transition-[top] duration-75 select-none"
+                    >
+                      {/* Sol tarafta şık sürükleme kulpu */}
+                      <div 
+                        className="absolute -left-5 md:-left-7 top-1/2 -translate-y-1/2 bg-amber-500 hover:bg-amber-600 dark:bg-amber-400 dark:hover:bg-amber-500 text-stone-950 p-1.5 rounded-l-md shadow-md cursor-ns-resize flex items-center justify-center transition-all z-30 active:scale-95"
+                        title="İşaretçiyi dikey kaydır"
+                        onMouseDown={handleDragStart}
+                        onTouchStart={handleDragStart}
+                      >
+                        <div className="flex flex-col gap-[2px] items-center px-0.5 pointer-events-none">
+                          <span className="w-2.5 h-[2px] bg-stone-900 rounded-full" />
+                          <span className="w-2.5 h-[2px] bg-stone-900 rounded-full" />
+                          <span className="w-2.5 h-[2px] bg-stone-900 rounded-full" />
+                        </div>
+                      </div>
+
+                      {/* Arka planda uzanan okuma şeridi vurgusu */}
+                      <div className="absolute inset-x-0 h-8 -translate-y-4 bg-amber-400/10 dark:bg-amber-400/15 pointer-events-none blur-sm" />
+
+                      {/* Sağ tarafta ince ayar düğmeleri */}
+                      <div className="absolute -right-5 md:-right-7 top-1/2 -translate-y-1/2 flex flex-col gap-[1px] bg-amber-500 dark:bg-amber-400 text-stone-950 p-1 rounded-r-md shadow-md z-30">
+                        <button 
+                          onClick={() => adjustPointer(-1.5)} 
+                          className="p-0.5 hover:bg-stone-900/10 dark:hover:bg-stone-900/10 active:scale-90 rounded transition-all cursor-pointer flex items-center justify-center"
+                          title="Yukarı İnce Ayar"
+                        >
+                          <ChevronLeft className="w-3.5 h-3.5 rotate-90 stroke-[2.5]" />
+                        </button>
+                        <button 
+                          onClick={() => adjustPointer(1.5)} 
+                          className="p-0.5 hover:bg-stone-900/10 dark:hover:bg-stone-900/10 active:scale-90 rounded transition-all cursor-pointer flex items-center justify-center"
+                          title="Aşağı İnce Ayar"
+                        >
+                          <ChevronLeft className="w-3.5 h-3.5 -rotate-90 stroke-[2.5]" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Sayfa Üst Süsü (Tüm Sayfalar İçin) */}
                   <div className={`flex items-center justify-center gap-3 mb-12 select-none transition-all duration-700 ${isActive ? 'opacity-100' : 'opacity-35 dark:opacity-55'}`}>
                     <div className={`h-[1px] transition-all duration-700 bg-sepia-accent/50 ${isActive ? 'w-24 bg-sepia-accent/80' : 'w-14'}`} />

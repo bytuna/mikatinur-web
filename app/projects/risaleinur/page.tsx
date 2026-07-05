@@ -12,6 +12,8 @@ type ReadingState = {
   selectedWordDefinition: DictionaryTerm | null;
   searchQuery: string;
   bookmarks: Array<{ bookId: string; page: number; date: string; }>;
+  // Per-book progress and UI pointers
+  bookProgress?: Record<string, { currentPage: number; pointerY?: number; showPointer?: boolean }>;
 };
 
 type DictionaryTerm = {
@@ -41,6 +43,15 @@ import { TefekkurSettings } from '../../../components/TefekkurSettings';
 import { LibraryView } from '../../../components/LibraryView';
 import { Menu, Settings, Compass, Library } from 'lucide-react';
 
+const DEFAULT_PREFERENCES: UserPreferences = {
+  theme: 'sepia',
+  fontSize: 'md',
+  fontStyle: 'serif',
+  lineHeight: 'relaxed',
+  showFootnotes: true,
+  showTefekkurHighlights: true, // "Renk Aç" modu varsayılan olarak aktif
+};
+
 const DEFAULT_STATE: ReadingState = {
   currentBookId: 'sozler',
   currentPage: 5,
@@ -50,12 +61,10 @@ const DEFAULT_STATE: ReadingState = {
   bookmarks: [
     { bookId: 'sozler', page: 5, date: '28.06.2026' }
   ],
+  bookProgress: {
+    sozler: { currentPage: 5 }
+  },
 };
-
-// Default user preferences fallback for SSR and initial state hydration
-const DEFAULT_PREFERENCES: UserPreferences = ({
-  theme: 'sepia',
-} as unknown) as UserPreferences;
 
 const getFilePrefixForChar = (char: string): string | null => {
   if (!char) return null;
@@ -552,34 +561,90 @@ export default function App() {
       minPage = dynBook.startingPage;
     }
     
-    let targetPage = pageNumber || minPage;
+    // Her kitap için bağımsız kaydedilmiş sayfa pozisyonunu geri yükle
+    let targetPage = pageNumber;
+    if (!targetPage) {
+      if (state.bookProgress && state.bookProgress[bookId]) {
+        targetPage = state.bookProgress[bookId].currentPage;
+      } else {
+        targetPage = minPage;
+      }
+    }
+
     if (targetPage < minPage) {
       targetPage = minPage;
     }
     
-    setState((prev) => ({
-      ...prev,
-      currentBookId: bookId,
-      currentPage: targetPage, // Kitap değişiminde kitap başlangıç sayfası veya belirtilen sayfa
-      selectedWord: null,
-      selectedWordDefinition: null,
-      searchQuery: searchQuery !== undefined ? searchQuery : prev.searchQuery,
-    }));
+    setState((prev) => {
+      const currentProgress = prev.bookProgress || {};
+      const bookProg = currentProgress[bookId] || { currentPage: targetPage };
+      const updatedProgress = {
+        ...currentProgress,
+        [bookId]: {
+          ...bookProg,
+          currentPage: targetPage,
+        }
+      };
+
+      return {
+        ...prev,
+        currentBookId: bookId,
+        currentPage: targetPage,
+        selectedWord: null,
+        selectedWordDefinition: null,
+        searchQuery: searchQuery !== undefined ? searchQuery : prev.searchQuery,
+        bookProgress: updatedProgress,
+      };
+    });
     setViewMode('reader');
     setSidebarOpen(true);
     setFihristClickTrigger(Date.now());
   };
 
   const handleSelectPage = (pageNumber: number, isFromFihrist = false) => {
-    setState((prev) => ({
-      ...prev,
-      currentPage: pageNumber,
-      selectedWord: null,
-      selectedWordDefinition: null,
-    }));
+    setState((prev) => {
+      const bookId = prev.currentBookId;
+      const currentProgress = prev.bookProgress || {};
+      const bookProg = currentProgress[bookId] || { currentPage: pageNumber };
+      const updatedProgress = {
+        ...currentProgress,
+        [bookId]: {
+          ...bookProg,
+          currentPage: pageNumber,
+        }
+      };
+
+      return {
+        ...prev,
+        currentPage: pageNumber,
+        selectedWord: null,
+        selectedWordDefinition: null,
+        bookProgress: updatedProgress,
+      };
+    });
     if (isFromFihrist) {
       setFihristClickTrigger(Date.now());
     }
+  };
+
+  const handleUpdatePointer = (bookId: string, pointerY: number, showPointer: boolean) => {
+    setState((prev) => {
+      const currentProgress = prev.bookProgress || {};
+      const bookProg = currentProgress[bookId] || { currentPage: prev.currentPage };
+      const updatedProgress = {
+        ...currentProgress,
+        [bookId]: {
+          ...bookProg,
+          pointerY,
+          showPointer,
+        }
+      };
+
+      return {
+        ...prev,
+        bookProgress: updatedProgress,
+      };
+    });
   };
 
   const handleSelectWord = (term: DictionaryTerm) => {
@@ -790,6 +855,9 @@ export default function App() {
               dictionary={dictionary}
               fihristClickTrigger={fihristClickTrigger}
               sections={parsedSections}
+              savedPointerY={state.bookProgress?.[state.currentBookId]?.pointerY}
+              savedShowPointer={state.bookProgress?.[state.currentBookId]?.showPointer}
+              onUpdatePointer={(pointerY, showPointer) => handleUpdatePointer(state.currentBookId, pointerY, showPointer)}
             />
           </div>
 
