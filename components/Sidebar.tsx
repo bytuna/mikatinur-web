@@ -1,8 +1,9 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { RisaleBook, ReadingState, DictionaryTerm, FihristItem, UserPreferences, UserNote } from '../types';
 import { BookOpen, Search, X, Compass, Library, ChevronRight, Plus, Trash2, ChevronDown, BookMarked, FileText } from 'lucide-react';
 import { BOOK_CONTENTS } from '../bookContents';
+import { turkishToLower } from '../kulliyat';
 
 interface SidebarProps {
   books: RisaleBook[];
@@ -30,7 +31,7 @@ interface FihristNodeItemProps {
   onToggleExpand: (id: string) => void;
   searchActive: boolean;
   searchQuery?: string;
-  theme?: 'light' | 'sepia' | 'dark' | string;
+  theme?: 'light' | 'sepia' | 'dark';
 }
 
 const simplifyChar = (char: string): string => {
@@ -328,6 +329,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [isContentsExpanded, setIsContentsExpanded] = useState(false);
   const [newNoteText, setNewNoteText] = useState('');
   const [includeReference, setIncludeReference] = useState(true);
+  const [notesSearchQuery, setNotesSearchQuery] = useState('');
+
+  const filteredNotes = useMemo(() => {
+    if (!notesSearchQuery.trim()) return notes;
+    const q = simplifyString(turkishToLower(notesSearchQuery.trim()));
+    return notes.filter((note) => {
+      const textMatches = simplifyString(turkishToLower(note.text)).includes(q);
+      const bookMatches = note.reference
+        ? simplifyString(turkishToLower(note.reference.bookTitle)).includes(q)
+        : false;
+      return textMatches || bookMatches;
+    });
+  }, [notes, notesSearchQuery]);
 
   const handleAddNote = () => {
     if (!newNoteText.trim()) return;
@@ -608,10 +622,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     </div>
                   </div>
 
+                  {/* Arama Çubuğu (Yalnızca kaydedilmiş notlar varsa gösterilir) */}
+                  {notes.length > 0 && (
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Notlarda ara..."
+                        value={notesSearchQuery}
+                        onChange={(e) => setNotesSearchQuery(e.target.value)}
+                        className={`w-full pl-8 pr-8 py-1.5 text-xs rounded-lg border focus:outline-none focus:ring-1 font-sans ${getInputClasses()}`}
+                      />
+                      <Search className="w-3.5 h-3.5 text-stone-400 absolute left-2.5 top-2.5" />
+                      {notesSearchQuery && (
+                        <button
+                          onClick={() => setNotesSearchQuery('')}
+                          className="absolute right-2.5 top-2 hover:text-red-500 text-stone-400 cursor-pointer"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  )}
+
                   {/* Kayıtlı Notlar Listesi */}
                   <div className="space-y-2.5 max-h-60 overflow-y-auto pr-0.5 no-scrollbar">
-                    {notes.length > 0 ? (
-                      notes.map((note) => (
+                    {filteredNotes.length > 0 ? (
+                      filteredNotes.map((note) => (
                         <div
                           key={note.id}
                           className={`p-3 rounded-lg border flex flex-col gap-2 relative group/item transition-all ${getNoteItemClasses()}`}
@@ -647,6 +683,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           </div>
                         </div>
                       ))
+                    ) : notes.length > 0 ? (
+                      <div className="text-center py-4 text-[10px] font-sans opacity-50 italic">
+                        Arama kriterlerine uygun not bulunamadı.
+                      </div>
                     ) : (
                       <div className="text-center py-4 text-[10px] font-sans opacity-50 italic">
                         Henüz tefekkür notu eklenmemiş.
@@ -805,7 +845,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           onToggleExpand={handleToggleExpand}
                           searchActive={false}
                           searchQuery=""
-                          theme={theme}
+                          theme={theme as 'light' | 'sepia' | 'dark'}
                         />
                       ))
                     ) : (
