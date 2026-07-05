@@ -145,10 +145,56 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
     }
   }, []);
 
+  // Okuma kılavuzunu görünür alanın (viewport) ortasına konumlandıran yardımcı fonksiyon
+  const getViewportCenterPercentY = useCallback(() => {
+    const container = containerRef.current;
+    const pageBlock = document.getElementById(`page-block-${pageNumber}`);
+    if (!container || !pageBlock) return 30; // fallback
+
+    const containerRect = container.getBoundingClientRect();
+    const pageRect = pageBlock.getBoundingClientRect();
+
+    // Container'ın dikey orta noktası
+    const centerY = containerRect.top + containerRect.height / 2;
+
+    // Bu noktanın sayfa bloğunun en üstüne olan dikey mesafesi
+    const relativeY = centerY - pageRect.top;
+
+    // Yüzdesel karşılığı
+    const percentage = (relativeY / pageRect.height) * 100;
+
+    // Sayfa dışına taşmasını engelle (%5 - %95 arası)
+    return Math.max(5, Math.min(95, percentage));
+  }, [pageNumber]);
+
+  // İşaretçinin dikey olarak şu anki görünür alanda olup olmadığını kontrol eden fonksiyon
+  const isPointerVisible = useCallback(() => {
+    const container = containerRef.current;
+    const pageBlock = document.getElementById(`page-block-${pageNumber}`);
+    if (!container || !pageBlock) return false;
+
+    const containerRect = container.getBoundingClientRect();
+    const pageRect = pageBlock.getBoundingClientRect();
+
+    // İşaretçinin piksel cinsinden dikey koordinatı
+    const pointerPixelY = pageRect.top + (pageRect.height * pointerY) / 100;
+
+    // Koordinat görünür dikey alanın içinde mi?
+    return pointerPixelY >= containerRect.top && pointerPixelY <= containerRect.bottom;
+  }, [pageNumber, pointerY]);
+
   const togglePointer = () => {
     const nextShow = !showPointer;
+    let nextY = pointerY;
+    if (nextShow) {
+      // Sadece işaretçi şu anki görünür alanın dışındaysa ekran ortasına getir
+      if (!isPointerVisible()) {
+        nextY = getViewportCenterPercentY();
+        setPointerY(nextY);
+      }
+    }
     setShowPointer(nextShow);
-    savePointerState(pointerY, nextShow);
+    savePointerState(nextY, nextShow);
   };
 
   const adjustPointer = (amount: number) => {
@@ -247,6 +293,8 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
     origin?: string;
     loading?: boolean;
     rect: DOMRect | null;
+    targetPageNum?: number;
+    targetPercentY?: number;
   } | null>(null);
 
   // Popup konumunu ekran dışına taşmayacak şekilde hesaplayan yardımcı fonksiyon
@@ -287,14 +335,26 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
     onSelectWord(term); // Sağ paneldeki asistanı da tetikler
     
     const rect = e.currentTarget.getBoundingClientRect();
+    const pageElement = e.currentTarget.closest('[data-page-num]');
+    const pageNumAttr = pageElement?.getAttribute('data-page-num');
+    const clickedPageNum = pageNumAttr ? parseInt(pageNumAttr, 10) : pageNumber;
+    let percentY = 30;
+    if (pageElement) {
+      const pageRect = pageElement.getBoundingClientRect();
+      const clickY = rect.top + (rect.height / 2) - pageRect.top;
+      percentY = Math.max(2, Math.min(98, (clickY / pageRect.height) * 100));
+    }
+
     setActivePopup({
       type: 'lugat',
       title: term.word,
       text: term.definition,
       origin: term.origin,
       rect,
+      targetPageNum: clickedPageNum,
+      targetPercentY: percentY,
     });
-  }, [onSelectWord]);
+  }, [onSelectWord, pageNumber]);
 
   const handleArabicClick = useCallback(async (e: React.MouseEvent<HTMLDivElement>, verseIdStr: string, arabicText: string) => {
     e.stopPropagation();
@@ -302,12 +362,24 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
     if (isNaN(verseId)) return;
 
     const rect = e.currentTarget.getBoundingClientRect();
+    const pageElement = e.currentTarget.closest('[data-page-num]');
+    const pageNumAttr = pageElement?.getAttribute('data-page-num');
+    const clickedPageNum = pageNumAttr ? parseInt(pageNumAttr, 10) : pageNumber;
+    let percentY = 30;
+    if (pageElement) {
+      const pageRect = pageElement.getBoundingClientRect();
+      const clickY = rect.top + (rect.height / 2) - pageRect.top;
+      percentY = Math.max(2, Math.min(98, (clickY / pageRect.height) * 100));
+    }
+
     setActivePopup({
       type: 'meal',
       title: 'Ayet / Hadis Meali',
       text: '',
       loading: true,
       rect,
+      targetPageNum: clickedPageNum,
+      targetPercentY: percentY,
     });
 
     try {
@@ -1167,36 +1239,51 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                     >
                       {/* Sol tarafta şık sürükleme kulpu */}
                       <div 
-                        className="absolute -left-5 md:-left-7 top-1/2 -translate-y-1/2 bg-amber-500 hover:bg-amber-600 dark:bg-amber-400 dark:hover:bg-amber-500 text-stone-950 p-1.5 rounded-l-md shadow-md cursor-ns-resize flex items-center justify-center transition-all z-30 active:scale-95"
-                        title="İşaretçiyi dikey kaydır"
+                        className="absolute -left-5 md:-left-7 top-1/2 -translate-y-1/2 bg-amber-500 hover:bg-amber-600 dark:bg-amber-400 dark:hover:bg-amber-500 text-stone-950 p-2 rounded-l-md shadow-md cursor-ns-resize flex items-center justify-center transition-all z-30 active:scale-95"
+                        title="İşaretçiyi dikey kaydır (Sürükle)"
                         onMouseDown={handleDragStart}
                         onTouchStart={handleDragStart}
                       >
-                        <div className="flex flex-col gap-[2px] items-center px-0.5 pointer-events-none">
-                          <span className="w-2.5 h-[2px] bg-stone-900 rounded-full" />
-                          <span className="w-2.5 h-[2px] bg-stone-900 rounded-full" />
-                          <span className="w-2.5 h-[2px] bg-stone-900 rounded-full" />
+                        <div className="flex flex-col gap-[3px] items-center px-0.5 pointer-events-none">
+                          <span className="w-3 h-[2px] bg-stone-900 rounded-full" />
+                          <span className="w-3 h-[2px] bg-stone-900 rounded-full" />
+                          <span className="w-3 h-[2px] bg-stone-900 rounded-full" />
                         </div>
                       </div>
 
                       {/* Arka planda uzanan okuma şeridi vurgusu */}
                       <div className="absolute inset-x-0 h-8 -translate-y-4 bg-amber-400/10 dark:bg-amber-400/15 pointer-events-none blur-sm" />
 
-                      {/* Sağ tarafta ince ayar düğmeleri */}
-                      <div className="absolute -right-5 md:-right-7 top-1/2 -translate-y-1/2 flex flex-col gap-[1px] bg-amber-500 dark:bg-amber-400 text-stone-950 p-1 rounded-r-md shadow-md z-30">
+                      {/* Sağ tarafta Çok Fonksiyonlu Kontrol ve Sürükleme Kulpu */}
+                      <div className="absolute -right-5 md:-right-7 top-1/2 -translate-y-1/2 flex flex-col items-center bg-amber-500 dark:bg-amber-400 text-stone-950 rounded-r-md shadow-md z-30 select-none">
+                        {/* Yukarı İnce Ayar */}
                         <button 
-                          onClick={() => adjustPointer(-1.5)} 
-                          className="p-0.5 hover:bg-stone-900/10 dark:hover:bg-stone-900/10 active:scale-90 rounded transition-all cursor-pointer flex items-center justify-center"
-                          title="Yukarı İnce Ayar"
+                          onClick={() => adjustPointer(-1.0)} 
+                          className="p-1 hover:bg-stone-900/10 active:scale-75 rounded-t-md transition-all cursor-pointer flex items-center justify-center border-b border-stone-900/10 w-full"
+                          title="Yukarı İnce Ayar (-1%)"
                         >
-                          <ChevronLeft className="w-3.5 h-3.5 rotate-90 stroke-[2.5]" />
+                          <ChevronLeft className="w-4 h-4 rotate-90 stroke-[2.5]" />
                         </button>
-                        <button 
-                          onClick={() => adjustPointer(1.5)} 
-                          className="p-0.5 hover:bg-stone-900/10 dark:hover:bg-stone-900/10 active:scale-90 rounded transition-all cursor-pointer flex items-center justify-center"
-                          title="Aşağı İnce Ayar"
+
+                        {/* Sürükleme Bölgesi */}
+                        <div 
+                          className="w-full py-2 hover:bg-stone-900/10 cursor-ns-resize flex flex-col gap-[3px] items-center justify-center border-b border-stone-900/10"
+                          title="İşaretçiyi dikey kaydır (Sürükle)"
+                          onMouseDown={handleDragStart}
+                          onTouchStart={handleDragStart}
                         >
-                          <ChevronLeft className="w-3.5 h-3.5 -rotate-90 stroke-[2.5]" />
+                          <span className="w-3 h-[1.5px] bg-stone-900 rounded-full" />
+                          <span className="w-3 h-[1.5px] bg-stone-900 rounded-full" />
+                          <span className="w-3 h-[1.5px] bg-stone-900 rounded-full" />
+                        </div>
+
+                        {/* Aşağı İnce Ayar */}
+                        <button 
+                          onClick={() => adjustPointer(1.0)} 
+                          className="p-1 hover:bg-stone-900/10 active:scale-75 rounded-b-md transition-all cursor-pointer flex items-center justify-center w-full"
+                          title="Aşağı İnce Ayar (+1%)"
+                        >
+                          <ChevronLeft className="w-4 h-4 -rotate-90 stroke-[2.5]" />
                         </button>
                       </div>
                     </div>
@@ -1358,6 +1445,33 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                     </p>
                   )}
                 </div>
+
+                {/* Popup Aksiyon Butonu Footer Alanı */}
+                {!activePopup.loading && activePopup.targetPageNum && activePopup.targetPercentY !== undefined && (
+                  <div className="px-5 py-3 bg-sepia-100/30 dark:bg-stone-950/35 border-t border-sepia-300/30 dark:border-stone-850/40 flex items-center justify-end">
+                    <button
+                      onClick={() => {
+                        const targetPage = activePopup.targetPageNum!;
+                        const targetY = activePopup.targetPercentY!;
+
+                        // Eğer işaretçi başka sayfadaysa o sayfaya geçiş yapalım
+                        if (targetPage !== pageNumber) {
+                          onPageChange(targetPage);
+                        }
+                        
+                        setPointerY(parseFloat(targetY.toFixed(1)));
+                        setShowPointer(true);
+                        savePointerState(targetY, true);
+                        setActivePopup(null);
+                      }}
+                      className="flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-500 hover:bg-amber-600 dark:bg-amber-500 dark:hover:bg-amber-600 text-stone-950 text-xs font-sans font-bold rounded-full shadow-md transition-all cursor-pointer active:scale-95"
+                      title="Okuma kılavuzunu tam bu satırın üzerine sabitle"
+                    >
+                      <Pin className="w-3.5 h-3.5 rotate-45 text-stone-950" />
+                      <span>Buraya Raptiyele (Kılavuz Sabitle)</span>
+                    </button>
+                  </div>
+                )}
 
                 {/* Süsleme Çizgisi */}
                 <div className="h-1 bg-gradient-to-r from-sepia-accent/50 via-sepia-accent to-sepia-accent/50" />
