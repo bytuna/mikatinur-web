@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { RisaleBook, ReadingState, DictionaryTerm, FihristItem, UserPreferences, UserNote } from '../types';
 import { BookOpen, Search, X, Compass, Library, ChevronRight, Plus, Trash2, ChevronDown, BookMarked, FileText } from 'lucide-react';
+import { BOOK_CONTENTS } from '../bookContents';
 
 interface SidebarProps {
   books: RisaleBook[];
@@ -317,12 +318,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const currentBook = books.find((b) => b.id === state.currentBookId) || books[0];
+  const activeBookContents = BOOK_CONTENTS[currentBook.id];
 
   // Kitap içi arama sonuçları hesaplaması
   const bookSearchResults = searchInBookPages(currentBook.pages, state.searchQuery);
 
   // Tefekkür Notları State & Metodları
   const [isNotesExpanded, setIsNotesExpanded] = useState(false);
+  const [isContentsExpanded, setIsContentsExpanded] = useState(false);
   const [newNoteText, setNewNoteText] = useState('');
   const [includeReference, setIncludeReference] = useState(true);
 
@@ -653,6 +656,64 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </div>
               )}
             </div>
+
+            {/* Kitap İçerik Listesi (Konu Fihristi) */}
+            {activeBookContents && activeBookContents.length > 0 && (
+              <div className={`border rounded-xl p-3.5 transition-all duration-300 ${getNotesPanelClasses()}`}>
+                <button
+                  onClick={() => setIsContentsExpanded(!isContentsExpanded)}
+                  className="w-full flex items-center justify-between text-left cursor-pointer group"
+                >
+                  <div className="flex items-center gap-2">
+                    <BookOpen className={`w-4 h-4 ${theme === 'dark' ? 'text-amber-400' : 'text-sepia-accent'}`} />
+                    <span className={`font-sans font-bold text-xs uppercase tracking-wider ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>
+                      {currentBook.title} Konu Listesi
+                    </span>
+                    <span className="px-1.5 py-0.5 text-[9px] rounded-full bg-sepia-accent/20 text-sepia-accent font-bold font-mono">
+                      {activeBookContents.length}
+                    </span>
+                  </div>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-stone-400 transition-transform duration-300 ${
+                      isContentsExpanded ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+
+                {isContentsExpanded && (
+                  <div className="mt-4 space-y-2 max-h-64 overflow-y-auto pr-0.5 no-scrollbar">
+                    {activeBookContents.map((item) => {
+                      const isCurrentPage = state.currentPage === item.page;
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => onSelectPage(item.page, true)}
+                          className={`w-full text-left p-2.5 rounded-lg border transition-all text-xs flex flex-col gap-1 cursor-pointer ${
+                            isCurrentPage
+                              ? 'bg-sepia-accent/10 border-sepia-accent text-sepia-accent font-medium'
+                              : theme === 'dark'
+                              ? 'bg-[#1b1917]/40 border-stone-850/50 hover:bg-[#1b1917]/80 text-stone-300'
+                              : 'bg-white/40 border-stone-200/50 hover:bg-white/80 text-stone-700'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between w-full gap-2">
+                            <span className="font-sans font-bold text-[11px] uppercase tracking-wide">
+                              {item.title}
+                            </span>
+                            <span className="text-[10px] font-mono opacity-60">
+                              s. {item.page}
+                            </span>
+                          </div>
+                          <p className="text-[11px] font-serif leading-relaxed opacity-80 break-words">
+                            {item.description}
+                          </p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Aktif Kitap Başlığı */}
             <div>

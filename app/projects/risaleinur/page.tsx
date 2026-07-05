@@ -65,22 +65,26 @@ const DEFAULT_PREFERENCES: UserPreferences = {
 };
 
 const turkishToLower = (text: string): string => {
-  return text.split('').map((char) => {
-    if (char === 'I') return 'ı';
-    if (char === 'İ') return 'i';
-    return char.toLowerCase();
-  }).join('');
+  if (!text) return text;
+  return text
+    .replace(/İ/g, 'i')
+    .replace(/I/g, 'ı')
+    .replace(/Ş/g, 'ş')
+    .replace(/Ğ/g, 'ğ')
+    .replace(/Ü/g, 'ü')
+    .replace(/Ö/g, 'ö')
+    .replace(/Ç/g, 'ç')
+    .replace(/Â/g, 'â')
+    .replace(/Î/g, 'î')
+    .replace(/Û/g, 'û')
+    .toLowerCase();
 };
 
+// Simplify string for dictionary keys: lowercase (Turkish-aware), remove punctuation and extra spaces
 const simplifyString = (text: string): string => {
+  if (!text) return text;
   return turkishToLower(text)
-    .replace(/[ÂÎÛâîû]/g, (match) => {
-      if (match === 'â' || match === 'Â') return 'a';
-      if (match === 'î' || match === 'Î') return 'i';
-      if (match === 'û' || match === 'Û') return 'u';
-      return match;
-    })
-    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()\?"'’]/g, '')
+    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’\[\]]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
 };
@@ -774,10 +778,11 @@ export default function App() {
     }
   };
 
-  type LibraryCompatibleTheme = 'sepia' | 'dark' | 'light';
-
-  const normalizeThemeForLibrary = (theme: ReadingTheme): LibraryCompatibleTheme => {
-    return theme === 'dark' || theme === 'light' ? theme : 'sepia';
+  // Map extended ReadingTheme to basic theme types expected by some child components
+  const mapToBasicTheme = (theme: ReadingTheme): 'sepia' | 'light' | 'dark' => {
+    if (theme === 'dark') return 'dark';
+    if (theme === 'sepia' || theme === 'saman') return 'sepia';
+    return 'light';
   };
 
   const booksWithDynamicData = KULLIYAT.map((book) => {
@@ -819,7 +824,7 @@ export default function App() {
         books={booksWithDynamicData}
         readingState={state}
         onSelectBook={handleSelectBook}
-        theme={normalizeThemeForLibrary(preferences.theme)}
+          theme={mapToBasicTheme(preferences.theme)}
       />
     );
   }
@@ -840,7 +845,7 @@ export default function App() {
         onGoToLibrary={handleGoToLibrary}
         dictionary={dictionary}
         onSelectWord={handleSelectWord}
-        theme={preferences.theme}
+        theme={mapToBasicTheme(preferences.theme)}
         preferences={preferences}
         notes={notes}
         onNotesChange={setNotes}
