@@ -501,6 +501,21 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
   const [scrollSpeed, setScrollSpeed] = useState<1 | 1.25 | 1.5 | 2>(1); // 1: yavaş, 1.25: orta-yavaş, 1.5: orta, 2: hızlı
 
+  // Sayfaya Git (Go to Page) State
+  const [isEditingPage, setIsEditingPage] = useState(false);
+  const [pageInputStr, setPageInputStr] = useState('');
+
+  const handlePageSubmit = () => {
+    setIsEditingPage(false);
+    const num = parseInt(pageInputStr, 10);
+    const minPage = book.startingPage;
+    const maxPage = book.startingPage + book.totalPages - 1;
+    if (!isNaN(num)) {
+      const targetPage = Math.max(minPage, Math.min(maxPage, num));
+      onPageChange(targetPage);
+    }
+  };
+
   const lastSelectedPageRef = useRef<number>(pageNumber);
   const lastFihristClickTriggerRef = useRef<number>(0);
   const isScrollingRef = useRef<boolean>(false);
@@ -1128,9 +1143,47 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
           <span className={`font-serif font-extrabold text-sm sm:text-base md:text-lg lg:text-xl tracking-tight truncate max-w-[80px] xs:max-w-[120px] sm:max-w-none ${titleThemeClass}`}>
             {book.title}
           </span>
-          <span className="text-[10px] sm:text-xs text-stone-400 dark:text-stone-500 font-mono whitespace-nowrap flex-shrink-0">
-            / s. {pageNumber}
-          </span>
+          {isEditingPage ? (
+            <div className="flex items-center gap-1 sm:gap-1.5 ml-1 flex-shrink-0">
+              <span className="text-[10px] sm:text-xs text-stone-400 dark:text-stone-500 font-mono">/ s.</span>
+              <input
+                type="number"
+                value={pageInputStr}
+                onChange={(e) => setPageInputStr(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handlePageSubmit();
+                  } else if (e.key === 'Escape') {
+                    setIsEditingPage(false);
+                  }
+                }}
+                className="w-12 sm:w-16 h-6 px-1 text-center text-xs font-mono border border-sepia-accent/30 dark:border-stone-700 rounded bg-[#fdfcf9] dark:bg-stone-900 text-stone-800 dark:text-stone-200 focus:outline-none focus:border-sepia-accent focus:ring-1 focus:ring-sepia-accent/50"
+                placeholder={`${book.startingPage}`}
+                autoFocus
+                onBlur={handlePageSubmit}
+                min={book.startingPage}
+                max={book.startingPage + book.totalPages - 1}
+              />
+              <button
+                onClick={handlePageSubmit}
+                className="px-2 py-0.5 text-[9px] font-sans font-bold uppercase tracking-wider rounded bg-sepia-accent text-stone-950 hover:bg-sepia-accent/90 transition-all cursor-pointer flex-shrink-0"
+              >
+                Git
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => {
+                setIsEditingPage(true);
+                setPageInputStr(pageNumber.toString());
+              }}
+              className="hover:bg-sepia-200/50 dark:hover:bg-stone-800/60 px-1.5 py-1 rounded cursor-pointer transition-colors duration-200 font-mono text-[10px] sm:text-xs text-stone-500 dark:text-stone-400 font-semibold flex items-center gap-1 flex-shrink-0"
+              title="Sayfaya gitmek için tıklayın"
+            >
+              / s. {pageNumber}
+              <span className="text-[8px] sm:text-[9px] opacity-40 font-sans font-normal border border-stone-400/30 rounded px-1 scale-90 sm:inline-block hidden">SAYFAYA GİT</span>
+            </button>
+          )}
         </div>
 
         {/* Masaüstü Ortalanmış Otomatik Akış Kumandası */}
