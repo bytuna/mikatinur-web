@@ -44,6 +44,7 @@ export interface TOCSection {
   id: string;
   title: string;
   startPage: number;
+  parentTitles?: string[];
 }
 
 export interface FihristItem {

@@ -119,7 +119,11 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
     const activeSections = sections.filter((s) => s.startPage <= pageNumber);
     if (activeSections.length === 0) return null;
     const sorted = [...activeSections].sort((a, b) => b.startPage - a.startPage);
-    return sorted[0].title;
+    const activeSec = sorted[0];
+    if (activeSec.parentTitles && activeSec.parentTitles.length > 0) {
+      return [...activeSec.parentTitles, activeSec.title].join(', ');
+    }
+    return activeSec.title;
   })();
 
   // 4. Okuma İşaretçisi (Gezen İşaretçi / Okuma Kılavuzu) State ve Mantığı
@@ -1229,7 +1233,11 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                 const activeSections = sections.filter((s) => s.startPage <= pageNum);
                 if (activeSections.length === 0) return null;
                 const sorted = [...activeSections].sort((a, b) => b.startPage - a.startPage);
-                return sorted[0].title;
+                const activeSec = sorted[0];
+                if (activeSec.parentTitles && activeSec.parentTitles.length > 0) {
+                  return [...activeSec.parentTitles, activeSec.title].join(', ');
+                }
+                return activeSec.title;
               })();
 
               return (
@@ -1364,10 +1372,14 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                     {/* İnce Çizgi ve Süsleme */}
                     <div className="h-[1px] bg-sepia-accent/15 dark:bg-stone-800/60 w-full" />
                     
-                    {/* Sayfa Numarası Emblemi */}
-                    <div className="flex items-center justify-center">
+                    {/* Sayfa Numarası Emblemi ve Fihrist Bilgisi */}
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-2 px-2 text-xs font-sans text-sepia-accent/80 dark:text-stone-400">
+                      <span className="hidden sm:inline opacity-60 font-semibold">{book.title}</span>
                       <span className="px-4 py-1.5 rounded-full border border-sepia-accent/30 dark:border-stone-700/80 text-sm font-sans tracking-wide text-sepia-accent dark:text-stone-300 bg-sepia-200/40 dark:bg-stone-900 font-bold shadow-sm">
                         Sayfa {pageNum}
+                      </span>
+                      <span className="text-right truncate max-w-[280px] font-semibold" title={pageSectionTitle || ''}>
+                        {pageSectionTitle || ''}
                       </span>
                     </div>
                   </div>

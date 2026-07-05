@@ -35,6 +35,7 @@ type TOCSection = {
   id: string;
   title: string;
   startPage: number;
+  parentTitles?: string[];
 };
 
 import { Sidebar } from '../../../components/Sidebar';
@@ -159,19 +160,21 @@ const parseFihristText = (text: string): FihristItem[] => {
 
 const flattenFihrist = (items: FihristItem[]): TOCSection[] => {
   const flat: TOCSection[] = [];
-  const traverse = (node: FihristItem) => {
+  const traverse = (node: FihristItem, ancestors: string[]) => {
     if (node.level > 0) {
       flat.push({
         id: node.id,
         title: node.title,
-        startPage: node.page
+        startPage: node.page,
+        parentTitles: ancestors
       });
     }
+    const nextAncestors = [...ancestors, node.title];
     if (node.children && node.children.length > 0) {
-      node.children.forEach(traverse);
+      node.children.forEach(child => traverse(child, nextAncestors));
     }
   };
-  items.forEach(traverse);
+  items.forEach(node => traverse(node, []));
   return flat;
 };
 
@@ -806,7 +809,7 @@ export default function App() {
           </div>
           
           <div className="flex items-center gap-1.5">
-            <span className="font-display font-bold text-sm tracking-tight">Külliyat-ı Nur</span>
+            <span className="font-display font-bold text-sm tracking-tight">RİSALE-İ NUR</span>
           </div>
 
           <button

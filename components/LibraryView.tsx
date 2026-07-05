@@ -743,7 +743,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
             {/* Tanıtım / Karşılama Kartı */}
             <div className="mb-12 text-center max-w-2xl mx-auto space-y-4">
               <h2 className="font-rln text-red-700 dark:text-red-500 text-3xl sm:text-4xl md:text-5xl tracking-wide font-normal">
-                Risale-i Nur Külliyatı
+                RİSALE-İ NUR
               </h2>
               <div className="min-h-[70px] flex items-center justify-center px-4">
                 <p className={`text-sm sm:text-base font-serif italic text-stone-700 dark:text-stone-300 max-w-xl mx-auto leading-relaxed transition-all duration-500 ${fade ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
@@ -806,7 +806,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                         {!isImageLoaded && (
                           <div className="z-10 text-center pt-2">
                             <div className="text-[7px] text-amber-400/80 font-serif tracking-[0.3em] uppercase">
-                              Külliyat-ı Nur
+                              RİSALE-İ NUR
                             </div>
                           </div>
                         )}

@@ -27,7 +27,7 @@ interface FihristNodeItemProps {
   onToggleExpand: (id: string) => void;
   searchActive: boolean;
   searchQuery?: string;
-  theme?: 'light' | 'sepia' | 'dark';
+  theme?: 'light' | 'sepia' | 'dark' | string;
 }
 
 const simplifyChar = (char: string): string => {
@@ -376,7 +376,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 MikatiNur Okuma
               </h2>
               <h1 className={`text-xl font-display font-light italic leading-tight ${theme === 'dark' ? 'text-amber-50' : 'text-sepia-900'}`}>
-                Risale-i Nur Külliyatı
+                RİSALE-İ NUR
               </h1>
             </div>
             {onToggleSidebar && (
@@ -529,7 +529,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           onToggleExpand={handleToggleExpand}
                           searchActive={false}
                           searchQuery=""
-                          theme={theme as 'sepia' | 'dark' | 'light' | undefined}
+                          theme={theme}
                         />
                       ))
                     ) : (
