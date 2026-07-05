@@ -1,3 +1,4 @@
+export const dynamic = 'force-static';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function POST(req: Request) {

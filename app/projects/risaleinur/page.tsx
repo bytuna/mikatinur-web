@@ -89,6 +89,46 @@ const simplifyString = (text: string): string => {
     .trim();
 };
 
+const parseRawDictionaryFile = (text: string): Record<string, DictionaryTerm> => {
+  const entries: Record<string, DictionaryTerm> = {};
+  if (!text) return entries;
+
+  const lines = text.split(/\r?\n/);
+  lines.forEach((line) => {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) return;
+
+    let key = '';
+    let definition = '';
+    const delimiters = ['\t', '|', '=', ' - '];
+
+    for (const delimiter of delimiters) {
+      if (trimmed.includes(delimiter)) {
+        const [first, ...rest] = trimmed.split(delimiter);
+        key = first.trim();
+        definition = rest.join(delimiter).trim();
+        break;
+      }
+    }
+
+    if (!key) {
+      key = trimmed;
+      definition = '';
+    }
+
+    const cleanKey = simplifyString(key);
+    if (!cleanKey) return;
+
+    entries[cleanKey] = {
+      word: key,
+      definition,
+      origin: 'Arapça',
+    };
+  });
+
+  return entries;
+};
+
 const getFilePrefixForChar = (char: string): string | null => {
   if (!char) return null;
   
@@ -107,29 +147,6 @@ const getFilePrefixForChar = (char: string): string | null => {
   
   if (c >= 'a' && c <= 'z') return c;
   return null;
-};
-
-const parseRawDictionaryFile = (text: string): Record<string, DictionaryTerm> => {
-  const dict: Record<string, DictionaryTerm> = {};
-  const lines = text.split('\n');
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed) continue;
-    const eqIdx = trimmed.indexOf('=');
-    if (eqIdx !== -1) {
-      const word = trimmed.substring(0, eqIdx).trim();
-      const definition = trimmed.substring(eqIdx + 1).trim();
-      if (word && definition) {
-        const key = turkishToLower(word).replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '').trim();
-        dict[key] = {
-          word: word,
-          definition: definition.replace(/<br>/g, '\n'),
-          origin: 'Arapça'
-        };
-      }
-    }
-  }
-  return dict;
 };
 
 const parseFihristText = (text: string): FihristItem[] => {
@@ -229,6 +246,17 @@ export default function App() {
         }
       }
 
+      // KRİTİK: Android Köprüsü Kontrolü
+      // Eğer Android'den "şu kitabı aç" emri gelmişse:
+      if ((window as any).AndroidBridge) {
+        const selectedBookId = (window as any).AndroidBridge.getSelectedBook();
+        if (selectedBookId) {
+          // Web projenin kendi fonksiyonunu kullanarak kitabı yükle
+          handleSelectBook(selectedBookId);
+          setViewMode('reader');
+        }
+      }
+
       const savedState = localStorage.getItem('mikatinur_reading_state');
       if (savedState) {
         try {
@@ -237,6 +265,7 @@ export default function App() {
           console.error(e);
         }
       }
+
       setIsHydrated(true);
     }
   }, []);
@@ -778,13 +807,6 @@ export default function App() {
     }
   };
 
-  // Map extended ReadingTheme to basic theme types expected by some child components
-  const mapToBasicTheme = (theme: ReadingTheme): 'sepia' | 'light' | 'dark' => {
-    if (theme === 'dark') return 'dark';
-    if (theme === 'sepia' || theme === 'saman') return 'sepia';
-    return 'light';
-  };
-
   const booksWithDynamicData = KULLIYAT.map((book) => {
     const dynBook = dynamicBooks[book.id];
     const combinedPages = (dynBook && Object.keys(dynBook.pages).length > 0)
@@ -824,7 +846,7 @@ export default function App() {
         books={booksWithDynamicData}
         readingState={state}
         onSelectBook={handleSelectBook}
-          theme={mapToBasicTheme(preferences.theme)}
+        theme={preferences.theme as 'sepia' | 'light' | 'dark'}
       />
     );
   }
@@ -845,7 +867,7 @@ export default function App() {
         onGoToLibrary={handleGoToLibrary}
         dictionary={dictionary}
         onSelectWord={handleSelectWord}
-        theme={mapToBasicTheme(preferences.theme)}
+        theme={preferences.theme as 'sepia' | 'light' | 'dark'}
         preferences={preferences}
         notes={notes}
         onNotesChange={setNotes}

@@ -1,3 +1,4 @@
+export const dynamic = 'force-static';
 // app/api/explain/route.ts
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
