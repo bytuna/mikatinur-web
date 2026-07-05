@@ -1219,18 +1219,36 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
         className={`flex-1 overflow-y-auto px-4 py-8 md:py-12 no-scrollbar scroll-smooth relative transition-colors duration-300 ${containerBgClass}`}
       >
         {loadedPages.length > 0 ? (
-          <div className={`w-full max-w-[820px] mx-auto ${pageBgClass} rounded-xs shadow-[0_4px_30px_rgba(0,0,0,0.12)] md:shadow-[0_12px_60px_rgba(0,0,0,0.18)] flex flex-col gap-16 relative pb-24 pt-12 md:pt-16 px-6 sm:px-12 md:px-20 min-h-full`}>
+          <div className="w-full max-w-[820px] mx-auto flex flex-col gap-12 relative pb-24 min-h-full">
             {loadedPages.map(({ pageNum, data }) => {
               const isActive = pageNum === pageNumber;
               const isFocused = focusActive && focusPageNum === pageNum;
+
+              const pageSectionTitle = (() => {
+                if (!sections || sections.length === 0) return null;
+                const activeSections = sections.filter((s) => s.startPage <= pageNum);
+                if (activeSections.length === 0) return null;
+                const sorted = [...activeSections].sort((a, b) => b.startPage - a.startPage);
+                return sorted[0].title;
+              })();
 
               return (
                 <div
                   key={pageNum}
                   id={`page-block-${pageNum}`}
                   data-page-num={pageNum}
-                  className="relative pb-16 last:pb-0 rounded-lg p-2 md:p-4"
+                  className={`relative ${pageBgClass} border border-sepia-300/40 dark:border-stone-850/80 rounded-lg shadow-[0_12px_45px_rgba(0,0,0,0.08)] dark:shadow-[0_16px_50px_rgba(0,0,0,0.35)] pb-16 pt-12 px-6 sm:px-12 md:px-16 transition-all duration-300 flex flex-col ${
+                    isActive 
+                      ? 'ring-1 ring-sepia-accent/25 dark:ring-amber-500/15 scale-[1.002]' 
+                      : 'opacity-90 dark:opacity-85'
+                  }`}
                 >
+                  {/* Sol Cilt Payı / Derinlik Gölgesi (Book Spine Gutter Shadow) */}
+                  <div className="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-stone-900/[0.06] dark:from-stone-950/40 to-transparent pointer-events-none rounded-l-lg z-10" />
+                  
+                  {/* Sağ Kitap Yaprağı Kenarı Efekti (Single Leaf border accent) */}
+                  <div className="absolute right-0 top-0 bottom-0 w-[1.5px] bg-stone-950/[0.05] dark:bg-stone-100/5 pointer-events-none rounded-r-lg z-10" />
+
                   {/* Okuma İşaretçisi (Gezen İşaretçi) */}
                   {isActive && showPointer && (
                     <div
@@ -1289,13 +1307,18 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                     </div>
                   )}
 
-                  {/* Sayfa Üst Süsü (Tüm Sayfalar İçin) */}
-                  <div className={`flex items-center justify-center gap-3 mb-12 select-none transition-all duration-700 ${isActive ? 'opacity-100' : 'opacity-35 dark:opacity-55'}`}>
-                    <div className={`h-[1px] transition-all duration-700 bg-sepia-accent/50 ${isActive ? 'w-24 bg-sepia-accent/80' : 'w-14'}`} />
-                    <div className={`text-[10px] font-sans font-extrabold uppercase tracking-[0.25em] transition-all duration-700 ${isActive ? 'text-sepia-accent' : 'text-sepia-accent/80'}`}>
-                      {book.title} — s. {pageNum}
+                  {/* Sayfa Başlığı ve Çizgisi (Book Page Header) */}
+                  <div className={`flex flex-col gap-2 mb-10 select-none transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-40 dark:opacity-50'}`}>
+                    <div className="flex items-center justify-between text-[11px] font-sans font-semibold tracking-wider text-sepia-accent/80 dark:text-stone-400">
+                      <span className="truncate max-w-[180px] md:max-w-[280px]">{book.title}</span>
+                      <span className="font-serif italic font-medium text-sepia-accent dark:text-amber-500/80">✦</span>
+                      <span className="truncate max-w-[180px] md:max-w-[280px]">{pageSectionTitle || book.title}</span>
                     </div>
-                    <div className={`h-[1px] transition-all duration-700 bg-sepia-accent/50 ${isActive ? 'w-24 bg-sepia-accent/80' : 'w-14'}`} />
+                    {/* Çift Çizgi Efekti (Kitap Sayfası Hissi için üstte bir kalın bir ince çizgi) */}
+                    <div className="flex flex-col gap-[2px]">
+                      <div className="h-[1.5px] bg-sepia-accent/35 dark:bg-stone-700/60 w-full" />
+                      <div className="h-[0.5px] bg-sepia-accent/15 dark:bg-stone-800/40 w-full scale-x-95 origin-center" />
+                    </div>
                   </div>
 
                   {/* Sayfa Metni */}
@@ -1335,6 +1358,19 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                       </div>
                     </div>
                   )}
+
+                  {/* Sayfa Altlığı ve Çizgisi (Book Page Footer) */}
+                  <div className={`flex flex-col gap-4 mt-12 select-none transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-40 dark:opacity-50'}`}>
+                    {/* İnce Çizgi ve Süsleme */}
+                    <div className="h-[1px] bg-sepia-accent/15 dark:bg-stone-800/60 w-full" />
+                    
+                    {/* Sayfa Numarası Emblemi */}
+                    <div className="flex items-center justify-center">
+                      <span className="px-4 py-1.5 rounded-full border border-sepia-accent/30 dark:border-stone-700/80 text-sm font-sans tracking-wide text-sepia-accent dark:text-stone-300 bg-sepia-200/40 dark:bg-stone-900 font-bold shadow-sm">
+                        Sayfa {pageNum}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               );
             })}
