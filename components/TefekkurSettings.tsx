@@ -1,17 +1,21 @@
 import React from 'react';
-import { UserPreferences, FontSize, FontStyle, ReadingTheme, ArabicFont } from '../types';
-import { Sun, Moon, Eye, Type, AlignLeft, RefreshCw, HelpCircle, Palette } from 'lucide-react';
+import { UserPreferences, FontSize, FontStyle, ReadingTheme, ArabicFont, UserNote } from '../types';
+import { Sun, Moon, Eye, Type, AlignLeft, RefreshCw, HelpCircle, Palette, Download, Upload } from 'lucide-react';
 
 interface TefekkurSettingsProps {
   preferences: UserPreferences;
   onChange: (prefs: UserPreferences) => void;
   onReset: () => void;
+  notes: UserNote[];
+  onNotesChange: (notes: UserNote[]) => void;
 }
 
 export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
   preferences,
   onChange,
   onReset,
+  notes,
+  onNotesChange,
 }) => {
   const themes: { id: ReadingTheme; name: string; bg: string; text: string; border: string; desc: string; previewBg: string }[] = [
     { id: 'light', name: 'Gündüz', bg: 'bg-stone-50', text: 'text-stone-800', border: 'border-stone-200', desc: 'Sade ve berrak klasik sayfa', previewBg: 'bg-[#fdfcf9] border-stone-300' },
@@ -56,6 +60,92 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
       ...preferences,
       [key]: value,
     });
+  };
+
+  const handleExportNotes = () => {
+    if (notes.length === 0) {
+      alert('Dışa aktarılacak hiç tefekkür notunuz bulunmuyor.');
+      return;
+    }
+    try {
+      const dataStr = JSON.stringify(notes, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `mikatinur-tefekkur-notlari-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error(e);
+      alert('Notlar dışa aktarılırken bir hata oluştu.');
+    }
+  };
+
+  const handleImportNotes = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const text = event.target?.result as string;
+        const imported = JSON.parse(text);
+
+        if (!Array.isArray(imported)) {
+          alert('Geçersiz dosya formatı. Notlar bir liste (array) şeklinde olmalıdır.');
+          return;
+        }
+
+        const validNotes: UserNote[] = [];
+        let skipped = 0;
+
+        for (const item of imported) {
+          if (item && typeof item === 'object' && item.id && item.text) {
+            validNotes.push({
+              id: String(item.id),
+              text: String(item.text),
+              createdAt: String(item.createdAt || new Date().toLocaleString('tr-TR')),
+              reference: item.reference ? {
+                bookId: String(item.reference.bookId || ''),
+                bookTitle: String(item.reference.bookTitle || ''),
+                page: Number(item.reference.page || 1),
+              } : undefined,
+            });
+          } else {
+            skipped++;
+          }
+        }
+
+        if (validNotes.length === 0) {
+          alert('Dosyada geçerli herhangi bir tefekkür notu bulunamadı.');
+          return;
+        }
+
+        const existingIds = new Set(notes.map((n) => n.id));
+        const mergedNotes = [...notes];
+        let addedCount = 0;
+
+        for (const note of validNotes) {
+          if (!existingIds.has(note.id)) {
+            mergedNotes.push(note);
+            addedCount++;
+          }
+        }
+
+        onNotesChange(mergedNotes);
+        localStorage.setItem('mikatinur_notes', JSON.stringify(mergedNotes));
+
+        alert(`İçe aktarma başarılı!\nEklenen yeni not: ${addedCount}\nMevcut olanlarla birleştirilen toplam not: ${mergedNotes.length}${skipped > 0 ? `\nHatalı/Atlanan satır: ${skipped}` : ''}`);
+      } catch (err) {
+        console.error(err);
+        alert('Dosya okunurken veya ayrıştırılırken hata oluştu. Lütfen geçerli bir mikatinur JSON dosyası seçin.');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
   };
 
   return (
@@ -235,6 +325,42 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
             }`}
           />
         </button>
+      </div>
+
+      {/* Tefekkür Notları Yönetimi (İçe/Dışa Aktar) */}
+      <div className="border-t border-sepia-300/50 dark:border-stone-800/80 pt-4 mt-4 space-y-3">
+        <span className="block text-[10px] uppercase tracking-wider font-sans font-bold opacity-50 dark:text-stone-400">
+          TEFEKKÜR NOTLARI YÖNETİMİ
+        </span>
+        <div className="grid grid-cols-2 gap-2">
+          {/* Dışa Aktar Butonu */}
+          <button
+            onClick={handleExportNotes}
+            className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-sepia-accent/30 bg-sepia-accent/5 hover:bg-sepia-accent/15 text-sepia-accent text-[11px] font-sans font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer"
+            title="Tüm notlarınızı yedeklemek için JSON formatında bilgisayarınıza indirin."
+          >
+            <Download className="w-3.5 h-3.5" />
+            Dışa Aktar
+          </button>
+
+          {/* İçe Aktar Butonu */}
+          <label
+            className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-stone-300 dark:border-stone-800 bg-stone-50 dark:bg-stone-900 hover:bg-stone-100 dark:hover:bg-stone-850 text-stone-600 dark:text-stone-300 text-[11px] font-sans font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer text-center"
+            title="Daha önce yedeklediğiniz tefekkür notları JSON dosyasını içeri aktarın."
+          >
+            <Upload className="w-3.5 h-3.5" />
+            İçe Aktar
+            <input
+              type="file"
+              accept=".json"
+              onChange={handleImportNotes}
+              className="hidden"
+            />
+          </label>
+        </div>
+        <p className="text-[9px] text-stone-400 dark:text-stone-500 font-sans leading-relaxed text-center">
+          Notlarınızı yedekleyebilir veya başka cihazlarla birleştirebilirsiniz.
+        </p>
       </div>
     </div>
   );

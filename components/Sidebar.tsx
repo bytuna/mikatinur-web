@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
-import { RisaleBook, ReadingState, DictionaryTerm, FihristItem, UserPreferences } from '../types';
-import { BookOpen, Search, X, Compass, Library, ChevronRight } from 'lucide-react';
+import { RisaleBook, ReadingState, DictionaryTerm, FihristItem, UserPreferences, UserNote } from '../types';
+import { BookOpen, Search, X, Compass, Library, ChevronRight, Plus, Trash2, ChevronDown, BookMarked, FileText } from 'lucide-react';
 
 interface SidebarProps {
   books: RisaleBook[];
@@ -17,6 +17,8 @@ interface SidebarProps {
   onSelectWord: (term: DictionaryTerm) => void;
   theme?: 'light' | 'sepia' | 'dark' | string;
   preferences?: UserPreferences;
+  notes: UserNote[];
+  onNotesChange: (notes: UserNote[]) => void;
 }
 
 interface FihristNodeItemProps {
@@ -67,6 +69,12 @@ const getFihristHighlightClass = (theme: 'light' | 'dark' | 'sepia' | string) =>
     return 'bg-amber-500/35 text-amber-100 border-b border-amber-500 font-bold px-0.5 rounded-sm';
   } else if (theme === 'sepia') {
     return 'bg-[#f4cf8a] text-[#422402] border-b border-[#bc872e] font-bold px-0.5 rounded-sm';
+  } else if (theme === 'saman') {
+    return 'bg-[#dfbe73] text-[#3a2002] border-b border-[#b08b35] font-bold px-0.5 rounded-sm';
+  } else if (theme === 'green') {
+    return 'bg-emerald-200 text-emerald-950 border-b border-emerald-600 font-bold px-0.5 rounded-sm';
+  } else if (theme === 'gray') {
+    return 'bg-blue-200 text-blue-950 border-b border-blue-600 font-bold px-0.5 rounded-sm';
   } else {
     return 'bg-amber-200 text-stone-950 border-b border-amber-500 font-bold px-0.5 rounded-sm';
   }
@@ -294,6 +302,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectWord,
   theme: themeProp,
   preferences,
+  notes,
+  onNotesChange,
 }) => {
   const theme = themeProp || preferences?.theme || 'light';
   const activeTab = 'fihrist';
@@ -311,12 +321,89 @@ export const Sidebar: React.FC<SidebarProps> = ({
   // Kitap içi arama sonuçları hesaplaması
   const bookSearchResults = searchInBookPages(currentBook.pages, state.searchQuery);
 
+  // Tefekkür Notları State & Metodları
+  const [isNotesExpanded, setIsNotesExpanded] = useState(false);
+  const [newNoteText, setNewNoteText] = useState('');
+  const [includeReference, setIncludeReference] = useState(true);
+
+  const handleAddNote = () => {
+    if (!newNoteText.trim()) return;
+    const newNote: UserNote = {
+      id: Date.now().toString(),
+      text: newNoteText.trim(),
+      createdAt: new Date().toLocaleString('tr-TR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      reference: includeReference ? {
+        bookId: currentBook.id,
+        bookTitle: currentBook.title,
+        page: state.currentPage,
+      } : undefined,
+    };
+    const updatedNotes = [newNote, ...notes];
+    onNotesChange(updatedNotes);
+    localStorage.setItem('mikatinur_notes', JSON.stringify(updatedNotes));
+    setNewNoteText('');
+  };
+
+  const handleDeleteNote = (id: string) => {
+    const updatedNotes = notes.filter((n) => n.id !== id);
+    onNotesChange(updatedNotes);
+    localStorage.setItem('mikatinur_notes', JSON.stringify(updatedNotes));
+  };
+
+  const getNotesPanelClasses = () => {
+    switch (theme) {
+      case 'dark':
+        return 'bg-[#151312] border-stone-850/80';
+      case 'sepia':
+        return 'bg-[#ebd9c1]/20 border-sepia-300/60';
+      case 'saman':
+        return 'bg-[#dfbe73]/20 border-[#d0c091]/60';
+      case 'green':
+        return 'bg-[#d7e6d7]/20 border-[#c3d1c3]/60';
+      case 'gray':
+        return 'bg-[#dee3e7]/20 border-[#ccd2d7]/60';
+      case 'light':
+      default:
+        return 'bg-stone-50/50 border-stone-200';
+    }
+  };
+
+  const getNoteItemClasses = () => {
+    switch (theme) {
+      case 'dark':
+        return 'bg-[#1b1917]/70 border-stone-800 text-stone-200';
+      case 'sepia':
+        return 'bg-white/60 border-sepia-200/60 text-[#2c2621]';
+      case 'saman':
+        return 'bg-[#f3eac8]/60 border-[#d0c091]/60 text-[#332913]';
+      case 'green':
+        return 'bg-[#edf4ed]/60 border-[#c3d1c3]/60 text-[#142918]';
+      case 'gray':
+        return 'bg-[#f0f3f5]/60 border-[#ccd2d7]/60 text-[#1e252b]';
+      case 'light':
+      default:
+        return 'bg-white border-stone-200 text-stone-800';
+    }
+  };
+
   const getSidebarThemeClasses = () => {
     switch (theme) {
       case 'dark':
         return 'bg-[#181614] text-[#e7e5e4] border-stone-900';
       case 'sepia':
         return 'bg-[#f5f2ed] text-[#2c2621] border-sepia-300';
+      case 'saman':
+        return 'bg-[#ebdcae] text-[#332913] border-[#d0c091]';
+      case 'green':
+        return 'bg-[#e3eee3] text-[#142918] border-[#c3d1c3]';
+      case 'gray':
+        return 'bg-[#e8ecef] text-[#1e252b] border-[#ccd2d7]';
       case 'light':
       default:
         return 'bg-[#fdfcf9] text-[#1c1917] border-stone-200';
@@ -329,6 +416,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         return 'bg-[#131110] border-stone-900';
       case 'sepia':
         return 'bg-[#ebd9c1]/40 border-sepia-300';
+      case 'saman':
+        return 'bg-[#e3d3a0] border-[#d0c091]';
+      case 'green':
+        return 'bg-[#d7e6d7] border-[#c3d1c3]';
+      case 'gray':
+        return 'bg-[#dee3e7] border-[#ccd2d7]';
       case 'light':
       default:
         return 'bg-stone-50 border-stone-200';
@@ -341,6 +434,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         return 'bg-[#131110] border-t border-stone-900';
       case 'sepia':
         return 'bg-[#ebd9c1]/30 border-t border-sepia-300';
+      case 'saman':
+        return 'bg-[#e3d3a0] border-t border-[#d0c091]';
+      case 'green':
+        return 'bg-[#d7e6d7] border-t border-[#c3d1c3]';
+      case 'gray':
+        return 'bg-[#dee3e7] border-t border-[#ccd2d7]';
       case 'light':
       default:
         return 'bg-stone-50 border-t border-stone-200';
@@ -353,6 +452,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         return 'bg-[#131110] text-[#e7e5e4] placeholder-stone-500 border-stone-800/80 focus:ring-amber-500/50 focus:border-amber-500';
       case 'sepia':
         return 'bg-white text-[#2c2621] placeholder-stone-400 border-sepia-300 focus:ring-sepia-accent focus:border-sepia-accent';
+      case 'saman':
+        return 'bg-[#f3eac8] text-[#332913] placeholder-[#7d6f4c] border-[#d0c091] focus:ring-yellow-600 focus:border-yellow-600';
+      case 'green':
+        return 'bg-[#edf4ed] text-[#142918] placeholder-emerald-700/60 border-[#c3d1c3] focus:ring-emerald-600 focus:border-emerald-600';
+      case 'gray':
+        return 'bg-[#f0f3f5] text-[#1e252b] placeholder-slate-500/60 border-[#ccd2d7] focus:ring-blue-600 focus:border-blue-600';
       case 'light':
       default:
         return 'bg-white text-[#1c1917] placeholder-stone-400 border-stone-200 focus:ring-sepia-accent focus:border-sepia-accent';
@@ -439,6 +544,116 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="flex-1 overflow-y-auto p-5 no-scrollbar">
           
           <div className="space-y-6">
+            
+            {/* Tefekkür Notları Paneli */}
+            <div className={`border rounded-xl p-3.5 transition-all duration-300 ${getNotesPanelClasses()}`}>
+              <button
+                onClick={() => setIsNotesExpanded(!isNotesExpanded)}
+                className="w-full flex items-center justify-between text-left cursor-pointer group"
+              >
+                <div className="flex items-center gap-2">
+                  <FileText className={`w-4 h-4 ${theme === 'dark' ? 'text-amber-400' : 'text-sepia-accent'}`} />
+                  <span className={`font-sans font-bold text-xs uppercase tracking-wider ${theme === 'dark' ? 'text-stone-300' : 'text-stone-700'}`}>
+                    Tefekkür Notlarım
+                  </span>
+                  {notes.length > 0 && (
+                    <span className="px-1.5 py-0.5 text-[9px] rounded-full bg-sepia-accent/20 text-sepia-accent font-bold font-mono">
+                      {notes.length}
+                    </span>
+                  )}
+                </div>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 text-stone-400 transition-transform duration-300 ${
+                    isNotesExpanded ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
+
+              {isNotesExpanded && (
+                <div className="mt-4 space-y-4">
+                  {/* Yeni Not Ekleme Formu */}
+                  <div className="space-y-2">
+                    <textarea
+                      placeholder="Tefekkür notunuzu buraya yazın..."
+                      value={newNoteText}
+                      onChange={(e) => setNewNoteText(e.target.value)}
+                      rows={3}
+                      className={`w-full p-2.5 text-xs rounded-lg border focus:outline-none focus:ring-1 resize-none font-sans ${getInputClasses()}`}
+                    />
+                    
+                    <div className="flex items-center justify-between gap-2">
+                      <label className="flex items-center gap-1.5 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={includeReference}
+                          onChange={(e) => setIncludeReference(e.target.checked)}
+                          className="w-3.5 h-3.5 accent-sepia-accent rounded text-sepia-accent border-stone-300 focus:ring-0 cursor-pointer"
+                        />
+                        <span className="text-[10px] font-sans opacity-70">
+                          Şu anki sayfayı referans ekle ({currentBook.title}, S. {state.currentPage})
+                        </span>
+                      </label>
+                      
+                      <button
+                        onClick={handleAddNote}
+                        disabled={!newNoteText.trim()}
+                        className="px-3 py-1.5 rounded-lg text-stone-950 bg-sepia-accent hover:bg-sepia-accent/90 disabled:opacity-40 disabled:cursor-not-allowed text-[10px] font-sans font-bold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1 shrink-0"
+                      >
+                        <Plus className="w-3 h-3" />
+                        Ekle
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Kayıtlı Notlar Listesi */}
+                  <div className="space-y-2.5 max-h-60 overflow-y-auto pr-0.5 no-scrollbar">
+                    {notes.length > 0 ? (
+                      notes.map((note) => (
+                        <div
+                          key={note.id}
+                          className={`p-3 rounded-lg border flex flex-col gap-2 relative group/item transition-all ${getNoteItemClasses()}`}
+                        >
+                          {/* Sil Butonu */}
+                          <button
+                            onClick={() => handleDeleteNote(note.id)}
+                            className="absolute right-2 top-2 p-1 rounded-md text-stone-400 hover:text-red-500 hover:bg-red-500/10 transition-colors opacity-0 group-hover/item:opacity-100 focus:opacity-100 cursor-pointer"
+                            title="Notu Sil"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+
+                          <div className="text-xs font-serif leading-relaxed break-words whitespace-pre-wrap pr-4">
+                            {note.text}
+                          </div>
+
+                          <div className="flex flex-wrap items-center justify-between gap-2 mt-1 border-t border-stone-400/10 pt-1.5">
+                            <span className="text-[9px] font-mono opacity-40">
+                              {note.createdAt}
+                            </span>
+                            
+                            {note.reference && (
+                              <button
+                                onClick={() => onSelectBook(note.reference!.bookId, note.reference!.page)}
+                                className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-sans font-semibold tracking-wide border border-sepia-accent/30 bg-sepia-accent/5 hover:bg-sepia-accent/15 text-sepia-accent transition-colors cursor-pointer"
+                                title={`${note.reference.bookTitle} Sayfa ${note.reference.page} sayfasına git`}
+                              >
+                                <BookMarked className="w-2.5 h-2.5" />
+                                {note.reference.bookTitle} s. {note.reference.page}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-4 text-[10px] font-sans opacity-50 italic">
+                        Henüz tefekkür notu eklenmemiş.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Aktif Kitap Başlığı */}
             <div>
               <span className="text-[9px] font-mono opacity-50 uppercase tracking-widest">

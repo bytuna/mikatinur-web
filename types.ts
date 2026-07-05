@@ -74,6 +74,17 @@ export interface BookProgress {
   showPointer?: boolean; // Gezen işaretçi görünürlüğü
 }
 
+export interface UserNote {
+  id: string;
+  text: string;
+  createdAt: string;
+  reference?: {
+    bookId: string;
+    bookTitle: string;
+    page: number;
+  };
+}
+
 export interface ReadingState {
   currentBookId: string;
   currentPage: number;

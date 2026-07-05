@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useMemo } from 'react';
-import { UserPreferences } from '../../../types';
+import { UserPreferences, UserNote } from '../../../types';
 import { KULLIYAT, DICTIONARY } from '../../../kulliyat';
 
 type ReadingTheme = 'sepia' | 'dark' | 'light' | 'saman' | 'green' | 'gray';
@@ -44,16 +44,6 @@ import { TefekkurSettings } from '../../../components/TefekkurSettings';
 import { LibraryView } from '../../../components/LibraryView';
 import { Menu, Settings, Compass, Library } from 'lucide-react';
 
-const DEFAULT_PREFERENCES: UserPreferences = {
-  theme: 'sepia',
-  fontSize: 'md',
-  fontStyle: 'serif',
-  lineHeight: 'relaxed',
-  showFootnotes: true,
-  showTefekkurHighlights: true, // "Renk Aç" modu varsayılan olarak aktif
-  arabicFont: 'hamdullah',
-};
-
 const DEFAULT_STATE: ReadingState = {
   currentBookId: 'sozler',
   currentPage: 5,
@@ -65,15 +55,33 @@ const DEFAULT_STATE: ReadingState = {
   ],
 };
 
+const DEFAULT_PREFERENCES: UserPreferences = {
+  theme: 'sepia',
+  fontSize: 'md',
+  fontStyle: 'serif',
+  lineHeight: 'normal',
+  showFootnotes: true,
+  showTefekkurHighlights: true,
+};
+
 const turkishToLower = (text: string): string => {
-  if (!text) return '';
-  return text.toLocaleLowerCase('tr-TR');
+  return text.split('').map((char) => {
+    if (char === 'I') return 'ı';
+    if (char === 'İ') return 'i';
+    return char.toLowerCase();
+  }).join('');
 };
 
 const simplifyString = (text: string): string => {
   return turkishToLower(text)
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9ığüşöçâîû]/g, '')
+    .replace(/[ÂÎÛâîû]/g, (match) => {
+      if (match === 'â' || match === 'Â') return 'a';
+      if (match === 'î' || match === 'Î') return 'i';
+      if (match === 'û' || match === 'Û') return 'u';
+      return match;
+    })
+    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()\?"'’]/g, '')
+    .replace(/\s+/g, ' ')
     .trim();
 };
 
@@ -230,6 +238,14 @@ export default function App() {
   }, []);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [notes, setNotes] = useState<UserNote[]>(() => {
+    try {
+      const saved = localStorage.getItem('mikatinur_notes');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
   const [fihristClickTrigger, setFihristClickTrigger] = useState<number>(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -758,6 +774,12 @@ export default function App() {
     }
   };
 
+  type LibraryCompatibleTheme = 'sepia' | 'dark' | 'light';
+
+  const normalizeThemeForLibrary = (theme: ReadingTheme): LibraryCompatibleTheme => {
+    return theme === 'dark' || theme === 'light' ? theme : 'sepia';
+  };
+
   const booksWithDynamicData = KULLIYAT.map((book) => {
     const dynBook = dynamicBooks[book.id];
     const combinedPages = (dynBook && Object.keys(dynBook.pages).length > 0)
@@ -791,18 +813,13 @@ export default function App() {
     };
   });
 
-  const libraryTheme: 'sepia' | 'dark' | 'light' =
-    preferences.theme === 'dark' || preferences.theme === 'light' || preferences.theme === 'sepia'
-      ? preferences.theme
-      : 'sepia';
-
   if (viewMode === 'library') {
     return (
       <LibraryView
         books={booksWithDynamicData}
         readingState={state}
         onSelectBook={handleSelectBook}
-        theme={libraryTheme}
+        theme={normalizeThemeForLibrary(preferences.theme)}
       />
     );
   }
@@ -825,6 +842,8 @@ export default function App() {
         onSelectWord={handleSelectWord}
         theme={preferences.theme}
         preferences={preferences}
+        notes={notes}
+        onNotesChange={setNotes}
       />
 
       {/* Mobil Sidebar Karartma Perdesi (Overlay Backdrop) */}
@@ -924,6 +943,8 @@ export default function App() {
                 preferences={preferences}
                 onChange={setPreferences}
                 onReset={handleResetPreferences}
+                notes={notes}
+                onNotesChange={setNotes}
               />
             )}
             
