@@ -127,24 +127,68 @@ const preprocessLine = (rawLine: string): string => {
 const segmentTextByPunctuation = (text: string): string[] => {
   const result: string[] = [];
   let currentSegment = '';
-  
+  let parenDepth = 0;
+
+  // Nokta karakterinden önce gelen kelimeyi bulur
+  const getPrecedingWord = (txt: string, index: number): string => {
+    let word = '';
+    let i = index - 1;
+    while (i >= 0 && /[a-zA-ZçğışöüÇĞİŞÖÜâîûÂÎÛ]/.test(txt[i])) {
+      word = txt[i] + word;
+      i--;
+    }
+    return word;
+  };
+
   for (let i = 0; i < text.length; i++) {
     const char = text[i];
     currentSegment += char;
+
+    if (char === '(' || char === '[' || char === '{') {
+      parenDepth++;
+    } else if (char === ')' || char === ']' || char === '}') {
+      parenDepth = Math.max(0, parenDepth - 1);
+    }
+
     if ([',', '.', ';', ':', '?', '!'].includes(char)) {
       const nextChar = text[i + 1];
       if (nextChar && [',', '.', ';', ':', '?', '!'].includes(nextChar)) {
         continue;
       }
-      result.push(currentSegment);
-      currentSegment = '';
+
+      let avoidSplit = false;
+
+      // Parantez içindeki noktalamalarda bölme yapma
+      if (parenDepth > 0) {
+        avoidSplit = true;
+      }
+
+      // Kısaltma noktalarında bölme yapma
+      if (char === '.') {
+        const precedingWord = getPrecedingWord(text, i);
+        const lowerWord = precedingWord.toLowerCase();
+
+        // Tek harfli kısaltmalar (R., A., S., M., C. vb.)
+        if (precedingWord.length === 1) {
+          avoidSplit = true;
+        }
+        // Sık kullanılan dini ve edebi kısaltmalar (Hz., vs., vb. gibi)
+        else if (['hz', 'vs', 'vb', 'bkz', 'bknz', 'prof', 'dr', 'm', 's', 'l'].includes(lowerWord)) {
+          avoidSplit = true;
+        }
+      }
+
+      if (!avoidSplit) {
+        result.push(currentSegment);
+        currentSegment = '';
+      }
     }
   }
-  
+
   if (currentSegment) {
     result.push(currentSegment);
   }
-  
+
   return result;
 };
 
