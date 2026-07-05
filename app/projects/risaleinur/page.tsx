@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { UserPreferences } from '../../../types';
 import { KULLIYAT, DICTIONARY } from '../../../kulliyat';
 
-type ReadingTheme = 'sepia' | 'dark' | 'light';
+type ReadingTheme = 'sepia' | 'dark' | 'light' | 'saman' | 'green' | 'gray';
 
 type ReadingState = {
   currentBookId: string;
@@ -470,6 +470,12 @@ export default function App() {
       root.style.backgroundColor = '#12100e'; 
     } else if (preferences.theme === 'sepia') {
       root.style.backgroundColor = '#d8ccb6'; 
+    } else if (preferences.theme === 'saman') {
+      root.style.backgroundColor = '#d0c091';
+    } else if (preferences.theme === 'green') {
+      root.style.backgroundColor = '#c3d1c3';
+    } else if (preferences.theme === 'gray') {
+      root.style.backgroundColor = '#ccd2d7';
     } else {
       root.style.backgroundColor = '#dfd4be'; // Saman kağıdı/parşömen uyumlu sıcak arka plan
     }
@@ -707,6 +713,12 @@ export default function App() {
         return 'bg-[#181614] text-[#e7e5e4]';
       case 'sepia':
         return 'bg-[#f5f2ed] text-[#2c2621]';
+      case 'saman':
+        return 'bg-[#eee0bb] text-[#332913]';
+      case 'green':
+        return 'bg-[#e9f2e9] text-[#142918]';
+      case 'gray':
+        return 'bg-[#eff2f4] text-[#1e252b]';
       case 'light':
       default:
         return 'bg-[#fdfcf9] text-[#1c1917]';
@@ -752,13 +764,13 @@ export default function App() {
         books={booksWithDynamicData}
         readingState={state}
         onSelectBook={handleSelectBook}
-        theme={preferences.theme}
+        theme={preferences.theme as 'light' | 'dark' | 'sepia'}
       />
     );
   }
 
   return (
-    <div className={`flex h-screen overflow-hidden ${getThemeLayoutClasses(preferences.theme)}`}>
+    <div className={`flex h-screen overflow-hidden ${getThemeLayoutClasses(preferences.theme as unknown as ReadingTheme)}`}>
       
       {/* Sol Sidebar (Fihrist & Arama & Lügat) */}
       <Sidebar
@@ -773,7 +785,7 @@ export default function App() {
         onGoToLibrary={handleGoToLibrary}
         dictionary={dictionary}
         onSelectWord={handleSelectWord}
-        theme={preferences.theme}
+        theme={preferences.theme as 'light' | 'dark' | 'sepia'}
         preferences={preferences}
       />
 

@@ -2,7 +2,7 @@
  * Risale-i Nur Okuma Platformu - Tip Tanımlamaları
  */
 
-export type ReadingTheme = 'light' | 'dark' | 'sepia';
+export type ReadingTheme = 'light' | 'dark' | 'sepia' | 'saman' | 'green' | 'gray';
 
 export type FontSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 

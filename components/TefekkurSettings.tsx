@@ -1,6 +1,6 @@
 import React from 'react';
 import { UserPreferences, FontSize, FontStyle, ReadingTheme, ArabicFont } from '../types';
-import { Sun, Moon, Eye, Type, AlignLeft, RefreshCw, HelpCircle } from 'lucide-react';
+import { Sun, Moon, Eye, Type, AlignLeft, RefreshCw, HelpCircle, Palette } from 'lucide-react';
 
 interface TefekkurSettingsProps {
   preferences: UserPreferences;
@@ -13,10 +13,13 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
   onChange,
   onReset,
 }) => {
-  const themes: { id: ReadingTheme; name: string; bg: string; text: string; border: string; desc: string }[] = [
-    { id: 'light', name: 'Gündüz', bg: 'bg-stone-50', text: 'text-stone-800', border: 'border-stone-200', desc: 'Sade ve berrak gündüz okuması' },
-    { id: 'sepia', name: 'Tefekkür', bg: 'bg-sepia-100', text: 'text-sepia-900', border: 'border-sepia-300', desc: 'Gözü yormayan sıcak sepya tonu' },
-    { id: 'dark', name: 'Gece', bg: 'bg-stone-900', text: 'text-stone-200', border: 'border-stone-800', desc: 'Loş ışıkta dinlendirici gece okuması' },
+  const themes: { id: ReadingTheme; name: string; bg: string; text: string; border: string; desc: string; previewBg: string }[] = [
+    { id: 'light', name: 'Gündüz', bg: 'bg-stone-50', text: 'text-stone-800', border: 'border-stone-200', desc: 'Sade ve berrak klasik sayfa', previewBg: 'bg-[#fdfcf9] border-stone-300' },
+    { id: 'sepia', name: 'Tefekkür', bg: 'bg-sepia-100', text: 'text-sepia-900', border: 'border-sepia-300', desc: 'Gözü yormayan sıcak sepya tonu', previewBg: 'bg-[#f5e9d3] border-[#d8ccb6]' },
+    { id: 'saman', name: 'Saman Kağıdı', bg: 'bg-[#eee0bb]', text: 'text-[#332913]', border: 'border-[#d0c091]', desc: 'Geleneksel sarımsı sıcak saman kağıdı tonu', previewBg: 'bg-[#ebdcae] border-[#d0c091]' },
+    { id: 'green', name: 'Göz Dostu', bg: 'bg-[#e9f2e9]', text: 'text-[#142918]', border: 'border-[#c3d1c3]', desc: 'Zihni dinlendiren huzurlu nane yeşili', previewBg: 'bg-[#e3eee3] border-[#c3d1c3]' },
+    { id: 'gray', name: 'Kitap Kağıdı', bg: 'bg-[#eff2f4]', text: 'text-[#1e252b]', border: 'border-[#ccd2d7]', desc: 'Kaliteli mat serin kitap kağıdı tonu', previewBg: 'bg-[#e8ecef] border-[#ccd2d7]' },
+    { id: 'dark', name: 'Gece', bg: 'bg-stone-900', text: 'text-stone-200', border: 'border-stone-800', desc: 'Loş ışıkta dinlendirici karanlık sayfa', previewBg: 'bg-[#1c1917] border-stone-800' },
   ];
 
   const fontSizes: { id: FontSize; label: string; px: string }[] = [
@@ -71,25 +74,30 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
         </button>
       </div>
 
-      {/* Tema Seçimi (Mütalaa Vakti) */}
-      <div className="space-y-2">
-        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-500 dark:text-stone-400">Mütalaa Vakti (Tema)</label>
+      {/* Tema Seçimi (Sayfa Renkleri ve Temalar) */}
+      <div className="space-y-2.5">
+        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-500 dark:text-stone-400 flex items-center gap-1.5">
+          <Palette className="w-3.5 h-3.5 text-sepia-accent" />
+          MÜTALAA SAYFA RENKLERİ (TEMA)
+        </label>
         <div className="grid grid-cols-3 gap-2">
           {themes.map((t) => (
             <button
               key={t.id}
               onClick={() => updatePreference('theme', t.id)}
-              className={`p-3 rounded-lg border flex flex-col items-center justify-center gap-1.5 transition-all text-xs font-bold font-sans cursor-pointer ${
+              className={`p-2.5 rounded-lg border flex flex-col items-center justify-center gap-2 transition-all cursor-pointer ${
                 preferences.theme === t.id
-                  ? 'border-sepia-accent bg-sepia-200/40 dark:bg-stone-800 text-sepia-accent ring-1 ring-sepia-accent/35 scale-[1.02]'
-                  : 'border-sepia-300/40 dark:border-stone-850 bg-white/40 dark:bg-stone-900/40 hover:bg-sepia-200/20 dark:hover:bg-stone-850'
-              } ${t.text}`}
+                  ? 'border-sepia-accent bg-sepia-200/40 dark:bg-[#1a1410] text-sepia-accent ring-1 ring-sepia-accent/35 scale-[1.01]'
+                  : 'border-sepia-300/30 dark:border-stone-850 bg-white/30 dark:bg-stone-900/30 hover:bg-sepia-200/20 dark:hover:bg-stone-850'
+              }`}
               title={t.desc}
             >
-              {t.id === 'light' && <Sun className="w-4 h-4 text-amber-500" />}
-              {t.id === 'sepia' && <Eye className="w-4 h-4 text-sepia-accent" />}
-              {t.id === 'dark' && <Moon className="w-4 h-4 text-indigo-400" />}
-              <span>{t.name}</span>
+              <div className={`w-6 h-6 rounded-full border shadow-inner flex items-center justify-center transition-transform duration-300 ${t.previewBg} ${preferences.theme === t.id ? 'scale-110' : ''}`}>
+                {preferences.theme === t.id && (
+                  <div className={`w-2 h-2 rounded-full ${t.id === 'dark' ? 'bg-amber-400' : 'bg-sepia-accent'}`} />
+                )}
+              </div>
+              <span className={`text-[10px] font-sans font-bold truncate max-w-full ${preferences.theme === t.id ? 'text-sepia-accent' : 'text-stone-600 dark:text-stone-300'}`}>{t.name}</span>
             </button>
           ))}
         </div>

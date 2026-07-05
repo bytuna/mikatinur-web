@@ -996,6 +996,12 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       ? 'text-stone-200 font-medium'
       : preferences.theme === 'sepia'
       ? 'text-[#2c2217] font-medium'
+      : preferences.theme === 'saman'
+      ? 'text-[#332913] font-medium'
+      : preferences.theme === 'green'
+      ? 'text-[#142918] font-medium'
+      : preferences.theme === 'gray'
+      ? 'text-[#1e252b] font-medium'
       : 'text-[#27211a] font-medium';
 
   const titleThemeClass = 
@@ -1003,6 +1009,12 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       ? 'text-stone-100 font-bold'
       : preferences.theme === 'sepia'
       ? 'text-[#2c2217] font-bold'
+      : preferences.theme === 'saman'
+      ? 'text-[#332913] font-bold'
+      : preferences.theme === 'green'
+      ? 'text-[#142918] font-bold'
+      : preferences.theme === 'gray'
+      ? 'text-[#1e252b] font-bold'
       : 'text-[#1c1917] font-bold';
 
   const wordColorClass = 
@@ -1010,6 +1022,12 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       ? 'text-stone-300 hover:text-orange-400 border-b border-stone-300/20 hover:border-orange-400'
       : preferences.theme === 'sepia'
       ? 'text-[#2c2217] hover:text-amber-700 border-b border-[#2c2217]/20 hover:border-amber-700'
+      : preferences.theme === 'saman'
+      ? 'text-[#332913] hover:text-amber-800 border-b border-[#332913]/20 hover:border-amber-800'
+      : preferences.theme === 'green'
+      ? 'text-[#142918] hover:text-emerald-700 border-b border-[#142918]/20 hover:border-emerald-700'
+      : preferences.theme === 'gray'
+      ? 'text-[#1e252b] hover:text-blue-700 border-b border-[#1e252b]/20 hover:border-blue-700'
       : 'text-[#27211a] hover:text-sepia-accent border-b border-[#27211a]/20 hover:border-sepia-accent';
 
   const headerThemeClass = 
@@ -1017,6 +1035,12 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       ? 'bg-[#181614]/85 border-stone-800 text-stone-200'
       : preferences.theme === 'sepia'
       ? 'bg-[#f5f2ed]/85 border-sepia-300 text-[#2c2621]'
+      : preferences.theme === 'saman'
+      ? 'bg-[#eee0bb]/85 border-[#d0c091] text-[#332913]'
+      : preferences.theme === 'green'
+      ? 'bg-[#e9f2e9]/85 border-[#c3d1c3] text-[#142918]'
+      : preferences.theme === 'gray'
+      ? 'bg-[#eff2f4]/85 border-[#ccd2d7] text-[#1e252b]'
       : 'bg-[#fdfcf9]/85 border-stone-200 text-stone-950';
 
   // Yazı boyutu sınıfları
@@ -1050,12 +1074,26 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       ? 'bg-[#12100e]' 
       : preferences.theme === 'sepia' 
       ? 'bg-[#d8ccb6]' 
+      : preferences.theme === 'saman'
+      ? 'bg-[#d0c091]'
+      : preferences.theme === 'green'
+      ? 'bg-[#c3d1c3]'
+      : preferences.theme === 'gray'
+      ? 'bg-[#ccd2d7]'
       : 'bg-[#dfd4be]';
 
   const pageBgClass = 
     preferences.theme === 'dark'
       ? 'bg-[#1c1917]'
-      : 'bg-[#f5e9d3]';
+      : preferences.theme === 'sepia'
+      ? 'bg-[#f5e9d3]'
+      : preferences.theme === 'saman'
+      ? 'bg-[#ebdcae]'
+      : preferences.theme === 'green'
+      ? 'bg-[#e3eee3]'
+      : preferences.theme === 'gray'
+      ? 'bg-[#e8ecef]'
+      : 'bg-[#fdfcf9]';
 
   return (
     <div className="flex flex-col h-full bg-transparent relative">
@@ -1337,7 +1375,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                     searchQuery={searchQuery}
                     dictionary={dictionary}
                     wordColorClass={wordColorClass}
-                    headingColorClass={preferences.theme === 'dark' ? 'text-stone-100' : preferences.theme === 'sepia' ? 'text-[#2c2217]' : 'text-[#27211a]'}
+                    headingColorClass={preferences.theme === 'dark' ? 'text-stone-100' : preferences.theme === 'sepia' ? 'text-[#2c2217]' : preferences.theme === 'saman' ? 'text-[#332913]' : preferences.theme === 'green' ? 'text-[#142918]' : preferences.theme === 'gray' ? 'text-[#1e252b]' : 'text-[#27211a]'}
                     onWordClick={handleWordClick}
                     onArabicClick={handleArabicClick}
                     fontSizeClass={fontSizeClasses[preferences.fontSize]}

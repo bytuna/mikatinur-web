@@ -232,11 +232,19 @@ const getHighlightRanges = (text: string, query: string) => {
   return ranges;
 };
 
-const getSearchHighlightClass = (theme: 'light' | 'dark' | 'sepia') => {
+import { ReadingTheme } from '../types';
+
+const getSearchHighlightClass = (theme: ReadingTheme) => {
   if (theme === 'dark') {
     return 'bg-amber-500/35 text-amber-100 border-b-2 border-amber-500 font-extrabold px-0.5 rounded-sm shadow-xs';
   } else if (theme === 'sepia') {
     return 'bg-[#f4cf8a] text-[#422402] border-b-2 border-[#bc872e] font-extrabold px-0.5 rounded-sm shadow-xs';
+  } else if (theme === 'saman') {
+    return 'bg-[#dfbe73] text-[#3a2002] border-b-2 border-[#b08b35] font-extrabold px-0.5 rounded-sm shadow-xs';
+  } else if (theme === 'green') {
+    return 'bg-emerald-200 text-emerald-950 border-b-2 border-emerald-600 font-extrabold px-0.5 rounded-sm shadow-xs';
+  } else if (theme === 'gray') {
+    return 'bg-blue-200 text-blue-950 border-b-2 border-blue-600 font-extrabold px-0.5 rounded-sm shadow-xs';
   } else {
     return 'bg-amber-200 text-stone-950 border-b-2 border-amber-500 font-extrabold px-0.5 rounded-sm shadow-xs';
   }
@@ -426,6 +434,12 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
               ? 'text-stone-100'
               : preferences.theme === 'sepia'
               ? 'text-[#2c2217]'
+              : preferences.theme === 'saman'
+              ? 'text-[#332913]'
+              : preferences.theme === 'green'
+              ? 'text-[#142918]'
+              : preferences.theme === 'gray'
+              ? 'text-[#1e252b]'
               : 'text-[#1c1917]';
 
           return (
