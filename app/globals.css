@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: 'FontRLN';
-  src: url('/fonts/fontrln.ttf') format('truetype');
+  src: url('../public/fonts/fontrln.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -11,7 +11,7 @@
 
 @font-face {
   font-family: 'LatinBookerly';
-  src: url('/fonts/latin_bookerly.ttf') format('truetype');
+  src: url('../public/fonts/latin_bookerly.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -19,7 +19,7 @@
 
 @font-face {
   font-family: 'LatinRoboto';
-  src: url('/fonts/latin_roboto.ttf') format('truetype');
+  src: url('../public/fonts/latin_roboto.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -27,7 +27,7 @@
 
 @font-face {
   font-family: 'ShaikhHamdullahMushaf';
-  src: url('/fonts/ShaikhHamdullahMushaf.ttf') format('truetype');
+  src: url('../public/fonts/ShaikhHamdullahMushaf.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -35,7 +35,7 @@
 
 @font-face {
   font-family: 'Hasenat';
-  src: url('/fonts/hasenat.ttf') format('truetype');
+  src: url('../public/fonts/hasenat.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
