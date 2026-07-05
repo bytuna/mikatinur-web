@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { UserPreferences } from '../../../types';
 import { KULLIYAT, DICTIONARY } from '../../../kulliyat';
 
@@ -65,15 +65,34 @@ const DEFAULT_STATE: ReadingState = {
   ],
 };
 
+const turkishToLower = (text: string): string => {
+  if (!text) return '';
+  return text.toLocaleLowerCase('tr-TR');
+};
+
+const simplifyString = (text: string): string => {
+  return turkishToLower(text)
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9ığüşöçâîû]/g, '')
+    .trim();
+};
+
 const getFilePrefixForChar = (char: string): string | null => {
   if (!char) return null;
-  const c = char.toLowerCase();
+  
+  if (char === 'I' || char === 'ı') return 'i1';
+  if (char === 'İ' || char === 'i') return 'i';
+  
+  const c = turkishToLower(char);
   if (c === 'ç') return 'c1';
-  if (c === 'ı') return 'i1';
   if (c === 'ö') return 'o1';
   if (c === 'ş') return 's1';
   if (c === 'ü') return 'u1';
   if (c === 'ğ') return 'g';
+  if (c === 'â') return 'a';
+  if (c === 'î') return 'i';
+  if (c === 'û') return 'u';
+  
   if (c >= 'a' && c <= 'z') return c;
   return null;
 };
@@ -89,7 +108,7 @@ const parseRawDictionaryFile = (text: string): Record<string, DictionaryTerm> =>
       const word = trimmed.substring(0, eqIdx).trim();
       const definition = trimmed.substring(eqIdx + 1).trim();
       if (word && definition) {
-        const key = word.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '').trim();
+        const key = turkishToLower(word).replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '').trim();
         dict[key] = {
           word: word,
           definition: definition.replace(/<br>/g, '\n'),
@@ -280,6 +299,20 @@ export default function App() {
   // Dinamik Lügat (Dictionary) Yükleme ve Birleştirme
   const [dictionary, setDictionary] = useState<Record<string, DictionaryTerm>>(DICTIONARY);
 
+  const simplifiedDictionary = useMemo(() => {
+    const map: Record<string, DictionaryTerm> = {};
+    for (const key of Object.keys(dictionary)) {
+      const term = dictionary[key];
+      if (term) {
+        const simpleKey = simplifyString(key);
+        if (!map[simpleKey] || key === turkishToLower(term.word)) {
+          map[simpleKey] = term;
+        }
+      }
+    }
+    return map;
+  }, [dictionary]);
+
   useEffect(() => {
     const loadCustomDictionary = async () => {
       try {
@@ -295,7 +328,7 @@ export default function App() {
           // Array of objects
           data.forEach((item: any) => {
             if (item && typeof item === 'object' && item.word) {
-              const key = item.word.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '').trim();
+              const key = turkishToLower(item.word).replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '').trim();
               loadedDict[key] = {
                 word: item.word,
                 definition: item.def || item.definition || item.meaning || '',
@@ -306,7 +339,7 @@ export default function App() {
         } else if (typeof data === 'object' && data !== null) {
           // Map of objects or strings
           Object.entries(data).forEach(([key, value]) => {
-            const cleanKey = key.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '').trim();
+            const cleanKey = turkishToLower(key).replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '').trim();
             if (typeof value === 'string') {
               loadedDict[cleanKey] = {
                 word: key.charAt(0).toUpperCase() + key.slice(1),
@@ -376,7 +409,7 @@ export default function App() {
     const prefixesToLoad = new Set<string>();
 
     words.forEach((word: string) => {
-      const cleaned = word.replace(/^[^a-zA-ZçğışöüÇĞİŞÖÜ]+/, '');
+      const cleaned = word.replace(/^[^a-zA-ZçğışöüÇĞİŞÖÜâîûÂÎÛ]+/, '');
       if (cleaned.length > 0) {
         const prefix = getFilePrefixForChar(cleaned[0]);
         if (prefix) {
@@ -393,7 +426,7 @@ export default function App() {
   // 2. Lügat arama kelimesine göre dinamik harf yükleme
   useEffect(() => {
     if (!state.searchQuery) return;
-    const cleaned = state.searchQuery.replace(/^[^a-zA-ZçğışöüÇĞİŞÖÜ]+/, '');
+    const cleaned = state.searchQuery.replace(/^[^a-zA-ZçğışöüÇĞİŞÖÜâîûÂÎÛ]+/, '');
     if (cleaned.length > 0) {
       const prefix = getFilePrefixForChar(cleaned[0]);
       if (prefix) {
@@ -758,19 +791,24 @@ export default function App() {
     };
   });
 
+  const libraryTheme: 'sepia' | 'dark' | 'light' =
+    preferences.theme === 'dark' || preferences.theme === 'light' || preferences.theme === 'sepia'
+      ? preferences.theme
+      : 'sepia';
+
   if (viewMode === 'library') {
     return (
       <LibraryView
         books={booksWithDynamicData}
         readingState={state}
         onSelectBook={handleSelectBook}
-        theme={preferences.theme as 'light' | 'dark' | 'sepia'}
+        theme={libraryTheme}
       />
     );
   }
 
   return (
-    <div className={`flex h-screen overflow-hidden ${getThemeLayoutClasses(preferences.theme as unknown as ReadingTheme)}`}>
+    <div className={`flex h-screen overflow-hidden ${getThemeLayoutClasses(preferences.theme)}`}>
       
       {/* Sol Sidebar (Fihrist & Arama & Lügat) */}
       <Sidebar
@@ -785,7 +823,7 @@ export default function App() {
         onGoToLibrary={handleGoToLibrary}
         dictionary={dictionary}
         onSelectWord={handleSelectWord}
-        theme={preferences.theme as 'light' | 'dark' | 'sepia'}
+        theme={preferences.theme}
         preferences={preferences}
       />
 

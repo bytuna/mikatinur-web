@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { UserPreferences, DictionaryTerm } from '../types';
+import { findDictionaryMatch } from '../kulliyat';
 
 interface ReadingPageContentProps {
   text: string;
@@ -336,6 +337,20 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
 }) => {
   if (!text) return null;
 
+  const simplifiedDict = useMemo(() => {
+    const map: Record<string, DictionaryTerm> = {};
+    for (const key of Object.keys(dictionary)) {
+      const term = dictionary[key];
+      if (term) {
+        const simpleKey = simplifyString(key);
+        if (!map[simpleKey] || key === term.word.toLowerCase()) {
+          map[simpleKey] = term;
+        }
+      }
+    }
+    return map;
+  }, [dictionary]);
+
   const lines = text.split('\n');
   let standardParagraphCount = 0;
 
@@ -370,8 +385,13 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
         .replace(/>$/, '')
         .trim();
 
-      const isLookupable = !!dictionary[cleanKey];
-      const isActive = selectedWord?.toLowerCase() === cleanKey;
+      const matchedTerm = findDictionaryMatch(token, dictionary, simplifiedDict);
+      const isLookupable = !!matchedTerm;
+      const isActive = selectedWord && matchedTerm && (
+        selectedWord.toLowerCase() === cleanKey ||
+        matchedTerm.word.toLowerCase() === selectedWord.toLowerCase() ||
+        matchedTerm.matchedWord?.toLowerCase() === selectedWord.toLowerCase()
+      );
       
       // Determine if there is an overlap match
       const hasOverlapMatch = matchRanges.some(
@@ -380,10 +400,10 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
 
       let renderedToken = null;
 
-      if (isLookupable) {
+      if (isLookupable && matchedTerm) {
         renderedToken = (
           <span
-            onClick={(e) => onWordClick(e, dictionary[cleanKey])}
+            onClick={(e) => onWordClick(e, matchedTerm)}
             className={`interactive-word transition-all duration-200 border-b border-dashed border-sepia-accent/40 hover:border-sepia-accent cursor-pointer ${
               isActive
                 ? 'bg-sepia-accent/30 text-sepia-accent font-bold px-0.5 rounded border-b border-sepia-accent'

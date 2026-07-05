@@ -25,6 +25,7 @@ export interface DictionaryTerm {
   word: string;
   definition: string;
   origin?: string; // Arapça, Farsça vb.
+  matchedWord?: string;
 }
 
 export interface Footnote {

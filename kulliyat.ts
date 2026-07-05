@@ -212,3 +212,108 @@ export const KULLIYAT: RisaleBook[] = [
     pages: {}
   }
 ];
+
+export const turkishToLower = (str: string): string => {
+  return str
+    .replace(/İ/g, 'i')
+    .replace(/I/g, 'ı')
+    .toLowerCase();
+};
+
+export const simplifyChar = (char: string): string => {
+  const lower = turkishToLower(char);
+  switch (lower) {
+    case 'â': return 'a';
+    case 'î': case 'ı': case 'i': return 'i';
+    case 'û': case 'ü': return 'u';
+    case 'ö': return 'o';
+    case 'ç': return 'c';
+    case 'ğ': return 'g';
+    case 'ş': return 's';
+    default: return lower;
+  }
+};
+
+export const simplifyString = (str: string): string => {
+  return Array.from(str).map(simplifyChar).join('');
+};
+
+export const COMMON_SUFFIXES = [
+  'ndaki', 'ndeki', 'ların', 'lerin', 'umuz', 'ümüz', 'iniz', 'ınız',
+  'lar', 'ler', 'dan', 'den', 'tan', 'ten', 'miz', 'mız', 'muz', 'müz', 
+  'niz', 'nız', 'nuz', 'nüz', 'dir', 'dır', 'dur', 'dür', 'tir', 'tır', 
+  'tur', 'tür', 'nın', 'nin', 'nun', 'nün', 'yle', 'yla', 'nda', 'nde', 
+  'lik', 'lık', 'luk', 'lük', 'siz', 'sız', 'suz', 'süz',
+  'ın', 'in', 'un', 'ün', 'ım', 'im', 'um', 'üm', 'da', 'de', 'ta', 'te', 
+  'ye', 'ya', 'yi', 'yı', 'yu', 'yü', 'le', 'la', 'ca', 'ce', 'ci', 'cı', 
+  'cu', 'cü', 'ar', 'er', 'ma', 'me', 'sa', 'se', 'sı', 'si', 'su', 'sü', 
+  'ıp', 'ip', 'up', 'üp', 'a', 'e', 'ı', 'i', 'u', 'ü', 'n', 'm', 'h'
+];
+
+export const findDictionaryMatch = (
+  token: string,
+  dictionary: Record<string, DictionaryTerm>,
+  simplifiedDict?: Record<string, DictionaryTerm>
+): DictionaryTerm | null => {
+  if (!token) return null;
+
+  const cleanKey = turkishToLower(token)
+    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '')
+    .replace(/^\\"?/, '')
+    .replace(/"?>$/, '')
+    .replace(/>$/, '')
+    .trim();
+
+  if (!cleanKey) return null;
+
+  // 1. Direct exact match
+  if (dictionary[cleanKey]) return { ...dictionary[cleanKey], matchedWord: token };
+
+  // 2. Direct simplified match
+  const simpleKey = simplifyString(cleanKey);
+  if (simplifiedDict && simplifiedDict[simpleKey]) {
+    return { ...simplifiedDict[simpleKey], matchedWord: token };
+  }
+
+  // 3. Suffix stripping
+  if (cleanKey.length > 3) {
+    for (const suffix of COMMON_SUFFIXES) {
+      if (cleanKey.endsWith(suffix)) {
+        const root = cleanKey.slice(0, -suffix.length);
+        if (root.length >= 3) {
+          if (dictionary[root]) {
+            return { ...dictionary[root], matchedWord: token };
+          }
+          
+          if (simplifiedDict) {
+            const simpleRoot = simplifyString(root);
+            if (simplifiedDict[simpleRoot]) {
+              return { ...simplifiedDict[simpleRoot], matchedWord: token };
+            }
+          }
+
+          // Double suffix stripping (e.g., nimet-ler-imiz)
+          for (const suffix2 of COMMON_SUFFIXES) {
+            if (root.endsWith(suffix2)) {
+              const root2 = root.slice(0, -suffix2.length);
+              if (root2.length >= 3) {
+                if (dictionary[root2]) {
+                  return { ...dictionary[root2], matchedWord: token };
+                }
+                if (simplifiedDict) {
+                  const simpleRoot2 = simplifyString(root2);
+                  if (simplifiedDict[simpleRoot2]) {
+                    return { ...simplifiedDict[simpleRoot2], matchedWord: token };
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return null;
+};
+
