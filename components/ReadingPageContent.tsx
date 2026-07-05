@@ -101,6 +101,20 @@ const isBoldHeader = (cleanWord: string): boolean => {
   );
 };
 
+// Arapça yazı tipi sınıfını belirleyen yardımcı fonksiyon
+const getArabicFontClass = (font?: string): string => {
+  switch (font) {
+    case 'hasenat': return 'font-arabic-hasenat';
+    case 'uthmantaha': return 'font-arabic-uthmantaha';
+    case 'amiri': return 'font-arabic-amiri';
+    case 'scheherazade': return 'font-arabic-scheherazade';
+    case 'notonaskh': return 'font-arabic-notonaskh';
+    case 'hamdullah':
+    default:
+      return 'font-arabic-hamdullah';
+  }
+};
+
 // 4. Metinlerdeki stray \ ve > işaretlerini temizleyen ve spacing düzenleyen önişlemci
 const preprocessLine = (rawLine: string): string => {
   if (!rawLine) return '';
@@ -399,17 +413,19 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
 
           const isClickable = !!verseNumber;
 
+          const arabicFontClass = getArabicFontClass(preferences.arabicFont);
+
           return (
             <div
               key={idx}
               dir="rtl"
               onClick={isClickable ? (e) => onArabicClick(e, verseNumber!, arabicText) : undefined}
-              className={`text-center font-arabic text-3xl md:text-4xl my-8 text-[#ff0000] leading-loose tracking-normal flex flex-col items-center justify-center gap-3 transition-all duration-300 ${
+              className={`text-center ${arabicFontClass} text-3xl md:text-4xl my-8 text-[#ff0000] leading-loose tracking-normal flex flex-col items-center justify-center gap-3 transition-all duration-300 ${
                 isClickable ? 'cursor-pointer' : ''
               }`}
               title={isClickable ? "Ayet / Hadis Meali İçin Tıklayın" : undefined}
             >
-              <span className="font-normal block leading-loose font-arabic select-all">{arabicText}</span>
+              <span className={`font-normal block leading-loose ${arabicFontClass} select-all`}>{arabicText}</span>
             </div>
           );
         }

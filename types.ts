@@ -8,6 +8,8 @@ export type FontSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
 export type FontStyle = 'serif' | 'sans';
 
+export type ArabicFont = 'hamdullah' | 'hasenat' | 'uthmantaha' | 'amiri' | 'scheherazade' | 'notonaskh';
+
 export interface UserPreferences {
   theme: ReadingTheme;
   fontSize: FontSize;
@@ -16,6 +18,7 @@ export interface UserPreferences {
   showFootnotes: boolean;
   showTefekkurHighlights: boolean; // "Renk Aç" / "Renk Kapa" Modu kontrolü
   savedScrollPosition?: number;
+  arabicFont?: ArabicFont;
 }
 
 export interface DictionaryTerm {

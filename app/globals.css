@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap');
 @import "tailwindcss";
 
 @font-face {
@@ -41,7 +41,15 @@
   font-display: swap;
 }
 
-:root {
+@font-face {
+  font-family: 'ArabicUthmanTaha';
+  src: url('../public/fonts/arabic_uthmantaha.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
   --variant-dark: selector(.dark);
   --font-sans: "LatinRoboto", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "LatinBookerly", "EB Garamond", Georgia, serif;
@@ -141,5 +149,25 @@ body {
   z-index: 10;
   display: inline-block;
   border-radius: 4px !important;
+}
+
+/* Arapça Yazı Tipi Hat Seçenekleri (Arabic Font Choices) */
+.font-arabic-hamdullah {
+  font-family: "ShaikhHamdullahMushaf", "Hasenat", "Amiri", serif !important;
+}
+.font-arabic-hasenat {
+  font-family: "Hasenat", "ShaikhHamdullahMushaf", serif !important;
+}
+.font-arabic-uthmantaha {
+  font-family: "ArabicUthmanTaha", "ShaikhHamdullahMushaf", serif !important;
+}
+.font-arabic-amiri {
+  font-family: "Amiri", serif !important;
+}
+.font-arabic-scheherazade {
+  font-family: "Scheherazade New", serif !important;
+}
+.font-arabic-notonaskh {
+  font-family: "Noto Naskh Arabic", serif !important;
 }
 

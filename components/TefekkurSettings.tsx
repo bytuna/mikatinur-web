@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserPreferences, FontSize, FontStyle, ReadingTheme } from '../types';
+import { UserPreferences, FontSize, FontStyle, ReadingTheme, ArabicFont } from '../types';
 import { Sun, Moon, Eye, Type, AlignLeft, RefreshCw, HelpCircle } from 'lucide-react';
 
 interface TefekkurSettingsProps {
@@ -30,6 +30,15 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
   const fontStyles: { id: FontStyle; name: string; class: string }[] = [
     { id: 'serif', name: 'EB Garamond (Serif)', class: 'font-serif' },
     { id: 'sans', name: 'Inter (Sans)', class: 'font-sans' },
+  ];
+
+  const arabicFonts: { id: ArabicFont; name: string; class: string; desc: string }[] = [
+    { id: 'hamdullah', name: 'Şeyh Hamdullah', class: 'font-arabic-hamdullah', desc: 'Asil Osmanlı sülüs/nesih hattı' },
+    { id: 'hasenat', name: 'Hasenat Nesih', class: 'font-arabic-hasenat', desc: 'Geleneksel okunaklı nesih hattı' },
+    { id: 'uthmantaha', name: 'Osman Taha', class: 'font-arabic-uthmantaha', desc: 'Standart Medine Mushafı hattı' },
+    { id: 'amiri', name: 'Amiri', class: 'font-arabic-amiri', desc: 'Klasik edebi matbaa hattı' },
+    { id: 'scheherazade', name: 'Şehrizat', class: 'font-arabic-scheherazade', desc: 'Geniş geleneksel nesih' },
+    { id: 'notonaskh', name: 'Noto Naskh', class: 'font-arabic-notonaskh', desc: 'Modern temiz nesih hattı' },
   ];
 
   const lineHeights = [
@@ -101,6 +110,28 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
               }`}
             >
               {f.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Arapça Yazı Tipi (Arapça Hat Sanatı) */}
+      <div className="space-y-2">
+        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-500 dark:text-stone-400">Arapça Hat Sanatı</label>
+        <div className="grid grid-cols-2 gap-2">
+          {arabicFonts.map((af) => (
+            <button
+              key={af.id}
+              onClick={() => updatePreference('arabicFont', af.id)}
+              className={`py-2.5 px-3 rounded-lg border text-xs transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${
+                (preferences.arabicFont || 'hamdullah') === af.id
+                  ? 'border-sepia-accent bg-sepia-200/60 dark:bg-amber-950/20 text-[#2c2621] dark:text-amber-100 ring-1 ring-sepia-accent/35 font-bold scale-[1.01]'
+                  : 'border-sepia-300/40 dark:border-stone-850 bg-white/40 dark:bg-stone-900/40 hover:bg-sepia-200/20 dark:hover:bg-stone-850 text-stone-700 dark:text-stone-350'
+              }`}
+              title={af.desc}
+            >
+              <span className="font-sans text-[11px] font-bold leading-tight">{af.name}</span>
+              <span className={`text-[17px] leading-none text-[#ff0000] ${af.class}`}>بِسْمِ اللَّهِ</span>
             </button>
           ))}
         </div>

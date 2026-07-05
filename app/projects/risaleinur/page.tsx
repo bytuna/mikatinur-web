@@ -50,6 +50,7 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   lineHeight: 'relaxed',
   showFootnotes: true,
   showTefekkurHighlights: true, // "Renk Aç" modu varsayılan olarak aktif
+  arabicFont: 'hamdullah',
 };
 
 const DEFAULT_STATE: ReadingState = {
@@ -61,9 +62,6 @@ const DEFAULT_STATE: ReadingState = {
   bookmarks: [
     { bookId: 'sozler', page: 5, date: '28.06.2026' }
   ],
-  bookProgress: {
-    sozler: { currentPage: 5 }
-  },
 };
 
 const getFilePrefixForChar = (char: string): string | null => {
