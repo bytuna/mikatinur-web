@@ -41,15 +41,6 @@ import { TefekkurSettings } from '../../../components/TefekkurSettings';
 import { LibraryView } from '../../../components/LibraryView';
 import { Menu, Settings, Compass, Library } from 'lucide-react';
 
-const DEFAULT_PREFERENCES: UserPreferences = {
-  theme: 'sepia',
-  fontSize: 'md',
-  fontStyle: 'serif',
-  lineHeight: 'relaxed',
-  showFootnotes: true,
-  showTefekkurHighlights: true, // "Renk Aç" modu varsayılan olarak aktif
-};
-
 const DEFAULT_STATE: ReadingState = {
   currentBookId: 'sozler',
   currentPage: 5,
@@ -60,6 +51,11 @@ const DEFAULT_STATE: ReadingState = {
     { bookId: 'sozler', page: 5, date: '28.06.2026' }
   ],
 };
+
+// Default user preferences fallback for SSR and initial state hydration
+const DEFAULT_PREFERENCES: UserPreferences = ({
+  theme: 'sepia',
+} as unknown) as UserPreferences;
 
 const getFilePrefixForChar = (char: string): string | null => {
   if (!char) return null;
@@ -202,7 +198,6 @@ export default function App() {
       }
       setIsHydrated(true);
     }
-  
   }, []);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -794,6 +789,7 @@ export default function App() {
               onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
               dictionary={dictionary}
               fihristClickTrigger={fihristClickTrigger}
+              sections={parsedSections}
             />
           </div>
 

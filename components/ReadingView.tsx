@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { RisaleBook, UserPreferences, RisalePage, DictionaryTerm } from '../types';
+import { RisaleBook, UserPreferences, RisalePage, DictionaryTerm, TOCSection } from '../types';
 import { ChevronLeft, ChevronRight, Bookmark, BookmarkCheck, HelpCircle, BookOpen, Play, Pause, Square, Library, Menu, X } from 'lucide-react';
 import { ReadingPageContent } from './ReadingPageContent';
 
@@ -19,6 +19,7 @@ interface ReadingViewProps {
   onToggleSidebar?: () => void;
   dictionary: Record<string, DictionaryTerm>;
   fihristClickTrigger?: number;
+  sections?: TOCSection[];
 }
 
 export const ReadingView: React.FC<ReadingViewProps> = ({
@@ -36,6 +37,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
   onToggleSidebar,
   dictionary,
   fihristClickTrigger = 0,
+  sections,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isProgrammaticScrollRef = useRef<boolean>(false);
@@ -45,6 +47,74 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
   // Fihrist/Yer iminden gelen odaklanma/zoom durumları
   const [focusPageNum, setFocusPageNum] = useState<number | null>(null);
   const [focusActive, setFocusActive] = useState(false);
+
+  // Okuma süresi ve mobil ekran kararmasını engelleme durumları
+  const [readingSeconds, setReadingSeconds] = useState<number>(0);
+
+  // 1. Ekran Kararmasını Engelleme (Screen Wake Lock API)
+  useEffect(() => {
+    let wakeLock: any = null;
+
+    const requestWakeLock = async () => {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await (navigator as any).wakeLock.request('screen');
+          console.log('Ekran kararmasını önleme aktif (Wake Lock acquired)');
+        }
+      } catch (err) {
+        console.warn('Ekran kararmasını önleme isteği başarısız:', err);
+      }
+    };
+
+    requestWakeLock();
+
+    const handleVisibilityChange = async () => {
+      if (wakeLock !== null && document.visibilityState === 'visible') {
+        await requestWakeLock();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (wakeLock) {
+        wakeLock.release().then(() => {
+          wakeLock = null;
+          console.log('Ekran kararmasını önleme devre dışı (Wake Lock released)');
+        }).catch((err: any) => console.warn('Wake lock release error:', err));
+      }
+    };
+  }, []);
+
+  // 2. Okumada Geçen Süre Sayacı
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        setReadingSeconds((prev) => prev + 1);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatReadingTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    if (mins > 0) {
+      return `${mins} dk ${secs} sn`;
+    }
+    return `${secs} sn`;
+  };
+
+  // 3. Bulunulan Sayfanın Fihrist Bilgisi
+  const currentSectionTitle = (() => {
+    if (!sections || sections.length === 0) return null;
+    const activeSections = sections.filter((s) => s.startPage <= pageNumber);
+    if (activeSections.length === 0) return null;
+    const sorted = [...activeSections].sort((a, b) => b.startPage - a.startPage);
+    return sorted[0].title;
+  })();
 
   // Arama sonucuna tıklandığında ilgili kelimeye otomatik odaklanma (scroll)
   useEffect(() => {
@@ -1056,6 +1126,9 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       <footer className="h-20 bg-transparent flex items-center px-8 justify-between select-none">
         {/* Okuma İlerlemesi Progress Bar */}
         <div className="flex-1 max-w-xl">
+          <div className="flex justify-between text-[9px] font-sans uppercase tracking-wider opacity-60 mb-1 text-sepia-accent/80 dark:text-stone-400">
+            <span>Süre: {formatReadingTime(readingSeconds)}</span>
+          </div>
           <div className="flex justify-between text-[10px] font-sans uppercase tracking-widest opacity-40 mb-2 dark:text-stone-400">
             <span>Okuma İlerlemesi</span>
             <span>{progressPercent}%</span>
@@ -1077,6 +1150,11 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
             <div className={`text-xs font-bold font-sans ${titleThemeClass}`}>
               {book.title} / S. {pageNumber}
             </div>
+            {currentSectionTitle && (
+              <div className="text-[10px] font-sans mt-0.5 text-sepia-accent/80 dark:text-stone-400 truncate max-w-[180px]" title={currentSectionTitle}>
+                {currentSectionTitle}
+              </div>
+            )}
           </div>
         </div>
       </footer>
