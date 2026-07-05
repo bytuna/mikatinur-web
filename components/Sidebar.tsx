@@ -31,7 +31,7 @@ interface FihristNodeItemProps {
   onToggleExpand: (id: string) => void;
   searchActive: boolean;
   searchQuery?: string;
-  theme?: 'light' | 'sepia' | 'dark';
+  theme?: 'light' | 'sepia' | 'dark' | string;
 }
 
 const simplifyChar = (char: string): string => {
@@ -330,6 +330,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [newNoteText, setNewNoteText] = useState('');
   const [includeReference, setIncludeReference] = useState(true);
   const [notesSearchQuery, setNotesSearchQuery] = useState('');
+  const [noteColor, setNoteColor] = useState<'yellow' | 'blue' | 'green' | 'red'>('yellow');
 
   const filteredNotes = useMemo(() => {
     if (!notesSearchQuery.trim()) return notes;
@@ -355,6 +356,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         hour: '2-digit',
         minute: '2-digit',
       }),
+      color: noteColor,
       reference: includeReference ? {
         bookId: currentBook.id,
         bookTitle: currentBook.title,
@@ -388,6 +390,54 @@ export const Sidebar: React.FC<SidebarProps> = ({
       case 'light':
       default:
         return 'bg-stone-50/50 border-stone-200';
+    }
+  };
+
+  const getNoteColorStyles = (color: 'yellow' | 'blue' | 'green' | 'red' | undefined) => {
+    if (!color) return '';
+    
+    if (theme === 'dark') {
+      switch (color) {
+        case 'yellow': return 'bg-amber-950/20 border-amber-900/40 border-l-4 border-l-amber-500 text-amber-200/90';
+        case 'blue': return 'bg-blue-950/20 border-blue-900/40 border-l-4 border-l-blue-500 text-blue-200/90';
+        case 'green': return 'bg-emerald-950/20 border-emerald-900/40 border-l-4 border-l-emerald-500 text-emerald-200/90';
+        case 'red': return 'bg-rose-950/20 border-rose-900/40 border-l-4 border-l-rose-500 text-rose-200/90';
+      }
+    } else if (theme === 'sepia') {
+      switch (color) {
+        case 'yellow': return 'bg-amber-100/40 border-amber-200/60 border-l-4 border-l-amber-600 text-amber-950';
+        case 'blue': return 'bg-blue-100/40 border-blue-200/60 border-l-4 border-l-blue-600 text-blue-950';
+        case 'green': return 'bg-emerald-100/40 border-emerald-200/60 border-l-4 border-l-emerald-700 text-emerald-950';
+        case 'red': return 'bg-rose-100/40 border-rose-200/60 border-l-4 border-l-rose-600 text-rose-950';
+      }
+    } else if (theme === 'saman') {
+      switch (color) {
+        case 'yellow': return 'bg-[#f7ebb5]/60 border-[#ebd88d]/60 border-l-4 border-l-amber-600 text-[#3a2f14]';
+        case 'blue': return 'bg-[#daf1f9]/60 border-[#b2e1f2]/60 border-l-4 border-l-blue-600 text-[#123946]';
+        case 'green': return 'bg-[#e4f4e4]/60 border-[#bde4bd]/60 border-l-4 border-l-emerald-700 text-[#143414]';
+        case 'red': return 'bg-[#fbe5e6]/60 border-[#f5c7c9]/60 border-l-4 border-l-rose-600 text-[#4c1618]';
+      }
+    } else if (theme === 'green') {
+      switch (color) {
+        case 'yellow': return 'bg-[#faf3cd]/50 border-[#eddba4]/50 border-l-4 border-l-amber-600 text-[#332a10]';
+        case 'blue': return 'bg-[#e3f4fc]/50 border-[#c4e8fa]/50 border-l-4 border-l-blue-600 text-[#133242]';
+        case 'green': return 'bg-[#f4faf4]/50 border-[#d8edd8]/50 border-l-4 border-l-emerald-600 text-[#112d15]';
+        case 'red': return 'bg-[#fdf0f1]/50 border-[#f9d7da]/50 border-l-4 border-l-rose-600 text-[#411417]';
+      }
+    } else if (theme === 'gray') {
+      switch (color) {
+        case 'yellow': return 'bg-amber-50/50 border-amber-200/50 border-l-4 border-l-amber-500 text-amber-900';
+        case 'blue': return 'bg-blue-50/50 border-blue-200/50 border-l-4 border-l-blue-500 text-blue-900';
+        case 'green': return 'bg-emerald-50/50 border-emerald-200/50 border-l-4 border-l-emerald-600 text-emerald-900';
+        case 'red': return 'bg-rose-50/50 border-rose-200/50 border-l-4 border-l-rose-500 text-rose-900';
+      }
+    } else { // light
+      switch (color) {
+        case 'yellow': return 'bg-amber-50/60 border-amber-200/60 border-l-4 border-l-amber-500 text-amber-900';
+        case 'blue': return 'bg-blue-50/60 border-blue-200/60 border-l-4 border-l-blue-500 text-blue-900';
+        case 'green': return 'bg-emerald-50/60 border-emerald-200/60 border-l-4 border-l-emerald-600 text-emerald-900';
+        case 'red': return 'bg-rose-50/60 border-rose-200/60 border-l-4 border-l-rose-500 text-rose-900';
+      }
     }
   };
 
@@ -598,6 +648,41 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       className={`w-full p-2.5 text-xs rounded-lg border focus:outline-none focus:ring-1 resize-none font-sans ${getInputClasses()}`}
                     />
                     
+                    {/* Renk Seçici */}
+                    <div className="flex items-center gap-2 py-0.5 select-none">
+                      <span className="text-[10px] font-sans opacity-70">Not Rengi:</span>
+                      <div className="flex items-center gap-1.5">
+                        {(['yellow', 'blue', 'green', 'red'] as const).map((color) => {
+                          const bgClasses = {
+                            yellow: 'bg-amber-400 border-amber-500 dark:bg-amber-500 dark:border-amber-600',
+                            blue: 'bg-blue-400 border-blue-500 dark:bg-blue-500 dark:border-blue-600',
+                            green: 'bg-emerald-500 border-emerald-600 dark:bg-emerald-600 dark:border-emerald-700',
+                            red: 'bg-rose-500 border-rose-600 dark:bg-rose-600 dark:border-rose-700',
+                          };
+                          const isSelected = noteColor === color;
+                          return (
+                            <button
+                              key={color}
+                              type="button"
+                              onClick={() => setNoteColor(color)}
+                              className={`w-3.5 h-3.5 rounded-full border transition-all duration-200 cursor-pointer ${bgClasses[color]} ${
+                                isSelected
+                                  ? 'scale-125 border-stone-950 dark:border-white shadow-sm ring-1 ring-stone-400 dark:ring-stone-500'
+                                  : 'opacity-50 border-transparent hover:opacity-100 hover:scale-110'
+                              }`}
+                              style={isSelected ? { outline: 'none' } : undefined}
+                              title={
+                                color === 'yellow' ? 'Sarı (Tefekkür)' :
+                                color === 'blue' ? 'Mavi (Araştırma)' :
+                                color === 'green' ? 'Yeşil (İlham)' :
+                                'Kırmızı (Önemli)'
+                              }
+                            />
+                          );
+                        })}
+                      </div>
+                    </div>
+                    
                     <div className="flex items-center justify-between gap-2">
                       <label className="flex items-center gap-1.5 cursor-pointer select-none">
                         <input
@@ -650,7 +735,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       filteredNotes.map((note) => (
                         <div
                           key={note.id}
-                          className={`p-3 rounded-lg border flex flex-col gap-2 relative group/item transition-all ${getNoteItemClasses()}`}
+                          className={`p-3 rounded-lg border flex flex-col gap-2 relative group/item transition-all ${
+                            note.color ? getNoteColorStyles(note.color) : getNoteItemClasses()
+                          }`}
                         >
                           {/* Sil Butonu */}
                           <button
@@ -845,7 +932,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           onToggleExpand={handleToggleExpand}
                           searchActive={false}
                           searchQuery=""
-                          theme={theme as 'light' | 'sepia' | 'dark'}
+                          theme={theme}
                         />
                       ))
                     ) : (

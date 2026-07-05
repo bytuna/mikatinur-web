@@ -78,6 +78,7 @@ export interface UserNote {
   id: string;
   text: string;
   createdAt: string;
+  color?: 'yellow' | 'blue' | 'green' | 'red';
   reference?: {
     bookId: string;
     bookTitle: string;
