@@ -89,64 +89,45 @@ const simplifyString = (text: string): string => {
     .trim();
 };
 
-const parseRawDictionaryFile = (text: string): Record<string, DictionaryTerm> => {
-  const entries: Record<string, DictionaryTerm> = {};
-  if (!text) return entries;
-
-  const lines = text.split(/\r?\n/);
-  lines.forEach((line) => {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('//')) return;
-
-    let key = '';
-    let definition = '';
-    const delimiters = ['\t', '|', '=', ' - '];
-
-    for (const delimiter of delimiters) {
-      if (trimmed.includes(delimiter)) {
-        const [first, ...rest] = trimmed.split(delimiter);
-        key = first.trim();
-        definition = rest.join(delimiter).trim();
-        break;
-      }
-    }
-
-    if (!key) {
-      key = trimmed;
-      definition = '';
-    }
-
-    const cleanKey = simplifyString(key);
-    if (!cleanKey) return;
-
-    entries[cleanKey] = {
-      word: key,
-      definition,
-      origin: 'Arapça',
-    };
-  });
-
-  return entries;
-};
-
 const getFilePrefixForChar = (char: string): string | null => {
   if (!char) return null;
-  
-  if (char === 'I' || char === 'ı') return 'i1';
-  if (char === 'İ' || char === 'i') return 'i';
-  
-  const c = turkishToLower(char);
-  if (c === 'ç') return 'c1';
-  if (c === 'ö') return 'o1';
-  if (c === 'ş') return 's1';
-  if (c === 'ü') return 'u1';
-  if (c === 'ğ') return 'g';
-  if (c === 'â') return 'a';
-  if (c === 'î') return 'i';
-  if (c === 'û') return 'u';
-  
-  if (c >= 'a' && c <= 'z') return c;
-  return null;
+  const normalized = turkishToLower(char).normalize('NFC');
+  const prefixMap: Record<string, string> = {
+    'â': 'a',
+    'î': 'i',
+    'û': 'u',
+    'ç': 'c',
+    'ğ': 'g',
+    'ş': 's',
+    'ö': 'o',
+    'ü': 'u',
+    'ı': 'i',
+  };
+  const key = prefixMap[normalized] || normalized;
+  return /^[a-z]$/.test(key) ? key : null;
+};
+
+const parseRawDictionaryFile = (text: string): Record<string, DictionaryTerm> => {
+  const dict: Record<string, DictionaryTerm> = {};
+  const lines = text.split('\n');
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+    const eqIdx = trimmed.indexOf('=');
+    if (eqIdx !== -1) {
+      const word = trimmed.substring(0, eqIdx).trim();
+      const definition = trimmed.substring(eqIdx + 1).trim();
+      if (word && definition) {
+        const key = turkishToLower(word).replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"'’]/g, '').trim();
+        dict[key] = {
+          word: word,
+          definition: definition.replace(/<br>/g, '\n'),
+          origin: 'Arapça'
+        };
+      }
+    }
+  }
+  return dict;
 };
 
 const parseFihristText = (text: string): FihristItem[] => {
@@ -243,17 +224,6 @@ export default function App() {
           setPreferences(JSON.parse(savedPrefs));
         } catch (e) {
           console.error(e);
-        }
-      }
-
-      // KRİTİK: Android Köprüsü Kontrolü
-      // Eğer Android'den "şu kitabı aç" emri gelmişse:
-      if ((window as any).AndroidBridge) {
-        const selectedBookId = (window as any).AndroidBridge.getSelectedBook();
-        if (selectedBookId) {
-          // Web projenin kendi fonksiyonunu kullanarak kitabı yükle
-          handleSelectBook(selectedBookId);
-          setViewMode('reader');
         }
       }
 
@@ -690,6 +660,30 @@ export default function App() {
     setFihristClickTrigger(Date.now());
   };
 
+  // Derin Bağlantı / URL Parametreleri Yönetimi (Android WebView & Dış Bağlantılar)
+  useEffect(() => {
+    if (isHydrated && typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const bookParam = params.get('book');
+      if (bookParam) {
+        const matchedBook = KULLIYAT.find((b) => b.id === bookParam);
+        if (matchedBook) {
+          const pageParam = params.get('page');
+          const searchParam = params.get('search') || undefined;
+          let targetPage: number | undefined = undefined;
+          if (pageParam) {
+            const parsedPage = parseInt(pageParam, 10);
+            if (!isNaN(parsedPage)) {
+              targetPage = parsedPage;
+            }
+          }
+          // handleSelectBook okuyucu modunu ve seçilen kitabı otomatik başlatır
+          handleSelectBook(matchedBook.id, targetPage, searchParam);
+        }
+      }
+    }
+  }, [isHydrated]);
+
   const handleSelectPage = (pageNumber: number, isFromFihrist = false) => {
     setState((prev) => {
       const bookId = prev.currentBookId;
@@ -807,6 +801,13 @@ export default function App() {
     }
   };
 
+  // Normalize internal theme values to a limited set expected by some child components
+  const normalizeThemeForChildren = (theme: ReadingTheme): 'sepia' | 'dark' | 'light' => {
+    if (theme === 'dark') return 'dark';
+    if (theme === 'sepia' || theme === 'saman' || theme === 'green' || theme === 'gray') return 'sepia';
+    return 'light';
+  };
+
   const booksWithDynamicData = KULLIYAT.map((book) => {
     const dynBook = dynamicBooks[book.id];
     const combinedPages = (dynBook && Object.keys(dynBook.pages).length > 0)
@@ -846,7 +847,7 @@ export default function App() {
         books={booksWithDynamicData}
         readingState={state}
         onSelectBook={handleSelectBook}
-        theme={preferences.theme as 'sepia' | 'light' | 'dark'}
+        theme={normalizeThemeForChildren(preferences.theme)}
       />
     );
   }
@@ -867,7 +868,7 @@ export default function App() {
         onGoToLibrary={handleGoToLibrary}
         dictionary={dictionary}
         onSelectWord={handleSelectWord}
-        theme={preferences.theme as 'sepia' | 'light' | 'dark'}
+        theme={normalizeThemeForChildren(preferences.theme)}
         preferences={preferences}
         notes={notes}
         onNotesChange={setNotes}
