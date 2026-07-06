@@ -4,7 +4,7 @@ import { BookOpen, Clock, ShieldCheck, ArrowRight, MessageSquare, Download, Lock
 export default function Home() {
   const cards = [
     { 
-      title: "Mikat-ı Nur", 
+      title: "Mîkāt-ı Nur", 
       desc: "Dijital Kütüphane Sistemi", 
       icon: <Compass className="w-8 h-8" />, 
       href: "/projects/mikatinur",
@@ -50,8 +50,8 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#050505] text-gray-100 flex flex-col items-center py-24 px-6">
       <div className="max-w-4xl w-full mb-20">
-        <h1 className="text-6xl font-black text-white mb-4">Mikat-ı Nur</h1>
-        <p className="text-xl text-gray-400 font-light">İlker TUNA tarafından dijital dünyaya taşınan manevi miras.</p>
+        <h1 className="text-6xl font-black text-white mb-4">Mîkāt-ı Nur</h1>
+        <p className="text-xl text-gray-400 font-light">Dijital dünyaya taşınan manevi miras.</p>
       </div>
 
       <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

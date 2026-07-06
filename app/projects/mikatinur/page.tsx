@@ -8,11 +8,12 @@ export default function MikatinurPage() {
         
         <h1 className="text-5xl font-bold mb-6 tracking-tighter flex items-center gap-4">
           <BookOpen className="text-blue-500" size={40} />
-          Mikat-ı Nur
+          Mîkāt-ı Nur
         </h1>
         <p className="text-lg text-gray-400 mb-12 leading-relaxed">
-          Risale-i Nur külliyatı için geliştirilen, yüksek performanslı arama, 
-          gelişmiş indeksleme ve modern bir okuma deneyimi sunan dijital kütüphane projesi.
+          Zamanı anlamlı kılmak, sadece vaktin farkında olmakla değil, o vakti hakikatle doldurmakla mümkündür. Mîkāt-ı Nur, günlük hayatınızın karmaşasında ezan vakitlerini en hassas şekilde takip etmenizi sağlarken, aynı zamanda zihninizi ve ruhunuzu besleyecek bir manevi kütüphaneyi de parmaklarınızın ucuna getiriyor.
+          Uygulamamızın içerisine entegre edilen Risale-i Nur külliyatı ile ister namaz beklerken, ister günün dingin saatlerinde iman hakikatlerini okuyabilir; vaktin bereketini tefekkürle birleştirebilirsiniz. Mîkāt-ı Nur, ezan ile vakti hatırlatır, Risale-i Nur ile o vakti maneviyatla parlatır.
+          Mîkāt-ı Nur ile vaktinizi en doğru şekilde değerlendirin, hakikat yolculuğunuza kesintisiz devam edin.
         </p>
 
         <div className="grid grid-cols-2 gap-4 mb-12">
@@ -39,15 +40,19 @@ export default function MikatinurPage() {
           <ul className="text-gray-400 space-y-4">
             <li className="flex items-center gap-3">
               <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              Jetpack Compose ile modern UI tasarımı
+              Hassas Vakit Takibi: Konumunuza özel, doğru ezan vakitleri ve geri sayım.
             </li>
             <li className="flex items-center gap-3">
               <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              SQLite ve Room Database ile hızlı veri yönetimi
+              Risale-i Nur Külliyatı: Zengin bir okuma tecrübesiyle, iman hakikatlerine her an her yerden ulaşım.
             </li>
             <li className="flex items-center gap-3">
               <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              <Search size={16} /> Sayfa bazlı JSON indeksleme yapısı
+              Tefekkür Modu: Okuma arayüzünde dikkatinizi dağıtmayan, gözü yormayan özel tasarım.
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+              Düzenli Hatim ve Okuma: İbadet takviminizi manevi okumalarınızla bütünleştirin.
             </li>
           </ul>
         </div>
