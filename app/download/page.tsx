@@ -3,11 +3,31 @@ import path from "path";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Download, HardDrive, PackageCheck } from "lucide-react";
 
+function getVersionTuple(version: string) {
+  const match = version.match(/v?(\d+)\.(\d+)\.(\d+)/);
+  if (!match) {
+    return [0, 0, 0];
+  }
+
+  return match.slice(1).map(Number) as [number, number, number];
+}
+
 function getApkInfo() {
   const apkDirectory = path.join(process.cwd(), "public", "apk");
-  const apkFile = fs
+  const apkFiles = fs
     .readdirSync(apkDirectory)
-    .find((file) => file.startsWith("Mikat-Nur-v") && file.endsWith(".apk"));
+    .filter((file) => /^Mikat-Nur-v\d+\.\d+\.\d+\.apk$/.test(file));
+
+  const apkFile = apkFiles.sort((a, b) => {
+    const aVersion = getVersionTuple(a);
+    const bVersion = getVersionTuple(b);
+
+    return (
+      bVersion[0] - aVersion[0] ||
+      bVersion[1] - aVersion[1] ||
+      bVersion[2] - aVersion[2]
+    );
+  })[0];
 
   if (!apkFile) {
     return {
