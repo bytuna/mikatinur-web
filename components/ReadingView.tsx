@@ -499,7 +499,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
 
   // Otomatik Akış (Auto Scroll) State
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
-  const [scrollSpeed, setScrollSpeed] = useState<1 | 1.25 | 1.5 | 2>(1); // 1: yavaş, 1.25: orta-yavaş, 1.5: orta, 2: hızlı
+  const [scrollSpeed, setScrollSpeed] = useState<0.1 | 0.15 | 0.2 | 0.25>(0.2); // 0.1: çok yavaş, 0.15: yavaş, 0.2: orta, 0.25: hızlı
 
   // Sayfaya Git (Go to Page) State
   const [isEditingPage, setIsEditingPage] = useState(false);
@@ -969,10 +969,10 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       lastTime = time;
 
       // Calculate speed factor (base pixels per frame at 60fps)
-      let speedFactor = 0.25; // 0.25 px (Ergonomik yavaş okuma)
-      if (scrollSpeed === 1.25) speedFactor = 0.65; // 1.25x
-      else if (scrollSpeed === 1.5) speedFactor = 0.9; // 1.5x
-      else if (scrollSpeed === 2) speedFactor = 1.4; // 2x
+      let speedFactor = 0.2;
+      if (scrollSpeed === 0.1) speedFactor = 0.1;
+      else if (scrollSpeed === 0.15) speedFactor = 0.15;
+      else if (scrollSpeed === 0.25) speedFactor = 0.25;
 
       // Adjust speed factor slightly based on frame duration to be independent of refresh rate
       // 16.67ms is 60fps baseline
@@ -1212,7 +1212,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
 
           {isAutoScrolling && (
             <div className="flex items-center bg-sepia-200/50 dark:bg-stone-900 border border-sepia-300 dark:border-stone-800 p-0.5 rounded-full shadow-xs gap-0.5">
-              {([1, 1.25, 1.5, 2] as const).map((speed) => (
+              {([0.1, 0.15, 0.2, 0.25] as const).map((speed) => (
                 <button
                    key={speed}
                    onClick={() => setScrollSpeed(speed)}
@@ -1222,12 +1222,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                        : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-200'
                    }`}
                 >
-                  {speed === 1 ? (
-                    <>
-                      <span className="sm:hidden">0.25 px</span>
-                      <span className="hidden sm:inline">0.25 px (Ergonomik yavaş okuma)</span>
-                    </>
-                  ) : speed === 1.25 ? '1.25x' : speed === 1.5 ? '1.5x' : '2x'}
+                  {speed.toFixed(2)}
                 </button>
               ))}
             </div>
@@ -1237,10 +1232,10 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
         {/* Sağ Panel: Yer İmi ve Mobil Otomatik Akış Kumandası */}
         <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
           {/* Mobil Akış Kumandası (Sadece mobilde görünür, asla üst üste binmez) */}
-          <div className="md:hidden flex items-center gap-1.5">
+          <div className="md:hidden flex items-center gap-1 max-w-[190px]">
             <button
               onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-              className={`flex items-center justify-center p-1.5 rounded-full border transition-all cursor-pointer ${
+              className={`flex items-center justify-center w-7 h-7 rounded-full border transition-all cursor-pointer shrink-0 ${
                 isAutoScrolling
                   ? 'bg-sepia-accent text-stone-950 border-sepia-accent'
                   : 'border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 bg-white/45 dark:bg-stone-900/45 hover:bg-sepia-200/30'
@@ -1248,25 +1243,29 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
               title={isAutoScrolling ? "Otomatik akışı durdur" : "Otomatik akışı başlat"}
             >
               {isAutoScrolling ? (
-                <Pause className="w-3.5 h-3.5 text-stone-950" />
+                <Pause className="w-3 h-3 text-stone-950" />
               ) : (
-                <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                <Play className="w-3 h-3 fill-current ml-0.5" />
               )}
             </button>
 
             {isAutoScrolling && (
-              <button
-                onClick={() => {
-                  if (scrollSpeed === 1) setScrollSpeed(1.25);
-                  else if (scrollSpeed === 1.25) setScrollSpeed(1.5);
-                  else if (scrollSpeed === 1.5) setScrollSpeed(2);
-                  else setScrollSpeed(1);
-                }}
-                className="px-2 py-1 text-[9px] font-sans font-bold rounded-full border border-sepia-300 dark:border-stone-850 bg-white/70 dark:bg-stone-900/70 text-stone-700 dark:text-stone-300 cursor-pointer transition-all hover:bg-sepia-200/50"
-                title="Akış hızını değiştir"
-              >
-                {scrollSpeed === 1 ? '0.25x' : scrollSpeed === 1.25 ? '1.25x' : scrollSpeed === 1.5 ? '1.5x' : '2x'}
-              </button>
+              <div className="flex items-center gap-0.5 rounded-full border border-sepia-300/70 dark:border-stone-700/80 bg-white/70 dark:bg-stone-900/70 p-0.5 overflow-hidden">
+                {([0.1, 0.15, 0.2, 0.25] as const).map((speed) => (
+                  <button
+                    key={String(speed)}
+                    onClick={() => setScrollSpeed(speed)}
+                    className={`min-w-[2.2rem] px-1 py-0.5 text-[8px] font-sans font-bold rounded-full transition-all cursor-pointer ${
+                      scrollSpeed === speed
+                        ? 'bg-sepia-accent text-stone-950 shadow-xs'
+                        : 'text-stone-600 dark:text-stone-300 hover:bg-sepia-200/40 dark:hover:bg-stone-800'
+                    }`}
+                    title={`Akış hızı: ${String(speed)}`}
+                  >
+                    {String(speed)}
+                  </button>
+                ))}
+              </div>
             )}
           </div>
 

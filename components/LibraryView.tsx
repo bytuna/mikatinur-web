@@ -5,7 +5,6 @@ import {
   BookOpen, 
   Search, 
   Bookmark, 
-  Compass, 
   Award, 
   ExternalLink,
   XCircle,
@@ -148,8 +147,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
   theme,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
-  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
+  const [coverStatus, setCoverStatus] = useState<Record<string, 'loading' | 'loaded' | 'failed'>>({});
   const [vecizeler, setVecizeler] = useState<string[]>(DEFAULT_VECIZELER);
   const [vecizeIndex, setVecizeIndex] = useState(0);
   const [fade, setFade] = useState(true);
@@ -166,6 +164,30 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
 
   const bookCache = useRef<Record<string, any>>({});
   const searchCanceledRef = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    books.forEach((book) => {
+      if (!book.coverImage) {
+        setCoverStatus((prev) => (prev[book.id] === 'failed' ? prev : { ...prev, [book.id]: 'failed' }));
+        return;
+      }
+
+      if (coverStatus[book.id] === 'loaded' || coverStatus[book.id] === 'failed') return;
+
+      const img = new window.Image();
+      img.decoding = 'async';
+      img.onload = () => {
+        setCoverStatus((prev) => ({ ...prev, [book.id]: 'loaded' }));
+      };
+      img.onerror = () => {
+        setCoverStatus((prev) => ({ ...prev, [book.id]: 'failed' }));
+      };
+      img.src = book.coverImage;
+      setCoverStatus((prev) => ({ ...prev, [book.id]: 'loading' }));
+    });
+  }, [books]);
 
   // Külliyat İçi Arama İptal Fonksiyonu
   const cancelCorpusSearch = () => {
@@ -355,8 +377,12 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
       {/* Üst Zarif Header */}
       <header className="border-b border-sepia-300/60 dark:border-stone-900 bg-white/40 dark:bg-stone-950/40 backdrop-blur-md px-4 py-3 md:px-8 md:py-4 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-0 z-30">
         <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto justify-center md:justify-start">
-          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-sepia-accent/15 flex items-center justify-center border border-sepia-accent/30 shadow-xs shrink-0">
-            <Compass className="w-4 h-4 md:w-5 md:h-5 text-sepia-accent" />
+          <div className="relative shrink-0 select-none">
+            <img
+              src="/risale-i-nur.jpg"
+              alt="Risale-i Nur emblem"
+              className="block w-14 h-14 md:w-20 md:h-20 object-cover rounded-full border border-[#7c4c2f]/70 shadow-[0_14px_24px_rgba(84,46,21,0.22)]"
+            />
           </div>
           <div className="text-center md:text-left">
             <h1 className="font-serif font-extrabold text-xl md:text-2xl tracking-tight text-sepia-accent">
@@ -746,7 +772,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                 RİSALE-İ NUR
               </h2>
               <div className="min-h-[70px] flex items-center justify-center px-4">
-                <p className={`text-sm sm:text-base font-serif italic text-stone-700 dark:text-stone-300 max-w-xl mx-auto leading-relaxed transition-all duration-500 ${fade ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                <p className={`text-sm sm:text-base font-serif italic text-stone-950 dark:text-stone-100 max-w-xl mx-auto leading-relaxed transition-all duration-500 font-medium tracking-[0.01em] ${fade ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
                   {vecizeler[vecizeIndex]}
                 </p>
               </div>
@@ -763,8 +789,9 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-6 gap-y-10">
                 {filteredBooks.map((book) => {
                   const badge = getBookBadge(book.id);
-                  const hasImage = book.coverImage && !failedImages[book.id];
-                  const isImageLoaded = hasImage && loadedImages[book.id];
+                  const coverState = coverStatus[book.id] ?? 'loading';
+                  const hasImage = Boolean(book.coverImage) && coverState !== 'failed';
+                  const isImageLoaded = coverState === 'loaded';
 
                   return (
                     <div
@@ -773,10 +800,10 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                       className="group flex flex-col items-center cursor-pointer relative"
                     >
                       {/* Kitap Görseli / 3D Cilt Efekti */}
-                      <div className={`relative w-36 h-52 sm:w-40 sm:h-56 rounded-r-lg shadow-[4px_6px_16px_rgba(0,0,0,0.35)] hover:shadow-[10px_16px_28px_rgba(0,0,0,0.5)] group-hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col justify-between p-3 select-none ${
+                      <div className={`relative w-36 h-52 sm:w-40 sm:h-56 rounded-r-lg shadow-[4px_6px_16px_rgba(0,0,0,0.35)] hover:shadow-[10px_16px_28px_rgba(0,0,0,0.5)] group-hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col justify-between select-none ${
                         isImageLoaded
-                          ? 'bg-transparent border-l-0'
-                          : 'bg-gradient-to-br from-stone-800 via-stone-700 to-stone-900 border-l-[6px] border-stone-900'
+                          ? 'bg-transparent border-l-0 p-0'
+                          : 'bg-gradient-to-br from-stone-800 via-stone-700 to-stone-900 border-l-[6px] border-stone-900 p-3'
                       }`}>
 
                         {/* Yüklenen Gerçek Kitap Kapak Resmi */}
@@ -785,11 +812,9 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                             src={book.coverImage}
                             alt={book.title}
                             referrerPolicy="no-referrer"
-                            onLoad={() => setLoadedImages((prev) => ({ ...prev, [book.id]: true }))}
-                            onError={() => setFailedImages((prev) => ({ ...prev, [book.id]: true }))}
-                            className={`absolute inset-0 w-full h-full object-cover rounded-r-xs z-0 transition-opacity duration-300 ${
-                              isImageLoaded ? 'opacity-100' : 'opacity-0'
-                            }`}
+                            onLoad={() => setCoverStatus((prev) => ({ ...prev, [book.id]: 'loaded' }))}
+                            onError={() => setCoverStatus((prev) => ({ ...prev, [book.id]: 'failed' }))}
+                            className="absolute inset-0 w-full h-full object-cover rounded-r-xs z-0 opacity-100 transition-opacity duration-300"
                           />
                         )}
 
@@ -798,9 +823,11 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                         <div className="absolute top-0 left-2 bottom-0 w-[1px] bg-white/20 z-10" />
 
                         {/* Altın Yaldızlı Kenarlık */}
-                        <div className="absolute inset-2 border border-amber-400/40 p-0.5 rounded-sm z-10 pointer-events-none">
-                          <div className="w-full h-full border border-amber-400/50 rounded-xs" />
-                        </div>
+                        {!isImageLoaded && (
+                          <div className="absolute inset-2 border border-amber-400/40 p-0.5 rounded-sm z-10 pointer-events-none">
+                            <div className="w-full h-full border border-amber-400/50 rounded-xs" />
+                          </div>
+                        )}
 
                         {/* Üst Kısım: Küçük Yaldızlı Yıldız / Motif */}
                         {!isImageLoaded && (
@@ -856,6 +883,37 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
           </>
         )}
       </div>
+
+      <section className="mt-14 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="rounded-3xl border border-stone-300/70 bg-white/70 dark:bg-stone-900/45 backdrop-blur-sm p-5 sm:p-7 shadow-[0_12px_30px_rgba(0,0,0,0.06)]">
+            <div className="mb-3 inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/5 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-amber-700 dark:text-amber-300">
+              Emirdağ Lâhikası 1, s. 49
+            </div>
+            <p className="text-base sm:text-lg leading-relaxed text-stone-800 dark:text-stone-100 font-serif italic">
+              “Risale-i Nur, Kur'ân'ın malıdır. Benim ne haddim var ki, sahib olayım; tâ ki kusurlarım ona sirayet etsin. Belki o Nur'un kusurlu bir hâdimi ve o elmas mücevherat dükkânının bir dellâlıyım.”
+            </p>
+          </div>
+
+          <div className="rounded-3xl border border-stone-300/70 bg-gradient-to-br from-stone-100 via-white to-stone-50 dark:from-stone-900 dark:via-stone-950 dark:to-stone-900 backdrop-blur-sm p-5 sm:p-7 shadow-[0_12px_30px_rgba(0,0,0,0.06)]">
+            <div className="mb-3 inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/5 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
+              Bu kütüphanenin ölçüsü
+            </div>
+            <p className="text-sm sm:text-base leading-7 text-stone-700 dark:text-stone-200 font-serif">
+              Bu kütüphane de aynı ölçüye tâbidir: <span className="font-semibold text-stone-900 dark:text-stone-50">hiçbir hakkı kendine görmez</span>. Metinler Bediüzzaman Said Nursî'ye, hakikatleri Kur'ân'a aittir. Buradaki yazılım yalnızca bir dellâllık — okumayı, aramayı ve çalışmayı kolaylaştıran bir araçtır. Ücretsizdir, kimsenin malı değildir; üyelik yalnızca çalışmalarınızı kaydetmeniz için istenir.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-6 rounded-3xl border border-stone-300/70 bg-white/65 dark:bg-stone-900/40 backdrop-blur-sm p-5 sm:p-7 shadow-[0_12px_30px_rgba(0,0,0,0.06)]">
+          <div className="mb-3 inline-flex items-center rounded-full border border-stone-400/40 bg-stone-100/80 dark:bg-stone-800/70 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-stone-600 dark:text-stone-300">
+            Mahiyet
+          </div>
+          <p className="text-base sm:text-lg leading-relaxed text-stone-800 dark:text-stone-100 font-serif italic">
+            “Bu platform, metinleri taşıyan bir araçtır; asıl sahip Kur’ân ve Bediüzzaman’dır.”
+          </p>
+        </div>
+      </section>
 
       {/* Tanıtıcı Alt Footer */}
       <footer className="mt-auto py-8 border-t border-sepia-300/30 dark:border-stone-900 text-center">

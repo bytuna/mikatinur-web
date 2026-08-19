@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Risale-i Nur emblem">
+  <defs>
+    <linearGradient id="gold" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff9de"/>
+      <stop offset="18%" stop-color="#f5e8af"/>
+      <stop offset="38%" stop-color="#d7b15d"/>
+      <stop offset="68%" stop-color="#b57e3d"/>
+      <stop offset="100%" stop-color="#6d4321"/>
+    </linearGradient>
+    <linearGradient id="book" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#f8f7f3"/>
+      <stop offset="100%" stop-color="#e6e0d8"/>
+    </linearGradient>
+    <filter id="glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#f7e8af" flood-opacity="0.7"/>
+    </filter>
+  </defs>
+
+  <rect width="240" height="240" fill="transparent"/>
+
+  <g filter="url(#glow)">
+    <g transform="translate(120,30)">
+      <path d="M0,-28 L10,-8 L23,-28 L30,-8 L42,-28 L49,-10 L44,10 L0,10 L-44,10 L-49,-10 L-42,-28 L-30,-8 L-23,-28 L-10,-8 Z" fill="url(#gold)" stroke="#7a4e2c" stroke-width="2"/>
+      <circle cx="0" cy="-41" r="11" fill="#fff7dc" stroke="#8f6737" stroke-width="2"/>
+      <path d="M0,-53 L4,-42 L16,-42 L6,-35 L9,-23 L0,-29 L-9,-23 L-6,-35 L-16,-42 L-4,-42 Z" fill="#f4dc94" stroke="#875f30" stroke-width="1.4"/>
+    </g>
+
+    <g transform="translate(120,88)">
+      <path d="M-12,18 C-30,2 -36,-12 -16,-18 C-6,-22 0,-24 0,-2 C0,12 -4,16 -12,18 Z" fill="url(#gold)" stroke="#724b2a" stroke-width="2"/>
+      <path d="M12,18 C30,2 36,-12 16,-18 C6,-22 0,-24 0,-2 C0,12 4,16 12,18 Z" fill="url(#gold)" stroke="#724b2a" stroke-width="2"/>
+      <path d="M-5,28 C-18,18 -24,18 -24,12 C-24,0 -14,-4 0,-4 C14,-4 24,0 24,12 C24,18 18,18 5,28 Z" fill="url(#gold)" stroke="#724b2a" stroke-width="2"/>
+      <path d="M-4,28 C-12,38 -18,52 0,60 C18,52 12,38 4,28 Z" fill="url(#gold)" stroke="#724b2a" stroke-width="2"/>
+    </g>
+
+    <g transform="translate(120,102)">
+      <path d="M-70,10 L-90,36 L-44,32 L-30,10 Z" fill="url(#gold)" stroke="#724b2a" stroke-width="2"/>
+      <path d="M70,10 L90,36 L44,32 L30,10 Z" fill="url(#gold)" stroke="#724b2a" stroke-width="2"/>
+      <path d="M-38,8 L-52,38 L-14,38 L-4,8 Z" fill="url(#gold)" stroke="#724b2a" stroke-width="2"/>
+      <path d="M38,8 L52,38 L14,38 L4,8 Z" fill="url(#gold)" stroke="#724b2a" stroke-width="2"/>
+      <path d="M-15,10 L-22,44 L-6,44 L0,10 Z" fill="url(#gold)" stroke="#724b2a" stroke-width="2"/>
+      <path d="M15,10 L22,44 L6,44 L0,10 Z" fill="url(#gold)" stroke="#724b2a" stroke-width="2"/>
+    </g>
+
+    <g transform="translate(120,115)">
+      <path d="M-86,22 C-58,-8 -35,-10 -12,10 C-6,15 -3,18 0,18 C3,18 6,15 12,10 C35,-10 58,-8 86,22 L82,40 L-82,40 Z" fill="url(#book)" stroke="#7d6d59" stroke-width="2"/>
+      <path d="M-78,22 C-52,12 -34,16 -12,26 C-6,28 -3,30 0,30 C3,30 6,28 12,26 C34,16 52,12 78,22" fill="none" stroke="#8a6b38" stroke-width="2" opacity="0.8"/>
+      <path d="M-60,22 L-60,46 L-34,48 L-34,20 Z" fill="#f4f0eb" stroke="#a1988d" stroke-width="1.5"/>
+      <path d="M-24,22 L-24,48 L0,50 L0,20 Z" fill="#f3efe9" stroke="#a1988d" stroke-width="1.5"/>
+      <path d="M24,22 L24,48 L0,50 L0,20 Z" fill="#f5f1ed" stroke="#a1988d" stroke-width="1.5"/>
+      <path d="M60,22 L60,46 L34,48 L34,20 Z" fill="#f1eee9" stroke="#a1988d" stroke-width="1.5"/>
+      <path d="M-84,22 L-64,44 L-20,44 L-4,22" fill="none" stroke="#d9bf77" stroke-width="3" opacity="0.9"/>
+      <path d="M84,22 L64,44 L20,44 L4,22" fill="none" stroke="#d9bf77" stroke-width="3" opacity="0.9"/>
+    </g>
+
+    <g fill="#fff8d6" opacity="0.95">
+      <circle cx="-58" cy="40" r="2.4"/>
+      <circle cx="58" cy="40" r="2.4"/>
+      <circle cx="-18" cy="36" r="2"/>
+      <circle cx="18" cy="36" r="2"/>
+      <circle cx="0" cy="32" r="2.1"/>
+      <circle cx="-42" cy="86" r="2"/>
+      <circle cx="42" cy="86" r="2"/>
+    </g>
+  </g>
+</svg>
