@@ -1,6 +1,6 @@
 import React from 'react';
 import { UserPreferences, FontSize, FontStyle, ReadingTheme, ArabicFont, UserNote } from '../types';
-import { Sun, Moon, Eye, Type, AlignLeft, RefreshCw, HelpCircle, Palette, Download, Upload } from 'lucide-react';
+import { Sun, Moon, Type, AlignLeft, RefreshCw, HelpCircle, Palette, Download, Upload, Settings } from 'lucide-react';
 
 interface TefekkurSettingsProps {
   preferences: UserPreferences;
@@ -149,15 +149,17 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
   };
 
   return (
-    <div className="space-y-6 transition-all duration-300">
-      <div className="flex items-center justify-between pb-3 border-b border-sepia-300 dark:border-stone-850">
-        <h3 className="text-xs font-serif font-extrabold uppercase tracking-[0.15em] text-[#2c2621] dark:text-amber-100 flex items-center gap-2">
-          <Eye className="w-4 h-4 text-sepia-accent" />
-          MÜTALAA VE TEFEKKÜR AYARLARI
-        </h3>
+    <div className="space-y-4 rounded-2xl border border-[#d9cdb8]/80 bg-gradient-to-b from-[#f9f4ee] via-[#f5efe7] to-[#efe4d6] p-4 shadow-[0_18px_40px_rgba(90,63,35,0.08)] transition-all duration-300 dark:from-stone-950 dark:via-stone-950 dark:to-stone-900 dark:border-stone-800/80">
+      <div className="flex items-center justify-between rounded-xl border border-[#e4d9c7] bg-white/60 px-3 py-2.5 shadow-sm dark:border-stone-800 dark:bg-stone-900/60">
+        <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-700 dark:text-stone-200">
+          <div className="p-1.5 rounded-full border border-[#d4b98d] bg-[#f8ead8] text-sepia-accent shadow-sm dark:border-stone-700 dark:bg-stone-800 dark:text-amber-300">
+            <Settings className="w-4 h-4" />
+          </div>
+          <span>Ayarlar</span>
+        </div>
         <button
           onClick={onReset}
-          className="text-[10px] uppercase tracking-wider text-stone-400 hover:text-sepia-accent flex items-center gap-1 transition-colors font-sans font-bold cursor-pointer"
+          className="text-[10px] uppercase tracking-wider text-stone-500 hover:text-sepia-accent flex items-center gap-1 transition-colors font-sans font-bold cursor-pointer"
           title="Ayarları Sıfırla"
         >
           <RefreshCw className="w-3 h-3" /> Sıfırla
@@ -165,10 +167,10 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
       </div>
 
       {/* Tema Seçimi (Sayfa Renkleri ve Temalar) */}
-      <div className="space-y-2.5">
-        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-500 dark:text-stone-400 flex items-center gap-1.5">
+      <div className="space-y-2.5 rounded-xl border border-[#e6d9c3] bg-white/55 p-3 shadow-sm dark:border-stone-800 dark:bg-stone-900/45">
+        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-600 dark:text-stone-300 flex items-center gap-1.5">
           <Palette className="w-3.5 h-3.5 text-sepia-accent" />
-          MÜTALAA SAYFA RENKLERİ (TEMA)
+          RENKLER (TEMA)
         </label>
         <div className="grid grid-cols-3 gap-2">
           {themes.map((t) => (
@@ -194,8 +196,8 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
       </div>
 
       {/* Yazı Tipi (Yazı Hat Sanatı) */}
-      <div className="space-y-2">
-        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-500 dark:text-stone-400">Yazı Hat Tipi</label>
+      <div className="space-y-2 rounded-xl border border-[#e6d9c3] bg-white/55 p-3 shadow-sm dark:border-stone-800 dark:bg-stone-900/45">
+        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-600 dark:text-stone-300">Yazı Hat Tipi</label>
         <div className="grid grid-cols-2 gap-2">
           {fontStyles.map((f) => (
             <button
@@ -214,8 +216,8 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
       </div>
 
       {/* Arapça Yazı Tipi (Arapça Hat Sanatı) */}
-      <div className="space-y-2">
-        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-500 dark:text-stone-400">Arapça Hat Sanatı</label>
+      <div className="space-y-2 rounded-xl border border-[#e6d9c3] bg-white/55 p-3 shadow-sm dark:border-stone-800 dark:bg-stone-900/45">
+        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-600 dark:text-stone-300">Arapça Hat Sanatı</label>
         <div className="grid grid-cols-2 gap-2">
           {arabicFonts.map((af) => (
             <button
@@ -236,8 +238,8 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
       </div>
 
       {/* Harf Boyutu (Punto) */}
-      <div className="space-y-2">
-        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-500 dark:text-stone-400">Yazı Boyutu (Punto)</label>
+      <div className="space-y-2 rounded-xl border border-[#e6d9c3] bg-white/55 p-3 shadow-sm dark:border-stone-800 dark:bg-stone-900/45">
+        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-600 dark:text-stone-300">Yazı Boyutu (Punto)</label>
         <div className="flex bg-sepia-200/30 dark:bg-stone-900/60 p-1 rounded-lg border border-sepia-300/40 dark:border-stone-850 justify-between gap-1">
           {fontSizes.map((fs) => (
             <button
@@ -256,8 +258,8 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
       </div>
 
       {/* Satır Aralığı (Satır Boşluğu) */}
-      <div className="space-y-2">
-        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-500 dark:text-stone-400">Satır Boşluğu</label>
+      <div className="space-y-2 rounded-xl border border-[#e6d9c3] bg-white/55 p-3 shadow-sm dark:border-stone-800 dark:bg-stone-900/45">
+        <label className="block text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-600 dark:text-stone-300">Satır Boşluğu</label>
         <div className="grid grid-cols-4 gap-1 bg-sepia-200/30 dark:bg-stone-900/60 p-1 rounded-lg border border-sepia-300/40 dark:border-stone-850 text-center">
           {lineHeights.map((lh) => (
             <button
@@ -276,8 +278,8 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
       </div>
 
       {/* Tefekkür Vurguları (Renk Aç / Kapa) */}
-      <div className="flex items-center justify-between border-t border-sepia-300/40 dark:border-stone-850 pt-4">
-        <span className="text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-500 dark:text-stone-400 flex flex-col gap-0.5">
+      <div className="flex items-center justify-between rounded-xl border border-[#e6d9c3] bg-white/55 p-3 shadow-sm dark:border-stone-800 dark:bg-stone-900/45">
+        <span className="text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-600 dark:text-stone-300 flex flex-col gap-0.5">
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-sepia-accent animate-pulse" />
             Tefekkür Vurgusu
@@ -309,8 +311,8 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
       </div>
 
       {/* Haşiye (Footnotes) Göster / Gizle */}
-      <div className="flex items-center justify-between border-t border-sepia-300/50 dark:border-stone-800/80 pt-4 mt-4">
-        <span className="text-[10px] uppercase tracking-wider font-sans font-bold opacity-50 dark:text-stone-400 flex items-center gap-1.5">
+      <div className="flex items-center justify-between rounded-xl border border-[#e6d9c3] bg-white/55 p-3 shadow-sm dark:border-stone-800 dark:bg-stone-900/45">
+        <span className="text-[10px] uppercase tracking-wider font-sans font-bold text-stone-600 dark:text-stone-300 flex items-center gap-1.5">
           <HelpCircle className="w-3.5 h-3.5" /> Haşiyeler
         </span>
         <button
@@ -328,8 +330,8 @@ export const TefekkurSettings: React.FC<TefekkurSettingsProps> = ({
       </div>
 
       {/* Tefekkür Notları Yönetimi (İçe/Dışa Aktar) */}
-      <div className="border-t border-sepia-300/50 dark:border-stone-800/80 pt-4 mt-4 space-y-3">
-        <span className="block text-[10px] uppercase tracking-wider font-sans font-bold opacity-50 dark:text-stone-400">
+      <div className="rounded-xl border border-[#e6d9c3] bg-white/55 p-3 shadow-sm dark:border-stone-800 dark:bg-stone-900/45 space-y-3">
+        <span className="block text-[10px] uppercase tracking-wider font-sans font-bold text-stone-600 dark:text-stone-300">
           TEFEKKÜR NOTLARI YÖNETİMİ
         </span>
         <div className="grid grid-cols-2 gap-2">

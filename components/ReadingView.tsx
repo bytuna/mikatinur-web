@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { RisaleBook, UserPreferences, RisalePage, DictionaryTerm, TOCSection } from '../types';
-import { ChevronLeft, ChevronRight, Bookmark, BookmarkCheck, HelpCircle, BookOpen, Play, Pause, Square, Library, Menu, X, Pin } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Bookmark, BookmarkCheck, HelpCircle, BookOpen, Play, Pause, Square, Library, Menu, X, Pin, Settings } from 'lucide-react';
 import { ReadingPageContent } from './ReadingPageContent';
 
 interface ReadingViewProps {
@@ -17,6 +17,8 @@ interface ReadingViewProps {
   onGoToLibrary?: () => void;
   sidebarOpen?: boolean;
   onToggleSidebar?: () => void;
+  onToggleSettings?: () => void;
+  settingsOpen?: boolean;
   dictionary: Record<string, DictionaryTerm>;
   fihristClickTrigger?: number;
   sections?: TOCSection[];
@@ -38,6 +40,8 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
   onGoToLibrary,
   sidebarOpen = false,
   onToggleSidebar,
+  onToggleSettings,
+  settingsOpen = false,
   dictionary,
   fihristClickTrigger = 0,
   sections,
@@ -1113,8 +1117,8 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
   return (
     <div className="flex flex-col h-full bg-transparent relative">
       {/* Kitap & Sayfa Üst Bilgi Barı */}
-      <div className={`flex items-center justify-between px-4 sm:px-6 md:px-8 py-3 sm:py-4 border-b backdrop-blur-md z-10 relative ${headerThemeClass}`}>
-        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
+      <div className={`flex items-center gap-1.5 sm:gap-3 px-2 sm:px-6 md:px-8 py-2 sm:py-4 border-b backdrop-blur-md z-10 relative ${headerThemeClass}`}>
+        <div className="flex items-center gap-1 sm:gap-3 min-w-0 flex-1">
           {onToggleSidebar && (
             <button
               onClick={onToggleSidebar}
@@ -1140,7 +1144,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
             </button>
           )}
           <BookOpen className="w-4 h-4 text-sepia-accent hidden sm:inline flex-shrink-0" />
-          <span className={`font-serif font-extrabold text-sm sm:text-base md:text-lg lg:text-xl tracking-tight truncate max-w-[80px] xs:max-w-[120px] sm:max-w-none ${titleThemeClass}`}>
+          <span className={`font-serif font-extrabold text-xs sm:text-base md:text-lg lg:text-xl tracking-tight text-left ${titleThemeClass}`}>
             {book.title}
           </span>
           {isEditingPage ? (
@@ -1186,53 +1190,52 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
           )}
         </div>
 
-        {/* Masaüstü Ortalanmış Otomatik Akış Kumandası */}
-        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-1.5 md:gap-2 z-20">
-          <button
-            onClick={() => setIsAutoScrolling(!isAutoScrolling)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
-              isAutoScrolling
-                ? 'bg-sepia-accent text-stone-950 border border-sepia-accent'
-                : 'border border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 bg-white/40 dark:bg-stone-900/40 hover:bg-sepia-200/50'
-            }`}
-            title={isAutoScrolling ? "Otomatik akışı durdur" : "Otomatik akışı başlat"}
-          >
-            {isAutoScrolling ? (
-              <>
-                <Pause className="w-3 h-3 text-stone-950" />
-                <span className="text-[9px] tracking-widest text-stone-950">Akıyor</span>
-              </>
-            ) : (
-              <>
-                <Play className="w-3 h-3 fill-current" />
-                <span className="text-[9px] tracking-widest">Akıt</span>
-              </>
-            )}
-          </button>
+        <div className="hidden md:flex flex-1 items-center justify-center min-w-0 z-20">
+          <div className="relative flex items-center justify-center">
+            <button
+              onClick={() => setIsAutoScrolling(!isAutoScrolling)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                isAutoScrolling
+                  ? 'bg-sepia-accent text-stone-950 border border-sepia-accent'
+                  : 'border border-sepia-300 dark:border-stone-800 text-stone-600 dark:text-stone-300 bg-white/40 dark:bg-stone-900/40 hover:bg-sepia-200/50'
+              }`}
+              title={isAutoScrolling ? "Otomatik akışı durdur" : "Otomatik akışı başlat"}
+            >
+              {isAutoScrolling ? (
+                <>
+                  <Pause className="w-3 h-3 text-stone-950" />
+                  <span className="text-[9px] tracking-widest text-stone-950">Akıyor</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-3 h-3 fill-current" />
+                  <span className="text-[9px] tracking-widest">Akıt</span>
+                </>
+              )}
+            </button>
 
-          {isAutoScrolling && (
-            <div className="flex items-center bg-sepia-200/50 dark:bg-stone-900 border border-sepia-300 dark:border-stone-800 p-0.5 rounded-full shadow-xs gap-0.5">
-              {([0.1, 0.15, 0.2, 0.25] as const).map((speed) => (
-                <button
-                   key={speed}
-                   onClick={() => setScrollSpeed(speed)}
-                   className={`px-2.5 py-0.5 text-[8px] font-sans font-bold rounded-full transition-all cursor-pointer whitespace-nowrap ${
-                     scrollSpeed === speed
-                       ? 'bg-sepia-accent text-stone-950 shadow-xs'
-                       : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-200'
-                   }`}
-                >
-                  {speed.toFixed(2)}
-                </button>
-              ))}
-            </div>
-          )}
+            {isAutoScrolling && (
+              <div className="absolute left-1/2 top-full mt-2 -translate-x-1/2 z-30 flex items-center bg-sepia-200/90 dark:bg-stone-900/95 border border-sepia-300 dark:border-stone-800 p-0.5 rounded-full shadow-lg gap-0.5 backdrop-blur-sm">
+                {([0.1, 0.15, 0.2, 0.25] as const).map((speed) => (
+                  <button
+                    key={speed}
+                    onClick={() => setScrollSpeed(speed)}
+                    className={`px-2.5 py-0.5 text-[8px] font-sans font-bold rounded-full transition-all cursor-pointer whitespace-nowrap ${
+                      scrollSpeed === speed
+                        ? 'bg-sepia-accent text-stone-950 shadow-xs'
+                        : 'text-stone-500 hover:text-stone-800 dark:hover:text-stone-200'
+                    }`}
+                  >
+                    {speed.toFixed(2)}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Sağ Panel: Yer İmi ve Mobil Otomatik Akış Kumandası */}
-        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-          {/* Mobil Akış Kumandası (Sadece mobilde görünür, asla üst üste binmez) */}
-          <div className="md:hidden flex items-center gap-1 max-w-[190px]">
+        <div className="flex items-center justify-end gap-1.5 sm:gap-2 flex-shrink-0 w-auto max-w-[220px]">
+          <div className="md:hidden relative flex items-center justify-end">
             <button
               onClick={() => setIsAutoScrolling(!isAutoScrolling)}
               className={`flex items-center justify-center w-7 h-7 rounded-full border transition-all cursor-pointer shrink-0 ${
@@ -1250,7 +1253,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
             </button>
 
             {isAutoScrolling && (
-              <div className="flex items-center gap-0.5 rounded-full border border-sepia-300/70 dark:border-stone-700/80 bg-white/70 dark:bg-stone-900/70 p-0.5 overflow-hidden">
+              <div className="absolute right-0 top-full mt-2 z-30 flex items-center gap-0.5 rounded-full border border-sepia-300/70 dark:border-stone-700/80 bg-white/90 dark:bg-stone-900/90 p-0.5 shadow-lg backdrop-blur-sm">
                 {([0.1, 0.15, 0.2, 0.25] as const).map((speed) => (
                   <button
                     key={String(speed)}
@@ -1269,7 +1272,6 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
             )}
           </div>
 
-          {/* Okuma İşaretçisi (Gezen İşaretçi) Butonu */}
           <button
             onClick={togglePointer}
             className={`p-2 rounded-full border transition-all cursor-pointer ${
@@ -1282,7 +1284,6 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
             <Pin className={`w-4 h-4 ${showPointer ? 'rotate-45 text-amber-600 dark:text-amber-400' : ''} transition-transform duration-300`} />
           </button>
 
-          {/* Yer İmi Butonu */}
           <button
             onClick={() => onToggleBookmark(book.id, pageNumber)}
             className={`p-2 rounded-full border transition-all cursor-pointer ${
@@ -1294,6 +1295,20 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
           >
             {isBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
           </button>
+
+          {onToggleSettings && (
+            <button
+              onClick={onToggleSettings}
+              className={`p-2 rounded-full border transition-all cursor-pointer ${
+                settingsOpen
+                  ? 'border-sepia-accent bg-sepia-accent/10 text-sepia-accent'
+                  : 'border-sepia-300 dark:border-stone-800 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 hover:bg-stone-50 dark:hover:bg-stone-900/50'
+              }`}
+              title="Tefekkür ve lügat ayarları"
+            >
+              <Settings className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -1310,10 +1325,10 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       {/* Okuma Alanı (Lazy Loaded Frame - Continuous Scroll) */}
       <div
         ref={containerRef}
-        className={`flex-1 overflow-y-auto px-4 py-8 md:py-12 no-scrollbar scroll-smooth relative transition-colors duration-300 ${containerBgClass}`}
+        className={`flex-1 overflow-y-auto px-1.5 py-1.5 sm:px-4 sm:py-8 md:px-8 md:py-12 no-scrollbar scroll-smooth relative transition-colors duration-300 ${containerBgClass}`}
       >
         {loadedPages.length > 0 ? (
-          <div className="w-full max-w-[820px] mx-auto flex flex-col gap-12 relative pb-24 min-h-full">
+          <div className="w-full max-w-[820px] mx-auto flex flex-col gap-3 sm:gap-12 relative pb-6 sm:pb-24 min-h-full">
             {loadedPages.map(({ pageNum, data }) => {
               const isActive = pageNum === pageNumber;
               const isFocused = focusActive && focusPageNum === pageNum;
@@ -1335,7 +1350,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                   key={pageNum}
                   id={`page-block-${pageNum}`}
                   data-page-num={pageNum}
-                  className={`relative ${pageBgClass} border border-sepia-300/40 dark:border-stone-850/80 rounded-lg shadow-[0_12px_45px_rgba(0,0,0,0.08)] dark:shadow-[0_16px_50px_rgba(0,0,0,0.35)] pb-16 pt-12 px-6 sm:px-12 md:px-16 transition-all duration-300 flex flex-col ${
+                  className={`relative ${pageBgClass} border border-sepia-300/40 dark:border-stone-850/80 rounded-lg shadow-[0_12px_45px_rgba(0,0,0,0.08)] dark:shadow-[0_16px_50px_rgba(0,0,0,0.35)] pb-2 pt-3 px-2 sm:pb-8 sm:pt-6 sm:px-8 md:px-12 transition-all duration-300 flex flex-col ${
                     isActive 
                       ? 'ring-1 ring-sepia-accent/25 dark:ring-amber-500/15 scale-[1.002]' 
                       : 'opacity-90 dark:opacity-85'
@@ -1406,16 +1421,15 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                   )}
 
                   {/* Sayfa Başlığı ve Çizgisi (Book Page Header) */}
-                  <div className={`flex flex-col gap-2 mb-10 select-none transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-40 dark:opacity-50'}`}>
-                    <div className="flex items-center justify-between text-[11px] font-sans font-semibold tracking-wider text-sepia-accent/80 dark:text-stone-400">
-                      <span className="truncate max-w-[180px] md:max-w-[280px]">{book.title}</span>
-                      <span className="font-serif italic font-medium text-sepia-accent dark:text-amber-500/80">✦</span>
-                      <span className="truncate max-w-[180px] md:max-w-[280px]">{pageSectionTitle || book.title}</span>
+                  <div className={`flex flex-col gap-1 mb-2 sm:mb-6 select-none transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-40 dark:opacity-50'}`}>
+                    <div className="flex items-center justify-between text-[10px] sm:text-[11px] font-sans font-semibold tracking-wider text-[#2a221d] dark:text-stone-300">
+                      <span className="truncate max-w-[120px] sm:max-w-[180px] md:max-w-[280px]">{book.title}</span>
+                      <span className="font-serif italic font-medium text-[#2a221d] dark:text-amber-400">✦</span>
+                      <span className="truncate max-w-[120px] sm:max-w-[180px] md:max-w-[280px]">{pageSectionTitle || book.title}</span>
                     </div>
-                    {/* Çift Çizgi Efekti (Kitap Sayfası Hissi için üstte bir kalın bir ince çizgi) */}
                     <div className="flex flex-col gap-[2px]">
-                      <div className="h-[1.5px] bg-sepia-accent/35 dark:bg-stone-700/60 w-full" />
-                      <div className="h-[0.5px] bg-sepia-accent/15 dark:bg-stone-800/40 w-full scale-x-95 origin-center" />
+                      <div className="h-[1.5px] bg-[#2a221d]/25 dark:bg-stone-600/60 w-full" />
+                      <div className="h-[0.5px] bg-[#2a221d]/15 dark:bg-stone-700/40 w-full scale-x-95 origin-center" />
                     </div>
                   </div>
 
@@ -1458,17 +1472,14 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                   )}
 
                   {/* Sayfa Altlığı ve Çizgisi (Book Page Footer) */}
-                  <div className={`flex flex-col gap-4 mt-12 select-none transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-40 dark:opacity-50'}`}>
-                    {/* İnce Çizgi ve Süsleme */}
-                    <div className="h-[1px] bg-sepia-accent/15 dark:bg-stone-800/60 w-full" />
-                    
-                    {/* Sayfa Numarası Emblemi ve Fihrist Bilgisi */}
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-2 px-2 text-xs font-sans text-sepia-accent/80 dark:text-stone-400">
-                      <span className="hidden sm:inline opacity-60 font-semibold">{book.title}</span>
-                      <span className="px-4 py-1.5 rounded-full border border-sepia-accent/30 dark:border-stone-700/80 text-sm font-sans tracking-wide text-sepia-accent dark:text-stone-300 bg-sepia-200/40 dark:bg-stone-900 font-bold shadow-sm">
+                  <div className={`flex flex-col gap-1 mt-2 sm:mt-8 select-none transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-40 dark:opacity-50'}`}>
+                    <div className="h-[1px] bg-[#2a221d]/15 dark:bg-stone-700/50 w-full" />
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-2 px-1 text-[10px] sm:text-xs font-sans text-[#2a221d] dark:text-stone-300">
+                      <span className="hidden sm:inline opacity-70 font-semibold">{book.title}</span>
+                      <span className="px-3 py-1 rounded-full border border-[#2a221d]/20 dark:border-stone-700/80 text-[11px] sm:text-sm font-sans tracking-wide text-[#1d1a17] dark:text-stone-200 bg-[#f3e7d3]/60 dark:bg-stone-900 font-bold shadow-sm">
                         Sayfa {pageNum}
                       </span>
-                      <span className="text-right truncate max-w-[280px] font-semibold" title={pageSectionTitle || ''}>
+                      <span className="text-right truncate max-w-[180px] sm:max-w-[280px] font-semibold" title={pageSectionTitle || ''}>
                         {pageSectionTitle || ''}
                       </span>
                     </div>
@@ -1493,35 +1504,33 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       </div>
 
       {/* Alt Navigasyon (Artistic Progress Footer Context Bar - Oklar Kaldırıldı) */}
-      <footer className="h-20 bg-transparent flex items-center px-8 justify-between select-none">
-        {/* Okuma İlerlemesi Progress Bar */}
+      <footer className="h-10 sm:h-16 md:h-20 bg-transparent flex items-center px-2 sm:px-5 md:px-8 justify-between select-none">
         <div className="flex-1 max-w-xl">
-          <div className="flex justify-between text-[9px] font-sans uppercase tracking-wider opacity-60 mb-1 text-sepia-accent/80 dark:text-stone-400">
+          <div className="flex justify-between text-[8px] sm:text-[9px] font-sans uppercase tracking-wider opacity-80 mb-1 text-[#1f1a17] dark:text-stone-300">
             <span>Süre: {formatReadingTime(readingSeconds)}</span>
           </div>
-          <div className="flex justify-between text-[10px] font-sans uppercase tracking-widest opacity-40 mb-2 dark:text-stone-400">
-            <span>Okuma İlerlemesi</span>
+          <div className="flex justify-between text-[9px] sm:text-[10px] font-sans uppercase tracking-widest opacity-70 mb-1.5 text-[#1f1a17] dark:text-stone-300">
+            <span>İlerleme</span>
             <span>{progressPercent}%</span>
           </div>
-          <div className="w-full h-[1px] bg-sepia-300 dark:bg-stone-800 relative">
+          <div className="w-full h-[2px] bg-[#2a221d]/15 dark:bg-stone-800 relative">
             <div
-              className="h-full bg-sepia-accent transition-all duration-300"
+              className="h-full bg-[#2a221d] dark:bg-amber-400 transition-all duration-300"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
         </div>
 
-        {/* Son Durak Bilgisi */}
-        <div className="flex items-center gap-4 pl-6 md:pl-12 ml-6">
+        <div className="flex items-center gap-2 sm:gap-4 pl-3 sm:pl-6 md:pl-12 ml-2 sm:ml-6">
           <div className="text-right">
-            <div className="text-[10px] font-sans uppercase tracking-widest opacity-40 dark:text-stone-400">
-              Şu Anki Konum
+            <div className="text-[8px] sm:text-[10px] font-sans uppercase tracking-widest opacity-70 text-[#1f1a17] dark:text-stone-300">
+              Konum
             </div>
-            <div className={`text-xs font-bold font-sans ${titleThemeClass}`}>
+            <div className="text-[10px] sm:text-xs font-bold font-sans text-[#1f1a17] dark:text-stone-200">
               {book.title} / S. {pageNumber}
             </div>
             {currentSectionTitle && (
-              <div className="text-[10px] font-sans mt-0.5 text-sepia-accent/80 dark:text-stone-400 truncate max-w-[180px]" title={currentSectionTitle}>
+              <div className="text-[8px] sm:text-[10px] font-sans mt-0.5 text-[#1f1a17]/80 dark:text-stone-300 truncate max-w-[120px] sm:max-w-[180px]" title={currentSectionTitle}>
                 {currentSectionTitle}
               </div>
             )}

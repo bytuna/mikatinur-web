@@ -587,12 +587,19 @@ export default function App() {
     if (typeof window === 'undefined') return;
 
     if (viewMode === 'reader') {
-      if (window.history.state?.view !== 'reader') {
-        window.history.pushState({ view: 'reader' }, '');
+      const desiredViewState = settingsOpen ? 'reader-settings' : 'reader';
+      if (window.history.state?.view !== desiredViewState) {
+        window.history.pushState({ view: desiredViewState }, '');
       }
     }
 
     const handlePopState = () => {
+      if (settingsOpen) {
+        setSettingsOpen(false);
+        window.history.pushState({ view: 'reader' }, '');
+        return;
+      }
+
       if (viewMode === 'reader') {
         setViewMode('library');
       }
@@ -602,7 +609,7 @@ export default function App() {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [viewMode]);
+  }, [viewMode, settingsOpen]);
 
   const handleSelectBook = (bookId: string, pageNumber?: number, searchQuery?: string) => {
     const book = KULLIYAT.find((b) => b.id === bookId) || KULLIYAT[0];
@@ -895,7 +902,6 @@ export default function App() {
               <Menu className="w-5 h-5" />
             </button>
             
-            {/* Mobil Geri Dön Butonu */}
             <button
               onClick={handleGoToLibrary}
               className="p-1.5 rounded-lg text-sepia-accent hover:bg-sepia-200 dark:hover:bg-stone-900 cursor-pointer flex items-center gap-1 text-xs font-sans font-bold uppercase tracking-wider"
@@ -909,28 +915,8 @@ export default function App() {
             <span className="font-display font-bold text-sm tracking-tight">RİSALE-İ NUR</span>
           </div>
 
-          <button
-            onClick={() => setSettingsOpen(!settingsOpen)}
-            className="p-1.5 rounded-lg text-[#2c2621] dark:text-stone-400 hover:bg-sepia-200 dark:hover:bg-stone-900 cursor-pointer"
-          >
-            <Settings className="w-5 h-5" />
-          </button>
+          <div className="w-9" aria-hidden="true" />
         </header>
-
-        {/* Masaüstü Ekstra Kontroller - Artistic design style button */}
-        <div className="hidden lg:flex absolute top-4 right-8 z-20 gap-2">
-          <button
-            onClick={() => setSettingsOpen(!settingsOpen)}
-            className={`flex items-center gap-2 py-2 px-4 text-[11px] font-sans font-bold uppercase tracking-widest rounded-full border transition-all cursor-pointer ${
-              settingsOpen
-                ? 'bg-sepia-900 text-white border-sepia-900'
-                : 'bg-white/60 dark:bg-stone-900/80 backdrop-blur-md border-sepia-300 dark:border-stone-800 text-[#2c2621] dark:text-stone-300 hover:bg-sepia-200 dark:hover:bg-stone-850'
-            }`}
-          >
-            <Settings className="w-3.5 h-3.5" />
-            Lügat & Tefekkür Ayarları
-          </button>
-        </div>
 
         {/* Esnek Okuma Grid / Alanı */}
         <div className="flex-1 flex flex-col md:flex-row min-h-0">
@@ -950,6 +936,8 @@ export default function App() {
               onGoToLibrary={handleGoToLibrary}
               sidebarOpen={sidebarOpen}
               onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+              onToggleSettings={() => setSettingsOpen(!settingsOpen)}
+              settingsOpen={settingsOpen}
               dictionary={dictionary}
               fihristClickTrigger={fihristClickTrigger}
               sections={parsedSections}
@@ -961,10 +949,24 @@ export default function App() {
 
           {/* Sağ Panel: Tefekkür Ayarları */}
           <div
-            className={`w-full md:w-80 border-t md:border-t-0 md:border-l border-sepia-300 dark:border-stone-900 p-6 overflow-y-auto no-scrollbar space-y-6 bg-[#ede8df]/35 dark:bg-stone-950/20 backdrop-blur-md transition-all duration-300 ${
-              settingsOpen ? 'block' : 'hidden'
-            }`}
+            className={`
+              fixed inset-x-3 top-[72px] bottom-3 z-40 lg:static lg:z-auto lg:inset-auto lg:top-auto lg:bottom-auto lg:left-auto lg:right-auto
+              w-auto overflow-y-auto no-scrollbar rounded-[26px] border border-[#d9cdb8]/80 bg-gradient-to-b from-[#f7f2eb] via-[#f3ecdf] to-[#ebdfce] shadow-[0_22px_50px_rgba(87,62,35,0.18)]
+              p-3 space-y-4 backdrop-blur-md transition-all duration-300
+              dark:from-stone-950 dark:via-stone-950 dark:to-stone-900 dark:border-stone-800/80
+              lg:w-80 lg:border-t-0 lg:border-l lg:rounded-none lg:rounded-r-2xl lg:rounded-l-none lg:p-6 lg:shadow-none lg:bg-[#ede8df]/35 lg:dark:bg-stone-950/20
+              ${settingsOpen ? 'block' : 'hidden'}
+            `}
           >
+            <div className="flex items-center justify-between rounded-xl border border-[#e4d9c7] bg-white/60 px-3 py-2.5 shadow-sm dark:border-stone-800 dark:bg-stone-900/60">
+              <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.15em] font-sans font-bold text-stone-700 dark:text-stone-200">
+                <div className="p-1.5 rounded-full border border-[#d4b98d] bg-[#f8ead8] text-sepia-accent shadow-sm dark:border-stone-700 dark:bg-stone-800 dark:text-amber-300">
+                  <Settings className="w-4 h-4" />
+                </div>
+                <span>Ayarlar</span>
+              </div>
+            </div>
+
             {/* Tefekkür Ayarları Paneli */}
             {settingsOpen && (
               <TefekkurSettings
@@ -977,9 +979,9 @@ export default function App() {
             )}
             
             {/* Bilgilendirme Kartı - Beautiful and refined */}
-            <div className="p-4 bg-sepia-200/50 border border-sepia-300 dark:border-stone-800/30 rounded-lg text-xs text-stone-600 dark:text-stone-400 space-y-2 leading-relaxed">
+            <div className="rounded-xl border border-[#e6d9c3] bg-white/60 p-3 text-xs text-stone-600 dark:text-stone-400 space-y-2 leading-relaxed shadow-sm dark:border-stone-800 dark:bg-stone-900/45">
               <div className="font-sans font-bold uppercase tracking-widest text-[10px] text-sepia-accent flex items-center gap-1">
-                Mütalaa Kılavuzu
+                Kılavuz
               </div>
               <p>
                 Risale metninde anlamını merak ettiğiniz kelimelerin üzerine tıklayarak anında lügat karşılığına erişebilirsiniz.
