@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { domToCanvas } from 'modern-screenshot';
 import { Bug, Check, Eraser, Loader2, Send, X } from 'lucide-react';
 
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
 interface BugReportModalProps {
   target: HTMLElement | null;
   bookTitle: string;
@@ -126,6 +128,12 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
       return;
     }
 
+    const trimmedEmail = reporterEmail.trim();
+    if (trimmedEmail && !emailPattern.test(trimmedEmail)) {
+      setError('Geri dönüş istiyorsanız lütfen geçerli bir e-posta adresi yazın. Geri dönüş istemiyorsanız bu alanı boş bırakabilirsiniz.');
+      return;
+    }
+
     setIsSending(true);
     setError('');
     try {
@@ -136,15 +144,18 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
           bookTitle,
           pageNumber,
           description: description.trim(),
-          reporterEmail: reporterEmail.trim(),
+          reporterEmail: trimmedEmail,
           screenshot: canvas.toDataURL('image/png'),
           url: window.location.href,
         }),
       });
-      if (!response.ok) throw new Error('send-failed');
+      if (!response.ok) {
+        const result = await response.json().catch(() => null);
+        throw new Error(result?.error || 'Bildirim gönderilemedi. Lütfen tekrar deneyin.');
+      }
       setSent(true);
-    } catch {
-      setError('Bildirim gönderilemedi. Lütfen tekrar deneyin.');
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : 'Bildirim gönderilemedi. Lütfen tekrar deneyin.');
     } finally {
       setIsSending(false);
     }
@@ -191,7 +202,8 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({
               <textarea value={description} onChange={(event) => setDescription(event.target.value)} required rows={4} placeholder="Bu sayfada gördüğünüz hatayı açıklayın..." className="mt-1.5 w-full resize-y rounded-xl border border-sepia-300 bg-white/70 p-3 text-sm font-normal text-stone-800 outline-none focus:border-sepia-accent dark:border-stone-700 dark:bg-stone-950/50 dark:text-stone-200" />
             </label>
             <label className="text-xs font-bold text-stone-700 dark:text-stone-300">E-posta adresiniz <span className="font-normal text-stone-400">(isteğe bağlı)</span>
-              <input type="email" value={reporterEmail} onChange={(event) => setReporterEmail(event.target.value)} placeholder="Geri dönüş yapılacaksa..." className="mt-1.5 w-full rounded-xl border border-sepia-300 bg-white/70 p-3 text-sm font-normal text-stone-800 outline-none focus:border-sepia-accent dark:border-stone-700 dark:bg-stone-950/50 dark:text-stone-200" />
+              <span className="mt-1 block text-[11px] font-normal leading-relaxed text-stone-500 dark:text-stone-400">Size geri dönüş yapılmasını istiyorsanız lütfen geçerli e-posta adresinizi yazın. Geri dönüş istemiyorsanız alanı boş bırakabilirsiniz; geçersiz adreslerle bildirim gönderilemez.</span>
+              <input type="email" value={reporterEmail} onChange={(event) => setReporterEmail(event.target.value)} placeholder="Geçerli e-posta adresiniz" className="mt-1.5 w-full rounded-xl border border-sepia-300 bg-white/70 p-3 text-sm font-normal text-stone-800 outline-none focus:border-sepia-accent dark:border-stone-700 dark:bg-stone-950/50 dark:text-stone-200" />
             </label>
             {error && <p className="text-xs font-semibold text-red-700 dark:text-red-400">{error}</p>}
             <div className="flex justify-end gap-2 border-t border-sepia-300/60 pt-3 dark:border-stone-800">

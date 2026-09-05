@@ -6,6 +6,7 @@ export const runtime = 'nodejs';
 
 const recipient = process.env.BUG_REPORT_TO || 'ilker.tuna6134@gmail.com';
 const storePath = path.join(process.cwd(), 'data', 'bug-reports.json');
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 type BugReportPayload = {
   bookTitle?: string;
@@ -71,6 +72,12 @@ export async function POST(request: Request) {
     const body = (await request.json()) as BugReportPayload;
     if (!body.bookTitle || !body.pageNumber || !body.description || !body.screenshot) {
       return NextResponse.json({ ok: false, error: 'Eksik hata bildirimi bilgisi' }, { status: 400 });
+    }
+    if (body.reporterEmail && !emailPattern.test(body.reporterEmail.trim())) {
+      return NextResponse.json({
+        ok: false,
+        error: 'Geri dönüş istiyorsanız geçerli bir e-posta adresi yazın; geri dönüş istemiyorsanız bu alanı boş bırakın.',
+      }, { status: 400 });
     }
 
     const report = {
