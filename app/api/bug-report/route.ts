@@ -85,7 +85,11 @@ export async function POST(request: Request) {
     };
 
     const emailed = await sendEmail(report, body.screenshot);
-    await saveLocally({ ...report, emailed });
+    try {
+      await saveLocally({ ...report, emailed });
+    } catch (error) {
+      console.error('Bug report local backup failed:', error);
+    }
 
     return NextResponse.json({ ok: true, emailed });
   } catch {
