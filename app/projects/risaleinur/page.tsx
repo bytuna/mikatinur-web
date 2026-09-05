@@ -42,7 +42,7 @@ import { Sidebar } from '../../../components/Sidebar';
 import { ReadingView } from '../../../components/ReadingView';
 import { TefekkurSettings } from '../../../components/TefekkurSettings';
 import { LibraryView } from '../../../components/LibraryView';
-import { Menu, Settings, Compass, Library } from 'lucide-react';
+import { Settings, Compass } from 'lucide-react';
 
 const DEFAULT_STATE: ReadingState = {
   currentBookId: 'sozler',
@@ -293,7 +293,6 @@ export default function App() {
       try {
         const response = await fetch(`/fihrist/${filename}`);
         if (!response.ok) {
-          console.warn(`Fihrist file not found: ${filename}`);
           setFihristNodes([]);
           return;
         }
@@ -301,10 +300,8 @@ export default function App() {
         if (active) {
           const parsed = parseFihristText(text);
           setFihristNodes(parsed);
-          console.log(`Successfully loaded and parsed hierarchical fihrist with ${parsed.length} root items.`);
         }
-      } catch (err) {
-        console.warn(`Error loading fihrist for ${state.currentBookId}:`, err);
+      } catch {
         setFihristNodes([]);
       }
     };
@@ -337,7 +334,6 @@ export default function App() {
       try {
         const response = await fetch('/lugat/tr.json');
         if (!response.ok) {
-          console.log('Custom dictionary tr.json not found, using default static DICTIONARY');
           return;
         }
         const data = await response.json();
@@ -377,9 +373,8 @@ export default function App() {
         }
 
         setDictionary(loadedDict);
-        console.log('Successfully loaded custom dictionary with', Object.keys(loadedDict).length, 'terms.');
-      } catch (err) {
-        console.warn('Error loading custom dictionary, fallback to default static DICTIONARY:', err);
+      } catch {
+        // Varsayılan sözlük kullanılacak.
       }
     };
 
@@ -408,10 +403,9 @@ export default function App() {
           });
           return next;
         });
-        console.log(`Arka planda '${prefix}' harfi lügat kayıtları başarıyla yüklendi.`);
       }
-    } catch (err) {
-      console.warn(`Harf dosyası yüklenirken hata oluştu (${prefix}):`, err);
+    } catch {
+      // Harf dosyası yüklenemedi; sessiz şekilde varsayılan sözlüğü bırak.
     }
   };
 
@@ -892,32 +886,6 @@ export default function App() {
       {/* Ana Çalışma Paneli */}
       <main className="flex-1 flex flex-col min-w-0 relative">
         
-        {/* Mobil Header Üst Menü */}
-        <header className="lg:hidden flex items-center justify-between px-6 py-3 border-b border-sepia-300 dark:border-stone-900 bg-white/80 dark:bg-stone-950/80 backdrop-blur-md">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="p-1.5 rounded-lg text-[#2c2621] dark:text-stone-400 hover:bg-sepia-200 dark:hover:bg-stone-900 cursor-pointer"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            
-            <button
-              onClick={handleGoToLibrary}
-              className="p-1.5 rounded-lg text-sepia-accent hover:bg-sepia-200 dark:hover:bg-stone-900 cursor-pointer flex items-center gap-1 text-xs font-sans font-bold uppercase tracking-wider"
-            >
-              <Library className="w-4 h-4" />
-              <span>Kütüphane</span>
-            </button>
-          </div>
-          
-          <div className="flex items-center gap-1.5">
-            <span className="font-display font-bold text-sm tracking-tight">RİSALE-İ NUR</span>
-          </div>
-
-          <div className="w-9" aria-hidden="true" />
-        </header>
-
         {/* Esnek Okuma Grid / Alanı */}
         <div className="flex-1 flex flex-col md:flex-row min-h-0">
           

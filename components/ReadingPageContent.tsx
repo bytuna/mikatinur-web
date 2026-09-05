@@ -11,11 +11,15 @@ interface ReadingPageContentProps {
   wordColorClass: string;
   headingColorClass: string;
   onWordClick: (e: React.MouseEvent<HTMLSpanElement>, term: DictionaryTerm) => void;
+  onWordHold?: (e: React.PointerEvent<HTMLSpanElement>, term: DictionaryTerm) => void;
+  onClearHold?: () => void;
+  onRemoveFlag?: (key: string) => void;
   onArabicClick: (e: React.MouseEvent<HTMLDivElement>, verseIdStr: string, arabicText: string) => void;
   fontSizeClass: string;
   lineHeightClass: string;
   fontStyleClass: string;
   textThemeClass: string;
+  flaggedWordKey?: string | null;
 }
 
 // 1. Dinamik ve Değişen Yumuşak HSL Renk Tonu Oluşturucu (Noktalama segmentleri için)
@@ -329,11 +333,15 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
   wordColorClass,
   headingColorClass,
   onWordClick,
+  onWordHold,
+  onClearHold,
+  onRemoveFlag,
   onArabicClick,
   fontSizeClass,
   lineHeightClass,
   fontStyleClass,
   textThemeClass,
+  flaggedWordKey,
 }) => {
   if (!text) return null;
 
@@ -387,6 +395,8 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
 
       const matchedTerm = findDictionaryMatch(token, dictionary, simplifiedDict);
       const isLookupable = !!matchedTerm;
+      const flagKey = matchedTerm ? `${cleanKey}:${matchedTerm.word.toLowerCase()}` : null;
+      const isFlagged = !!flagKey && !!flaggedWordKey && flagKey === flaggedWordKey;
       const isActive = selectedWord && matchedTerm && (
         selectedWord.toLowerCase() === cleanKey ||
         matchedTerm.word.toLowerCase() === selectedWord.toLowerCase() ||
@@ -404,16 +414,36 @@ export const ReadingPageContent: React.FC<ReadingPageContentProps> = React.memo(
         renderedToken = (
           <span
             onClick={(e) => onWordClick(e, matchedTerm)}
-            className={`interactive-word transition-all duration-200 border-b border-dashed border-sepia-accent/40 hover:border-sepia-accent cursor-pointer ${
+            onPointerDown={(e) => onWordHold?.(e, matchedTerm)}
+            onPointerUp={onClearHold}
+            onPointerLeave={onClearHold}
+            onPointerCancel={onClearHold}
+            className={`interactive-word transition-all duration-200 border-b border-dashed border-sepia-accent/40 hover:border-sepia-accent cursor-pointer relative ${
               isActive
                 ? 'bg-sepia-accent/30 text-sepia-accent font-bold px-0.5 rounded border-b border-sepia-accent'
                 : wordColorClass
-            }`}
-            title={`${displayValue} - Lügatte bakmak için tıkla`}
+            } ${isFlagged ? 'bg-red-200/70 text-red-900 ring-1 ring-red-400/80 shadow-sm' : ''}`}
+            title={`${displayValue} - Lügatte bakmak için tıkla / Uzun basılı tutup bayrak ekle`}
           >
             {hasOverlapMatch
               ? renderTokenWithParentMatches(displayValue, tokenStart, matchRanges, highlightClass)
               : displayValue}
+            {isFlagged && (
+              <span
+                className="ml-1 align-middle text-[10px] leading-none text-red-700 font-bold select-none cursor-pointer"
+                aria-label="Bayrağı kaldır"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (typeof window !== 'undefined' && window.confirm('Bayrağı kaldırmak istiyor musunuz?')) {
+                    onRemoveFlag?.(flagKey || '');
+                  }
+                }}
+                title="Bayrağı kaldır"
+              >
+                ⚑
+              </span>
+            )}
           </span>
         );
       } else if (hasOverlapMatch) {

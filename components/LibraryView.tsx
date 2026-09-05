@@ -153,7 +153,6 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
   const [fade, setFade] = useState(true);
 
   // Külliyat İçi Arama Durumları
-  const [searchScope, setSearchScope] = useState<'titles' | 'corpus'>('titles');
   const [isSearchingCorpus, setIsSearchingCorpus] = useState(false);
   const [searchProgress, setSearchProgress] = useState(0);
   const [currentSearchingBook, setCurrentSearchingBook] = useState('');
@@ -326,13 +325,6 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
     return () => clearInterval(interval);
   }, [vecizeler]);
 
-  // Kitap filtreleme
-  const filteredBooks = books.filter(
-    (book) =>
-      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   // Her kitap için son okunan sayfayı veya yer imini bulma
   const getBookBadge = (bookId: string) => {
     // Önce o kitabın yer imlerine bak
@@ -385,7 +377,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
             />
           </div>
           <div className="text-center md:text-left">
-            <h1 className="font-serif font-extrabold text-xl md:text-2xl tracking-tight text-sepia-accent">
+            <h1 className="font-rln uppercase text-xl md:text-2xl lg:text-[2rem] tracking-[0.12em] text-[#a31d1d] drop-shadow-[0_1px_0_rgba(96,69,38,0.18)]">
               Risale-i Nur
             </h1>
             <p className="text-[9px] md:text-[10px] font-sans font-bold tracking-widest text-stone-400 dark:text-stone-500 uppercase">
@@ -396,47 +388,18 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
 
         {/* Canlı Arama Kutusu ve Eylemler */}
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto justify-end">
-          {/* Arama Kapsamı Seçici */}
-          <div className="flex bg-stone-200/50 dark:bg-stone-900/50 border border-sepia-300/30 dark:border-stone-800 p-0.5 rounded-full select-none text-[10px] font-sans font-bold uppercase tracking-wider w-full sm:w-auto justify-center shrink-0">
-            <button
-              onClick={() => {
-                setSearchScope('titles');
-                setHasSearched(false);
-              }}
-              className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-full transition-all cursor-pointer text-center ${
-                searchScope === 'titles'
-                  ? 'bg-sepia-accent text-stone-950 shadow-xs font-bold'
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
-              }`}
-            >
-              📁 Kitap Adları
-            </button>
-            <button
-              onClick={() => setSearchScope('corpus')}
-              className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-full transition-all cursor-pointer text-center ${
-                searchScope === 'corpus'
-                  ? 'bg-sepia-accent text-stone-950 shadow-xs font-bold'
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200'
-              }`}
-            >
-              🔍 Tüm Külliyat
-            </button>
-          </div>
-
           {/* Gelişmiş Giriş Alanı */}
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <div className="relative flex-1 sm:flex-initial sm:w-64 lg:w-72">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
               <input
                 type="text"
-                placeholder={searchScope === 'corpus' ? "Külliyatta kelime ara (örn: ihlas)..." : "Kütüphanede kitap ara..."}
+                placeholder="Tüm külliyatta kelime veya cümle ara..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    if (searchScope === 'corpus') {
-                      handleCorpusSearch(searchQuery);
-                    }
+                    handleCorpusSearch(searchQuery);
                   }
                 }}
                 className="w-full pl-9 pr-8 py-2 text-xs font-sans font-medium rounded-full border border-sepia-300 dark:border-stone-800 bg-white/60 dark:bg-stone-900/60 focus:outline-none focus:ring-2 focus:ring-sepia-accent/20 focus:border-sepia-accent transition-all text-stone-800 dark:text-stone-200 placeholder-stone-400 dark:placeholder-stone-500"
@@ -445,10 +408,8 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                 <button
                   onClick={() => {
                     setSearchQuery('');
-                    if (searchScope === 'corpus') {
-                      setHasSearched(false);
-                      setCorpusSearchResults([]);
-                    }
+                    setHasSearched(false);
+                    setCorpusSearchResults([]);
                   }}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 cursor-pointer"
                 >
@@ -457,31 +418,29 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
               )}
             </div>
 
-            {searchScope === 'corpus' && (
-              <button
-                onClick={() => handleCorpusSearch(searchQuery)}
-                disabled={isSearchingCorpus || searchQuery.trim().length < 3}
-                className={`px-4 py-2 text-xs font-sans font-bold uppercase tracking-wider rounded-full transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
-                  searchQuery.trim().length >= 3 && !isSearchingCorpus
-                    ? 'bg-sepia-accent text-stone-950 hover:bg-sepia-accent/90 shadow-xs'
-                    : 'bg-stone-200 dark:bg-stone-800 text-stone-400 dark:text-stone-600 cursor-not-allowed'
-                }`}
-              >
-                {isSearchingCorpus ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <Search className="w-3.5 h-3.5" />
-                )}
-                Ara
-              </button>
-            )}
+            <button
+              onClick={() => handleCorpusSearch(searchQuery)}
+              disabled={isSearchingCorpus || searchQuery.trim().length < 3}
+              className={`px-4 py-2 text-xs font-sans font-bold uppercase tracking-wider rounded-full transition-all flex items-center gap-1.5 cursor-pointer shrink-0 ${
+                searchQuery.trim().length >= 3 && !isSearchingCorpus
+                  ? 'bg-sepia-accent text-stone-950 hover:bg-sepia-accent/90 shadow-xs'
+                  : 'bg-stone-200 dark:bg-stone-800 text-stone-400 dark:text-stone-600 cursor-not-allowed'
+              }`}
+            >
+              {isSearchingCorpus ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Search className="w-3.5 h-3.5" />
+              )}
+              Ara
+            </button>
           </div>
         </div>
       </header>
 
       {/* Ana Gövde */}
       <div className="max-w-7xl mx-auto px-6 sm:px-12 py-12 flex-1 w-full">
-        {searchScope === 'corpus' && (isSearchingCorpus || hasSearched) ? (
+        {(isSearchingCorpus || hasSearched) ? (
           /* ==========================================================
              KÜLLİYAT İÇİ DETAYLI ARAMA GÖRÜNÜMÜ
              ========================================================== */
@@ -711,7 +670,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
               </div>
             )}
           </div>
-        ) : searchScope === 'corpus' && !hasSearched ? (
+        ) : false ? (
           /* ==========================================================
              KÜLLİYAT İÇİ ARAMA GİRİŞ / HOŞ GELDİNİZ GÖRÜNÜMÜ
              ========================================================== */
@@ -767,27 +726,34 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
              ========================================================== */
           <>
             {/* Tanıtım / Karşılama Kartı */}
-            <div className="mb-12 text-center max-w-2xl mx-auto space-y-4">
+            <div className="mb-12 text-center max-w-3xl mx-auto space-y-5">
               <h2 className="font-rln text-red-700 dark:text-red-500 text-3xl sm:text-4xl md:text-5xl tracking-wide font-normal">
                 RİSALE-İ NUR
               </h2>
-              <div className="min-h-[70px] flex items-center justify-center px-4">
-                <p className={`text-sm sm:text-base font-serif italic text-stone-950 dark:text-stone-100 max-w-xl mx-auto leading-relaxed transition-all duration-500 font-medium tracking-[0.01em] ${fade ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-                  {vecizeler[vecizeIndex]}
-                </p>
+
+              <div className="relative overflow-hidden rounded-[22px] sm:rounded-[28px] border border-[#d9c5a6] bg-[linear-gradient(135deg,rgba(250,245,238,0.96),rgba(241,231,216,0.94),rgba(229,214,189,0.92))] shadow-[0_14px_28px_rgba(95,62,34,0.10)] px-3 py-3 sm:px-8 sm:py-6 dark:border-stone-800 dark:bg-[linear-gradient(135deg,rgba(27,22,18,0.96),rgba(23,19,17,0.96),rgba(17,15,14,0.96))]">
+                <div className="absolute inset-x-4 sm:inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#b9966d]/80 to-transparent" />
+                <div className="min-h-[42px] sm:min-h-[52px] flex items-center justify-center">
+                  <p
+                    className={`text-[12px] sm:text-sm md:text-lg font-serif italic max-w-2xl mx-auto leading-relaxed transition-all duration-500 font-medium tracking-[0.01em] text-[#1c1917] dark:text-stone-100 ${fade ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+                  >
+                    {vecizeler[vecizeIndex]}
+                  </p>
+                </div>
               </div>
+
               <div className="h-px w-24 bg-sepia-accent/30 mx-auto" />
             </div>
 
             {/* Kitap Grid Listesi */}
-            {filteredBooks.length === 0 ? (
+            {books.length === 0 ? (
               <div className="text-center py-20 bg-white/30 dark:bg-stone-950/30 rounded-2xl border border-dashed border-sepia-300 dark:border-stone-900 p-8">
                 <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
                 <p className="text-sm font-sans font-medium text-stone-400">Aradığınız kriterde bir kitap bulunamadı.</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-6 gap-y-10">
-                {filteredBooks.map((book) => {
+                {books.map((book) => {
                   const badge = getBookBadge(book.id);
                   const coverState = coverStatus[book.id] ?? 'loading';
                   const hasImage = Boolean(book.coverImage) && coverState !== 'failed';

@@ -1,0 +1,24 @@
+[
+  {
+    "id": "63baf15f-39c3-41de-b8dd-ed64c8320d9e",
+    "createdAt": "2026-09-05T13:39:33.822Z",
+    "bookTitle": "Sözler",
+    "pageNumber": 5,
+    "description": "test",
+    "reporterEmail": "deneme@mail.com",
+    "url": "http://localhost:3000/projects/risaleinur/",
+    "recipient": "ilker.tuna6134@gmail.com",
+    "emailed": true
+  },
+  {
+    "id": "29745e48-0d75-43c3-977b-ec9f984cb5f6",
+    "createdAt": "2026-09-05T13:34:29.988Z",
+    "bookTitle": "Sözler",
+    "pageNumber": 8,
+    "description": "deneme",
+    "reporterEmail": "abc@defg.com",
+    "url": "http://localhost:3000/projects/risaleinur/",
+    "recipient": "ilker.tuna6134@gmail.com",
+    "emailed": true
+  }
+]

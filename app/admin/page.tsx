@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Lock, MessageSquare, BarChart3, LogOut, Loader2, ArrowLeft } from "lucide-react";
+import { AdminAnalyticsDashboard } from "../../components/AdminAnalyticsDashboard";
 
 export default function AdminPage() {
   const [auth, setAuth] = useState(false);
@@ -70,6 +71,11 @@ export default function AdminPage() {
               <p className="text-3xl font-bold">{data.messageCount}</p>
             </div>
           </div>
+
+          <section className="bg-gray-900/30 border border-gray-800 rounded-3xl p-6">
+            <h2 className="text-xl font-bold mb-6">Ziyaretçi ve Site İstatistikleri</h2>
+            <AdminAnalyticsDashboard />
+          </section>
 
           <section className="bg-gray-900/30 border border-gray-800 rounded-3xl p-6">
             <h2 className="text-xl font-bold mb-6">Gelen Mesajlar</h2>

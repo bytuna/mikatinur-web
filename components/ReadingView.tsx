@@ -1,8 +1,9 @@
 "use client";
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { RisaleBook, UserPreferences, RisalePage, DictionaryTerm, TOCSection } from '../types';
-import { ChevronLeft, ChevronRight, Bookmark, BookmarkCheck, HelpCircle, BookOpen, Play, Pause, Square, Library, Menu, X, Pin, Settings } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Bookmark, BookmarkCheck, HelpCircle, BookOpen, Bug, Play, Pause, Square, Library, Menu, X, Pin, Settings } from 'lucide-react';
 import { ReadingPageContent } from './ReadingPageContent';
+import { BugReportModal } from './BugReportModal';
 
 interface ReadingViewProps {
   book: RisaleBook;
@@ -60,6 +61,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
 
   // Okuma süresi ve mobil ekran kararmasını engelleme durumları
   const [readingSeconds, setReadingSeconds] = useState<number>(0);
+  const [bugReportOpen, setBugReportOpen] = useState(false);
 
   // 1. Ekran Kararmasını Engelleme (Screen Wake Lock API)
   useEffect(() => {
@@ -69,10 +71,9 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       try {
         if ('wakeLock' in navigator) {
           wakeLock = await (navigator as any).wakeLock.request('screen');
-          console.log('Ekran kararmasını önleme aktif (Wake Lock acquired)');
         }
-      } catch (err) {
-        console.warn('Ekran kararmasını önleme isteği başarısız:', err);
+      } catch {
+        // Wake Lock izni reddedilirse sessiz şekilde devam eder.
       }
     };
 
@@ -91,8 +92,9 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       if (wakeLock) {
         wakeLock.release().then(() => {
           wakeLock = null;
-          console.log('Ekran kararmasını önleme devre dışı (Wake Lock released)');
-        }).catch((err: any) => console.warn('Wake lock release error:', err));
+        }).catch(() => {
+          // Wake Lock bırakma hatası görmezden gelinir.
+        });
       }
     };
   }, []);
@@ -133,6 +135,15 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
   // 4. Okuma İşaretçisi (Gezen İşaretçi / Okuma Kılavuzu) State ve Mantığı
   const [showPointer, setShowPointer] = useState<boolean>(savedShowPointer ?? false);
   const [pointerY, setPointerY] = useState<number>(savedPointerY ?? 30); // varsayılan olarak sayfanın %30 dikey pozisyonu
+  const [flagTarget, setFlagTarget] = useState<{
+    key: string;
+    word: string;
+    rect: DOMRect;
+    side: 'left' | 'right';
+    pageNum: number;
+  } | null>(null);
+  const [flaggedWordKey, setFlaggedWordKey] = useState<string | null>(null);
+  const flagHoldTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isDraggingRef = useRef(false);
 
   // Kitap değiştiğinde işaretçi durumlarını güncelle
@@ -363,6 +374,41 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
       targetPercentY: percentY,
     });
   }, [onSelectWord, pageNumber]);
+
+  const handleWordHold = useCallback((e: React.PointerEvent<HTMLSpanElement>, term: DictionaryTerm) => {
+    e.preventDefault();
+    const currentTarget = e.currentTarget;
+    if (!currentTarget) return;
+
+    if (flagHoldTimerRef.current) {
+      clearTimeout(flagHoldTimerRef.current);
+    }
+
+    flagHoldTimerRef.current = setTimeout(() => {
+      const rect = currentTarget.getBoundingClientRect();
+      const pageElement = currentTarget.closest('[data-page-num]');
+      const pageNumAttr = pageElement?.getAttribute('data-page-num');
+      const clickedPageNum = pageNumAttr ? parseInt(pageNumAttr, 10) : pageNumber;
+      const key = `${clickedPageNum}:${term.word.toLowerCase()}`;
+      const side = rect.left + rect.width / 2 < window.innerWidth / 2 ? 'right' : 'left';
+
+      setFlagTarget({
+        key,
+        word: term.word,
+        rect,
+        side,
+        pageNum: clickedPageNum,
+      });
+    }, 500);
+  }, [pageNumber]);
+
+  useEffect(() => {
+    return () => {
+      if (flagHoldTimerRef.current) {
+        clearTimeout(flagHoldTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleArabicClick = useCallback(async (e: React.MouseEvent<HTMLDivElement>, verseIdStr: string, arabicText: string) => {
     e.stopPropagation();
@@ -1309,6 +1355,15 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
               <Settings className="w-4 h-4" />
             </button>
           )}
+
+          <button
+            onClick={() => setBugReportOpen(true)}
+            className="p-2 rounded-full border border-sepia-300 dark:border-stone-800 text-stone-400 hover:text-red-700 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all cursor-pointer"
+            title="Bu sayfada hata bildir"
+            aria-label="Bu sayfada hata bildir"
+          >
+            <Bug className="w-4 h-4" />
+          </button>
         </div>
       </div>
 
@@ -1443,11 +1498,24 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
                     wordColorClass={wordColorClass}
                     headingColorClass={preferences.theme === 'dark' ? 'text-stone-100' : preferences.theme === 'sepia' ? 'text-[#2c2217]' : preferences.theme === 'saman' ? 'text-[#332913]' : preferences.theme === 'green' ? 'text-[#142918]' : preferences.theme === 'gray' ? 'text-[#1e252b]' : 'text-[#27211a]'}
                     onWordClick={handleWordClick}
+                    onWordHold={handleWordHold}
+                    onClearHold={() => {
+                      if (flagHoldTimerRef.current) {
+                        clearTimeout(flagHoldTimerRef.current);
+                      }
+                    }}
+                    onRemoveFlag={(key) => {
+                      if (!key) return;
+                      if (flaggedWordKey === key) {
+                        setFlaggedWordKey(null);
+                      }
+                    }}
                     onArabicClick={handleArabicClick}
                     fontSizeClass={fontSizeClasses[preferences.fontSize]}
                     lineHeightClass={lineHeightClasses[preferences.lineHeight]}
                     fontStyleClass={fontStyleClasses[preferences.fontStyle]}
                     textThemeClass={textThemeClass}
+                    flaggedWordKey={flaggedWordKey}
                   />
 
                   {/* Haşiyeler (Footnotes) - Floating/Callout Style */}
@@ -1538,6 +1606,35 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
         </div>
       </footer>
 
+      {flagTarget && (
+        <div
+          className="fixed z-[70] pointer-events-none"
+          style={{
+            top: `${Math.max(24, Math.min(window.innerHeight - 64, flagTarget.rect.top + flagTarget.rect.height / 2 - 18))}px`,
+            ...(flagTarget.side === 'right'
+              ? { left: `${Math.min(window.innerWidth - 62, flagTarget.rect.right + 18)}px` }
+              : { right: `${Math.min(window.innerWidth - flagTarget.rect.left, 18)}px` })
+          }}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              setFlaggedWordKey(flagTarget.key);
+              setFlagTarget(null);
+            }}
+            className="pointer-events-auto group relative flex items-center justify-center h-10 w-9 select-none"
+            title={`${flagTarget.word} kelimesini bayrakla`}
+          >
+            <span className="absolute left-0 top-1/2 -translate-y-1/2 h-7 w-[2px] bg-[#8a5d3a] rounded-full" />
+            <span
+              className="absolute left-[3px] top-1 h-3 w-4 border border-[#8a5d3a] bg-[#d5543d] shadow-md rounded-[2px] rotate-[-6deg]"
+              style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 76%)' }}
+            />
+            <span className="absolute left-[4px] top-[3px] h-[9px] w-[1px] bg-[#f5d2bf]" />
+          </button>
+        </div>
+      )}
+
       {/* Yüzen Lügat ve Meal Popup Paneli */}
       {activePopup && activePopup.rect && (
         <>
@@ -1626,6 +1723,15 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
             );
           })()}
         </>
+      )}
+
+      {bugReportOpen && (
+        <BugReportModal
+          target={document.getElementById(`page-block-${pageNumber}`) || containerRef.current}
+          bookTitle={book.title}
+          pageNumber={pageNumber}
+          onClose={() => setBugReportOpen(false)}
+        />
       )}
     </div>
   );
