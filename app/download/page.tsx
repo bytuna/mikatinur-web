@@ -106,6 +106,33 @@ export default function DownloadPage() {
         </p>
         <p className="text-gray-400 mt-3 text-sm sm:text-base">
           🚀 Not: Bilinmeyen kaynaklardan uygulama yükleme iznini açmayı unutmayınız.
+
+        <section className="mt-6 sm:mt-8 bg-gray-900/30 border border-gray-800 rounded-3xl p-4 sm:p-8">
+          <h2 className="text-lg sm:text-xl font-bold text-white">Güncellemeler</h2>
+          <p className="mt-2 text-sm sm:text-base text-blue-200">Tefeül dersleri ve UI optimizasyonları</p>
+          <ul className="mt-5 space-y-5 text-sm sm:text-base text-gray-300">
+            <li>
+              <h3 className="font-semibold text-white">Tesbihat Okuma Ekranı:</h3>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
+                <li>Arka plan temiz beyaz renge çevrildi ve yüksek kontrastlı renk paleti uygulandı.</li>
+                <li>Arapça metinler için Uthman Taha (uthman_taha.ttf) hattı entegre edildi.</li>
+              </ul>
+            </li>
+            <li>
+              <h3 className="font-semibold text-white">Vakit Sekmeleri Optimizasyonu:</h3>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
+                <li>5 vakit (Sabah, Öğle, İkindi, Akşam, Yatsı) küçük ekranlı cihazlarda kaydırma gerektirmeden ekrana sığdırıldı.</li>
+              </ul>
+            </li>
+            <li>
+              <h3 className="font-semibold text-white">TopBar &amp; Tefeül Entegrasyonu:</h3>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
+                <li>Üst bara &quot;Tefeül&quot; butonu eklendi.</li>
+                <li>Tefeül dersleri eklendi.</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
         </p>
         <p className="mt-6 text-xs sm:text-sm text-gray-600 text-center">
           Dosya, kendi sunucumuzdan güvenli şekilde indirilir.
