@@ -5,7 +5,7 @@ const apkInfo = {
   version: "v1.1.4",
   sizeLabel: "58,7 MB",
   updatedAt: "6 Eylül 2026",
-  url: "https://apk.mikatinur.com.tr/Mikat-Nur-v1.1.4.apk",
+  url: "/apk/Mikat-Nur-v1.1.4.apk",
   fileName: "Mikat-Nur-v1.1.4.apk",
 };
 
