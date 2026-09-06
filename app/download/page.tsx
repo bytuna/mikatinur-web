@@ -1,64 +1,15 @@
-import fs from "fs";
-import path from "path";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Download, HardDrive, PackageCheck } from "lucide-react";
 
-function getVersionTuple(version: string) {
-  const match = version.match(/v?(\d+)\.(\d+)\.(\d+)/);
-  if (!match) {
-    return [0, 0, 0];
-  }
-
-  return match.slice(1).map(Number) as [number, number, number];
-}
-
-function getApkInfo() {
-  const apkDirectory = path.join(process.cwd(), "public", "apk");
-  const apkFiles = fs
-    .readdirSync(apkDirectory)
-    .filter((file) => /^Mikat-Nur-v\d+\.\d+\.\d+\.apk$/.test(file));
-
-  const apkFile = apkFiles.sort((a, b) => {
-    const aVersion = getVersionTuple(a);
-    const bVersion = getVersionTuple(b);
-
-    return (
-      bVersion[0] - aVersion[0] ||
-      bVersion[1] - aVersion[1] ||
-      bVersion[2] - aVersion[2]
-    );
-  })[0];
-
-  if (!apkFile) {
-    return {
-      version: "En son sürüm",
-      sizeLabel: "Bilinmiyor",
-      updatedAt: "Bilinmiyor",
-      url: "/download",
-      fileName: "Mikat-Nur.apk",
-    };
-  }
-
-  const apkPath = path.join(apkDirectory, apkFile);
-  const stats = fs.statSync(apkPath);
-  const versionMatch = apkFile.match(/v\d+\.\d+\.\d+/);
-  const version = versionMatch ? versionMatch[0] : "En son sürüm";
-  const sizeLabel = `${(stats.size / (1024 * 1024)).toFixed(1)} MB`;
-  const updatedAt = new Intl.DateTimeFormat("tr-TR", {
-    dateStyle: "medium",
-  }).format(new Date(stats.mtime));
-
-  return {
-    version,
-    sizeLabel,
-    updatedAt,
-    url: `/apk/${apkFile}`,
-    fileName: apkFile,
-  };
-}
+const apkInfo = {
+  version: "v1.1.4",
+  sizeLabel: "58,7 MB",
+  updatedAt: "6 Eylül 2026",
+  url: "https://mikatinur.com.tr/Mikat-Nur-v1.1.4.apk",
+  fileName: "Mikat-Nur-v1.1.4.apk",
+};
 
 export default function DownloadPage() {
-  const apkInfo = getApkInfo();
   const infoCards = [
     { label: "Sürüm", value: apkInfo.version, icon: PackageCheck },
     { label: "Boyut", value: apkInfo.sizeLabel, icon: HardDrive },
@@ -106,6 +57,7 @@ export default function DownloadPage() {
         </p>
         <p className="text-gray-400 mt-3 text-sm sm:text-base">
           🚀 Not: Bilinmeyen kaynaklardan uygulama yükleme iznini açmayı unutmayınız.
+        </p>
 
         <section className="mt-6 sm:mt-8 bg-gray-900/30 border border-gray-800 rounded-3xl p-4 sm:p-8">
           <h2 className="text-lg sm:text-xl font-bold text-white">Güncellemeler</h2>
@@ -133,9 +85,8 @@ export default function DownloadPage() {
             </li>
           </ul>
         </section>
-        </p>
         <p className="mt-6 text-xs sm:text-sm text-gray-600 text-center">
-          Dosya, kendi sunucumuzdan güvenli şekilde indirilir.
+          Dosya, Hostinger sunucumuzdan güvenli şekilde indirilir.
         </p>
       </div>
     </main>
