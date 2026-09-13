@@ -2,11 +2,11 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, Download, HardDrive, PackageCheck } from "lucide-react";
 
 const apkInfo = {
-  version: "v1.1.4",
-  sizeLabel: "58,7 MB",
-  updatedAt: "6 Eylül 2026",
-  url: "/apk/Mikat-Nur-v1.1.4.apk",
-  fileName: "Mikat-Nur-v1.1.4.apk",
+  version: "v1.1.5",
+  sizeLabel: "59,6 MB",
+  updatedAt: "13 Eylül 2026",
+  url: "/apk/Mikat-Nur-v1.1.5.apk",
+  fileName: "Mikat-Nur-v1.1.5.apk",
 };
 
 export default function DownloadPage() {
@@ -61,26 +61,24 @@ export default function DownloadPage() {
 
         <section className="mt-6 sm:mt-8 bg-gray-900/30 border border-gray-800 rounded-3xl p-4 sm:p-8">
           <h2 className="text-lg sm:text-xl font-bold text-white">Güncellemeler</h2>
-          <p className="mt-2 text-sm sm:text-base text-blue-200">Tefeül dersleri ve UI optimizasyonları</p>
-          <ul className="mt-5 space-y-5 text-sm sm:text-base text-gray-300">
-            <li>
-              <h3 className="font-semibold text-white">Tesbihat Okuma Ekranı:</h3>
+          <p className="mt-2 text-sm sm:text-base text-blue-200">v1.1.5 sürümünde yapılan iyileştirmeler</p>
+          <ul className="mt-5 space-y-4 text-sm sm:text-base text-gray-300">
+            <li className="rounded-xl border border-gray-800 bg-black/20 p-3 sm:p-4">
+              <h3 className="font-semibold text-white">Bildirim paneli</h3>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
-                <li>Arka plan temiz beyaz renge çevrildi ve yüksek kontrastlı renk paleti uygulandı.</li>
-                <li>Arapça metinler için Uthman Taha (uthman_taha.ttf) hattı entegre edildi.</li>
+                <li>Bildirim paneline kalan vakit gösterimi eklendi.</li>
               </ul>
             </li>
-            <li>
-              <h3 className="font-semibold text-white">Vakit Sekmeleri Optimizasyonu:</h3>
+            <li className="rounded-xl border border-gray-800 bg-black/20 p-3 sm:p-4">
+              <h3 className="font-semibold text-white">Akşam Namazı tesbihatı</h3>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
-                <li>5 vakit (Sabah, Öğle, İkindi, Akşam, Yatsı) küçük ekranlı cihazlarda kaydırma gerektirmeden ekrana sığdırıldı.</li>
+                <li>Akşam Namazı tesbihatındaki hata giderildi.</li>
               </ul>
             </li>
-            <li>
-              <h3 className="font-semibold text-white">TopBar &amp; Tefeül Entegrasyonu:</h3>
+            <li className="rounded-xl border border-gray-800 bg-black/20 p-3 sm:p-4">
+              <h3 className="font-semibold text-white">Kayıt ekranı</h3>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
-                <li>Üst bara &quot;Tefeül&quot; butonu eklendi.</li>
-                <li>Tefeül dersleri eklendi.</li>
+                <li>Kayıt ekranı eklendi.</li>
               </ul>
             </li>
           </ul>
