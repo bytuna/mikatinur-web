@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Analytics } from '@vercel/analytics/react';
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -116,6 +117,11 @@ export default function RootLayout({
         <JsonLdSchema data={personSchema} />
         <AnalyticsTracker />
         {children}
+        <footer className="border-t border-gray-900 bg-[#050505] px-6 py-5 text-center text-xs text-gray-600">
+          <Link href="/kvkk-aydinlatma-metni" className="transition-colors hover:text-gray-300">
+            KVKK Aydınlatma Metni
+          </Link>
+        </footer>
         <Analytics />
         <SpeedInsights />
       </body>

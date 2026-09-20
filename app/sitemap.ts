@@ -48,6 +48,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly' as const,
       priority: 0.6,
     },
+    {
+      url: `${baseUrl}/kvkk-aydinlatma-metni`,
+      lastModified: new Date('2026-09-19'),
+      changeFrequency: 'yearly' as const,
+      priority: 0.5,
+    },
   ];
 
   return routes;
