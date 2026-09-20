@@ -42,7 +42,7 @@ import { Sidebar } from '../../../components/Sidebar';
 import { ReadingView } from '../../../components/ReadingView';
 import { TefekkurSettings } from '../../../components/TefekkurSettings';
 import { LibraryView } from '../../../components/LibraryView';
-import { Settings, Compass } from 'lucide-react';
+import { Settings, Compass, Plus, X } from 'lucide-react';
 
 const DEFAULT_STATE: ReadingState = {
   currentBookId: 'sozler',
@@ -241,6 +241,8 @@ export default function App() {
   }, []);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [openBookIds, setOpenBookIds] = useState<string[]>([]);
+  const [bookMenuOpen, setBookMenuOpen] = useState(false);
   const [notes, setNotes] = useState<UserNote[]>(() => {
     try {
       const saved = localStorage.getItem('mikatinur_notes');
@@ -506,6 +508,12 @@ export default function App() {
     }
   }, [state, isHydrated]);
 
+  useEffect(() => {
+    if (isHydrated) {
+      setOpenBookIds([state.currentBookId]);
+    }
+  }, [isHydrated]);
+
   // Tema Yönetimi (Global Theme Context)
   useEffect(() => {
     const root = document.documentElement;
@@ -656,9 +664,28 @@ export default function App() {
         bookProgress: updatedProgress,
       };
     });
+    setOpenBookIds((prev) => prev.includes(bookId) ? prev : [...prev, bookId]);
+    setBookMenuOpen(false);
     setViewMode('reader');
     setSidebarOpen(true);
     setFihristClickTrigger(Date.now());
+  };
+
+  const handleCloseBook = (bookId: string) => {
+    const closedIndex = openBookIds.indexOf(bookId);
+    const nextOpenBookIds = openBookIds.filter((id) => id !== bookId);
+
+    setOpenBookIds(nextOpenBookIds);
+    setBookMenuOpen(false);
+
+    if (state.currentBookId !== bookId) return;
+
+    const nextBookId = nextOpenBookIds[closedIndex] || nextOpenBookIds[closedIndex - 1];
+    if (nextBookId) {
+      handleSelectBook(nextBookId);
+    } else {
+      setViewMode('library');
+    }
   };
 
   // Derin Bağlantı / URL Parametreleri Yönetimi (Android WebView & Dış Bağlantılar)
@@ -842,6 +869,30 @@ export default function App() {
     };
   });
 
+  const openBooks = openBookIds
+    .map((bookId) => booksWithDynamicData.find((book) => book.id === bookId))
+    .filter((book): book is typeof booksWithDynamicData[number] => Boolean(book));
+
+  const readerHeaderClass = preferences.theme === 'dark'
+    ? 'border-stone-800 bg-[#181614]/95 text-stone-300'
+    : preferences.theme === 'sepia'
+    ? 'border-sepia-300 bg-[#f5f2ed]/95 text-stone-700'
+    : preferences.theme === 'saman'
+    ? 'border-[#d0c091] bg-[#eee0bb]/95 text-[#332913]'
+    : preferences.theme === 'green'
+    ? 'border-[#c3d1c3] bg-[#e9f2e9]/95 text-[#142918]'
+    : preferences.theme === 'gray'
+    ? 'border-[#ccd2d7] bg-[#eff2f4]/95 text-[#1e252b]'
+    : 'border-stone-200 bg-[#fdfcf9]/95 text-stone-700';
+
+  const activeTabClass = preferences.theme === 'dark'
+    ? 'bg-amber-400 text-stone-950'
+    : 'bg-sepia-accent text-stone-950';
+
+  const inactiveTabClass = preferences.theme === 'dark'
+    ? 'text-stone-400 hover:bg-stone-800 hover:text-stone-100'
+    : 'text-stone-500 hover:bg-black/5 hover:text-stone-900';
+
   if (viewMode === 'library') {
     return (
       <LibraryView
@@ -885,6 +936,71 @@ export default function App() {
 
       {/* Ana Çalışma Paneli */}
       <main className="flex-1 flex flex-col min-w-0 relative">
+
+        <div className={`relative z-20 flex shrink-0 items-center gap-2 border-b px-2 py-1.5 sm:px-4 ${readerHeaderClass}`}>
+          <div className="relative flex min-w-0 flex-1 items-center gap-1">
+            <div className="flex w-fit max-w-[calc(100%-2.5rem)] flex-none items-center gap-1 overflow-x-auto no-scrollbar">
+              {openBooks.map((book) => {
+                const isActive = book.id === state.currentBookId;
+                return (
+                  <div
+                    key={book.id}
+                    className={`flex max-w-[12rem] shrink-0 items-center rounded-md text-xs font-semibold transition-colors sm:max-w-[17rem] ${isActive ? activeTabClass : inactiveTabClass}`}
+                    title={book.title}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleSelectBook(book.id)}
+                      className="min-w-0 truncate px-3 py-1.5 text-left"
+                      aria-current={isActive ? 'page' : undefined}
+                    >
+                      {book.title}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleCloseBook(book.id)}
+                      className="mr-1 flex h-5 w-5 shrink-0 items-center justify-center rounded text-current/60 transition-colors hover:bg-black/10 hover:text-current"
+                      aria-label={`${book.title} sekmesini kapat`}
+                      title="Sekmeyi kapat"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => setBookMenuOpen((prev) => !prev)}
+              className="flex h-8 w-8 items-center justify-center rounded-md border border-current/20 text-current transition-colors hover:bg-black/10"
+              aria-label="Yeni kitap aç"
+              aria-expanded={bookMenuOpen}
+              title="Yeni kitap aç"
+            >
+              <Plus className="h-4 w-4" />
+            </button>
+
+            {bookMenuOpen && (
+              <div className={`absolute left-0 top-10 w-56 overflow-hidden rounded-xl border p-1 shadow-xl ${readerHeaderClass}`}>
+                <div className="max-h-72 overflow-y-auto">
+                  {booksWithDynamicData.map((book) => (
+                    <button
+                      key={book.id}
+                      type="button"
+                      onClick={() => handleSelectBook(book.id)}
+                      className="block w-full truncate rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-black/10"
+                    >
+                      {book.title}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            </div>
+          </div>
+        </div>
         
         {/* Esnek Okuma Grid / Alanı */}
         <div className="flex-1 flex flex-col md:flex-row min-h-0">

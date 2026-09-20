@@ -1163,8 +1163,8 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
   return (
     <div className="flex flex-col h-full bg-transparent relative">
       {/* Kitap & Sayfa Üst Bilgi Barı */}
-      <div className={`flex items-center gap-1.5 sm:gap-3 px-2 sm:px-6 md:px-8 py-2 sm:py-4 border-b backdrop-blur-md z-10 relative ${headerThemeClass}`}>
-        <div className="flex items-center gap-1 sm:gap-3 min-w-0 flex-1">
+      <div className={`flex items-center gap-1.5 sm:gap-3 px-2 sm:px-6 md:px-8 py-2 sm:py-4 border-b backdrop-blur-md z-10 relative overflow-x-auto no-scrollbar ${headerThemeClass}`}>
+        <div className="flex items-center gap-1 sm:gap-3 flex-none">
           {onToggleSidebar && (
             <button
               onClick={onToggleSidebar}
@@ -1190,7 +1190,10 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
             </button>
           )}
           <BookOpen className="w-4 h-4 text-sepia-accent hidden sm:inline flex-shrink-0" />
-          <span className={`font-serif font-extrabold text-xs sm:text-base md:text-lg lg:text-xl tracking-tight text-left ${titleThemeClass}`}>
+          <span
+            className={`flex-none whitespace-nowrap font-serif font-extrabold text-xs sm:text-base md:text-lg lg:text-xl tracking-tight text-left ${titleThemeClass}`}
+            title={book.title}
+          >
             {book.title}
           </span>
           {isEditingPage ? (
