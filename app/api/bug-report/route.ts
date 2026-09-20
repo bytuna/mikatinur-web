@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
 
-const recipient = process.env.BUG_REPORT_TO || 'ilker.tuna6134@gmail.com';
+const recipient = process.env.BUG_REPORT_TO || 'ilker.tuna@mikatinur.com.tr';
 const storePath = path.join(process.cwd(), 'data', 'bug-reports.json');
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 

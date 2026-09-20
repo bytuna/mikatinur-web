@@ -7,7 +7,7 @@
     "description": "test",
     "reporterEmail": "deneme@mail.com",
     "url": "http://localhost:3000/projects/risaleinur/",
-    "recipient": "ilker.tuna6134@gmail.com",
+    "recipient": "ilker.tuna@mikatinur.com.tr",
     "emailed": true
   },
   {
@@ -18,7 +18,7 @@
     "description": "deneme",
     "reporterEmail": "abc@defg.com",
     "url": "http://localhost:3000/projects/risaleinur/",
-    "recipient": "ilker.tuna6134@gmail.com",
+    "recipient": "ilker.tuna@mikatinur.com.tr",
     "emailed": true
   }
 ]

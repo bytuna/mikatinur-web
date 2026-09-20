@@ -738,26 +738,6 @@ export default function App() {
     }
   };
 
-  const handleUpdatePointer = (bookId: string, pointerY: number, showPointer: boolean) => {
-    setState((prev) => {
-      const currentProgress = prev.bookProgress || {};
-      const bookProg = currentProgress[bookId] || { currentPage: prev.currentPage };
-      const updatedProgress = {
-        ...currentProgress,
-        [bookId]: {
-          ...bookProg,
-          pointerY,
-          showPointer,
-        }
-      };
-
-      return {
-        ...prev,
-        bookProgress: updatedProgress,
-      };
-    });
-  };
-
   const handleSelectWord = (term: DictionaryTerm) => {
     setState((prev) => ({
       ...prev,
@@ -1025,9 +1005,6 @@ export default function App() {
               dictionary={dictionary}
               fihristClickTrigger={fihristClickTrigger}
               sections={parsedSections}
-              savedPointerY={state.bookProgress?.[state.currentBookId]?.pointerY}
-              savedShowPointer={state.bookProgress?.[state.currentBookId]?.showPointer}
-              onUpdatePointer={(pointerY, showPointer) => handleUpdatePointer(state.currentBookId, pointerY, showPointer)}
             />
           </div>
 
