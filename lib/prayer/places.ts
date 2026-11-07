@@ -127,9 +127,13 @@ type RawLookup = {
   lon: number | string;
 };
 
+function getLookupList(): Promise<RawLookup[]> {
+  return cached("lookup", 12 * 3600e3, () => getJson<RawLookup[]>("/lookup", 20000));
+}
+
 function getLookupMap(): Promise<Map<string, RawLookup>> {
-  return cached("lookup", 12 * 3600e3, async () => {
-    const raw = await getJson<RawLookup[]>("/lookup", 20000);
+  return cached("lookup-map", 12 * 3600e3, async () => {
+    const raw = await getLookupList();
     const map = new Map<string, RawLookup>();
     for (const r of raw) {
       const id = String(r.IlceID);
@@ -137,6 +141,39 @@ function getLookupMap(): Promise<Map<string, RawLookup>> {
     }
     return map;
   });
+}
+
+/** Koordinata en yakın ilçeyi bulur (dünya genelinde). */
+export async function findNearest(
+  lat: number,
+  lon: number,
+): Promise<{ id: string; name: string; city: string; country: string; distanceKm: number } | null> {
+  const list = await getLookupList();
+  const p1 = (lat * Math.PI) / 180;
+  let best: RawLookup | null = null;
+  let bestD = Infinity;
+  for (const r of list) {
+    const la = Number(r.lat);
+    const lo = Number(r.lon);
+    if (!Number.isFinite(la) || !Number.isFinite(lo)) continue;
+    const p2 = (la * Math.PI) / 180;
+    const dp = p2 - p1;
+    const dl = ((lo - lon) * Math.PI) / 180;
+    const a = Math.sin(dp / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) ** 2;
+    const d = 2 * 6371 * Math.asin(Math.min(1, Math.sqrt(a)));
+    if (d < bestD) {
+      bestD = d;
+      best = r;
+    }
+  }
+  if (!best) return null;
+  return {
+    id: String(best.IlceID),
+    name: titleTr(best.IlceAdi),
+    city: titleTr(best.SehirAdi),
+    country: titleTr(best.UlkeAdi),
+    distanceKm: Math.round(bestD * 10) / 10,
+  };
 }
 
 function zoneFor(country: string, lat: number, lon: number): string {

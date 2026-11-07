@@ -178,6 +178,24 @@ export function hijriDateTr(y: number, m: number, d: number): string {
   }
 }
 
+/** "dd.mm.yyyy" biçiminde hicri tarih (Ümmü'l-Kurâ takvimi). */
+export function hijriShort(y: number, m: number, d: number): string {
+  try {
+    const f = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", {
+      timeZone: "UTC",
+      day: "numeric",
+      month: "numeric",
+      year: "numeric",
+    });
+    const parts = f.formatToParts(new Date(Date.UTC(y, m - 1, d, 12)));
+    const g = (t: string) => Number(parts.find((p) => p.type === t)?.value);
+    if (!g("day") || !g("month")) return "";
+    return `${pad(g("day"))}.${pad(g("month"))}.${g("year")}`;
+  } catch {
+    return "";
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /* Ana hesap                                                           */
 /* ------------------------------------------------------------------ */

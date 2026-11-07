@@ -1,6 +1,34 @@
 {
   "visits": [
     {
+      "id": "visitor-1794058006495-4003b501f5b61-1794058026529",
+      "timestamp": "2026-11-07T13:27:06.529Z",
+      "url": "http://localhost:3000/projects/namaz-vakti/",
+      "path": "/projects/namaz-vakti/",
+      "country": "Unknown",
+      "city": "Unknown",
+      "device": "desktop",
+      "browser": "Chrome",
+      "os": "Windows",
+      "referrer": "direct",
+      "visitorId": "visitor-1794058006495-4003b501f5b61",
+      "sessionDurationSec": 0
+    },
+    {
+      "id": "visitor-1794058006495-4003b501f5b61-1794058007644",
+      "timestamp": "2026-11-07T13:26:47.644Z",
+      "url": "http://localhost:3000/projects/",
+      "path": "/projects/",
+      "country": "Unknown",
+      "city": "Unknown",
+      "device": "desktop",
+      "browser": "Chrome",
+      "os": "Windows",
+      "referrer": "direct",
+      "visitorId": "visitor-1794058006495-4003b501f5b61",
+      "sessionDurationSec": 0
+    },
+    {
       "id": "visitor-1788609562532-06c0989118435-1788613684882",
       "timestamp": "2026-09-05T13:08:04.883Z",
       "url": "http://localhost:3000/projects/risaleinur/",
