@@ -49,7 +49,10 @@ function buildDay(place: PlaceInfo, y: number, m: number, d: number, diyanet: Ma
       source: "diyanet",
     };
   }
-  const t = computeDay(y, m, d, { lat: place.lat, lon: place.lon, tz: place.tz, method: place.method });
+  // Koordinatı yaklaşık olan yerlerde hesap yapılmaz (yanlış vakit göstermemek için)
+  const t = place.approx
+    ? null
+    : computeDay(y, m, d, { lat: place.lat, lon: place.lon, tz: place.tz, method: place.method });
   return {
     date,
     imsak: t?.imsak ?? DASH,

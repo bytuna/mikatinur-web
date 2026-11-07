@@ -217,7 +217,7 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
 
   /* şu anki / sıradaki vakit */
   const status = useMemo(() => {
-    if (!zoned || !todayRow) return null;
+    if (!zoned || !todayRow || placeInfo?.approx === 2) return null;
     const secs = VAKITS.map((v) => toSecs(todayRow[v.key]));
     if (secs.some((s) => s === null)) return null;
     const t = secs as number[];
@@ -231,7 +231,7 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
     }
     const next = cur + 1;
     return { current: cur, next, remaining: t[next] - n };
-  }, [zoned, todayRow, tomorrowRow]);
+  }, [zoned, todayRow, tomorrowRow, placeInfo]);
 
   /* seçiciler */
   async function onCountry(id: string) {
@@ -427,7 +427,9 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
                 {error ? <span className="text-red-400">{error}</span> : null}
               </span>
               <span>
-                {placeInfo?.method === "ummalqura"
+                {placeInfo?.approx === 2
+                  ? "Bu yerin saat dilimi tahmini: geri sayım gösterilmiyor"
+                  : placeInfo?.method === "ummalqura"
                   ? "Yöntem: Ümmü'l-Kurâ (hesaplanmıştır)"
                   : calculated
                     ? "Yöntem: Diyanet kuralıyla hesaplanmıştır"

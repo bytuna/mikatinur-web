@@ -1,4 +1,5 @@
 import tzlookup from "tz-lookup";
+import lookupData from "./lookup.json";
 import { qiblaBearing, type Method } from "./engine";
 import type { Option, PlaceInfo } from "./types";
 
@@ -20,6 +21,7 @@ const FALLBACK_PLACES: Record<string, PlaceInfo> = {
     tz: "Europe/Istanbul",
     method: "diyanet",
     qibla: qiblaBearing(40.8767, 29.2333),
+    approx: 0,
   },
 };
 
@@ -118,47 +120,25 @@ export function getDistricts(regionId: string): Promise<Option[]> {
 /* ------------------------------------------------------------------ */
 /* Yer bilgisi (koordinat, saat dilimi)                                */
 /* ------------------------------------------------------------------ */
-type RawLookup = {
-  UlkeAdi: string;
-  SehirAdi: string;
-  IlceAdi: string;
-  IlceID: string;
-  lat: number | string;
-  lon: number | string;
-};
+/** [ilceId, ilce, il, ülke, lat, lon, approx, ilId, ülkeId] */
+type LookupRow = [string, string, string, string, number, number, number, string, string];
 
-function getLookupList(): Promise<RawLookup[]> {
-  return cached("lookup", 12 * 3600e3, () => getJson<RawLookup[]>("/lookup", 20000));
-}
+const LOOKUP = lookupData as unknown as LookupRow[];
+const LOOKUP_MAP = new Map<string, LookupRow>(LOOKUP.map((r) => [r[0], r]));
 
-function getLookupMap(): Promise<Map<string, RawLookup>> {
-  return cached("lookup-map", 12 * 3600e3, async () => {
-    const raw = await getLookupList();
-    const map = new Map<string, RawLookup>();
-    for (const r of raw) {
-      const id = String(r.IlceID);
-      if (!map.has(id)) map.set(id, r);
-    }
-    return map;
-  });
-}
-
-/** Koordinata en yakın ilçeyi bulur (dünya genelinde). */
+/** Koordinata en yakın (kesin koordinatlı) ilçeyi bulur (dünya genelinde). */
 export async function findNearest(
   lat: number,
   lon: number,
 ): Promise<{ id: string; name: string; city: string; country: string; distanceKm: number } | null> {
-  const list = await getLookupList();
   const p1 = (lat * Math.PI) / 180;
-  let best: RawLookup | null = null;
+  let best: LookupRow | null = null;
   let bestD = Infinity;
-  for (const r of list) {
-    const la = Number(r.lat);
-    const lo = Number(r.lon);
-    if (!Number.isFinite(la) || !Number.isFinite(lo)) continue;
-    const p2 = (la * Math.PI) / 180;
+  for (const r of LOOKUP) {
+    if (r[6] !== 0) continue;
+    const p2 = (r[4] * Math.PI) / 180;
     const dp = p2 - p1;
-    const dl = ((lo - lon) * Math.PI) / 180;
+    const dl = ((r[5] - lon) * Math.PI) / 180;
     const a = Math.sin(dp / 2) ** 2 + Math.cos(p1) * Math.cos(p2) * Math.sin(dl / 2) ** 2;
     const d = 2 * 6371 * Math.asin(Math.min(1, Math.sqrt(a)));
     if (d < bestD) {
@@ -168,16 +148,16 @@ export async function findNearest(
   }
   if (!best) return null;
   return {
-    id: String(best.IlceID),
-    name: titleTr(best.IlceAdi),
-    city: titleTr(best.SehirAdi),
-    country: titleTr(best.UlkeAdi),
+    id: best[0],
+    name: titleTr(best[1]),
+    city: titleTr(best[2]),
+    country: titleTr(best[3]),
     distanceKm: Math.round(bestD * 10) / 10,
   };
 }
 
-function zoneFor(country: string, lat: number, lon: number): string {
-  if (norm(country) === "turkiye") return "Europe/Istanbul";
+function zoneFor(countryId: string, lat: number, lon: number): string {
+  if (countryId === "2") return "Europe/Istanbul";
   try {
     return tzlookup(lat, lon);
   } catch {
@@ -187,29 +167,22 @@ function zoneFor(country: string, lat: number, lon: number): string {
 
 export async function getPlace(id: string): Promise<PlaceInfo | null> {
   if (!/^\d{1,7}$/.test(id)) return null;
-  try {
-    const map = await getLookupMap();
-    const r = map.get(id);
-    if (r) {
-      const lat = Number(r.lat);
-      const lon = Number(r.lon);
-      if (Number.isFinite(lat) && Number.isFinite(lon)) {
-        const method: Method = UMMALQURA_IDS.has(id) ? "ummalqura" : "diyanet";
-        return {
-          id,
-          name: titleTr(r.IlceAdi),
-          city: titleTr(r.SehirAdi),
-          country: titleTr(r.UlkeAdi),
-          lat,
-          lon,
-          tz: zoneFor(r.UlkeAdi, lat, lon),
-          method,
-          qibla: qiblaBearing(lat, lon),
-        };
-      }
-    }
-  } catch {
-    /* yedeğe düş */
+  const r = LOOKUP_MAP.get(id);
+  if (r) {
+    const [, ilce, il, ulke, lat, lon, approx, , ulkeId] = r;
+    const method: Method = UMMALQURA_IDS.has(id) ? "ummalqura" : "diyanet";
+    return {
+      id,
+      name: titleTr(ilce),
+      city: titleTr(il),
+      country: titleTr(ulke),
+      lat,
+      lon,
+      tz: zoneFor(ulkeId, lat, lon),
+      method,
+      qibla: qiblaBearing(lat, lon),
+      approx: approx === 0 ? 0 : approx === 2 ? 2 : 1,
+    };
   }
   return FALLBACK_PLACES[id] ?? null;
 }

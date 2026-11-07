@@ -12,6 +12,7 @@ export type PlaceInfo = {
   tz: string;
   method: Method;
   qibla: number; // derece, kuzeyden saat yönünde
+  approx: 0 | 1 | 2; // 0: kesin koordinat, 1: yaklaşık koordinat (hesap kapalı), 2: saat dilimi de belirsiz
 };
 
 export type DayRow = {
