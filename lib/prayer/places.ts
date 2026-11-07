@@ -44,14 +44,14 @@ function cached<T>(key: string, ttlMs: number, loader: () => Promise<T>): Promis
   return p;
 }
 
-async function getJson<T>(path: string, timeoutMs = 8000): Promise<T> {
+export async function getJson<T>(path: string, timeoutMs = 10000): Promise<T> {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
     const res = await fetch(BASE + path, {
       cache: "no-store",
       signal: ctrl.signal,
-      headers: { Accept: "application/json", "User-Agent": "MikatiNur-Web/1.0" },
+      headers: { Accept: "application/json", "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) MkatNur-Web/1.0" },
     });
     if (!res.ok) throw new Error(`upstream ${res.status}`);
     return (await res.json()) as T;
@@ -95,30 +95,29 @@ function sortTr(list: Option[]): Option[] {
 /* ------------------------------------------------------------------ */
 /* Ülke / il / ilçe listeleri                                          */
 /* ------------------------------------------------------------------ */
-type RawCountry = { UlkeAdi: string; UlkeAdiEn?: string; UlkeID: string };
-type RawRegion = { SehirAdi: string; SehirAdiEn?: string; SehirID: string };
-type RawDistrict = { IlceAdi: string; IlceAdiEn?: string; IlceID: string };
-
 export function getCountries(): Promise<Option[]> {
   return cached("countries", 12 * 3600e3, async () => {
-    const raw = await getJson<RawCountry[]>("/ulkeler");
-    return sortTr(raw.map((c) => ({ id: String(c.UlkeID), name: titleTr(c.UlkeAdi) })));
+    const seen = new Map<string, string>();
+    for (const r of LOOKUP) if (!seen.has(r[8])) seen.set(r[8], r[3]);
+    return sortTr([...seen].map(([id, name]) => ({ id, name: titleTr(name) })));
   });
 }
 
 export function getRegions(countryId: string): Promise<Option[]> {
   return cached("regions:" + countryId, 12 * 3600e3, async () => {
-    const raw = await getJson<RawRegion[]>("/sehirler/" + countryId);
     const loc = locFor(countryId);
-    return sortTr(raw.map((c) => ({ id: String(c.SehirID), name: titleTr(c.SehirAdi, loc) })));
+    const seen = new Map<string, string>();
+    for (const r of LOOKUP) if (r[8] === countryId && !seen.has(r[7])) seen.set(r[7], r[2]);
+    return sortTr([...seen].map(([id, name]) => ({ id, name: titleTr(name, loc) })));
   });
 }
 
 export function getDistricts(regionId: string): Promise<Option[]> {
   return cached("districts:" + regionId, 12 * 3600e3, async () => {
-    const raw = await getJson<RawDistrict[]>("/ilceler/" + regionId);
     const loc = locFor(REGION_COUNTRY.get(regionId));
-    return sortTr(raw.map((c) => ({ id: String(c.IlceID), name: titleTr(c.IlceAdi, loc) })));
+    const out: Option[] = [];
+    for (const r of LOOKUP) if (r[7] === regionId) out.push({ id: r[0], name: titleTr(r[1], loc) });
+    return sortTr(out);
   });
 }
 
