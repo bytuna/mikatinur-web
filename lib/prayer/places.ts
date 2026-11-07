@@ -73,15 +73,18 @@ export function norm(s: string): string {
     .trim();
 }
 
-/** "İSTANBUL" → "İstanbul"; zaten karışık harfliyse dokunmaz. */
-export function titleTr(s: string): string {
+/**
+ * "İSTANBUL" → "İstanbul"; zaten karışık harfliyse dokunmaz.
+ * loc="tr": Türkçe büyük/küçük harf kuralı (Türkiye, ülke adları); loc="en": yabancı Latin adlar ("BERLIN" → "Berlin").
+ */
+export function titleTr(s: string, loc: "tr" | "en" = "tr"): string {
   const t = (s || "").trim();
   if (!t) return t;
-  if (t !== t.toLocaleUpperCase("tr")) return t;
+  if (t !== t.toLocaleUpperCase(loc)) return t;
   return t
-    .toLocaleLowerCase("tr")
+    .toLocaleLowerCase(loc)
     .split(/(\s+|-|\/)/)
-    .map((w) => (w.length > 0 ? w.charAt(0).toLocaleUpperCase("tr") + w.slice(1) : w))
+    .map((w) => (w.length > 0 ? w.charAt(0).toLocaleUpperCase(loc) + w.slice(1) : w))
     .join("");
 }
 
@@ -106,14 +109,16 @@ export function getCountries(): Promise<Option[]> {
 export function getRegions(countryId: string): Promise<Option[]> {
   return cached("regions:" + countryId, 12 * 3600e3, async () => {
     const raw = await getJson<RawRegion[]>("/sehirler/" + countryId);
-    return sortTr(raw.map((c) => ({ id: String(c.SehirID), name: titleTr(c.SehirAdi) })));
+    const loc = locFor(countryId);
+    return sortTr(raw.map((c) => ({ id: String(c.SehirID), name: titleTr(c.SehirAdi, loc) })));
   });
 }
 
 export function getDistricts(regionId: string): Promise<Option[]> {
   return cached("districts:" + regionId, 12 * 3600e3, async () => {
     const raw = await getJson<RawDistrict[]>("/ilceler/" + regionId);
-    return sortTr(raw.map((c) => ({ id: String(c.IlceID), name: titleTr(c.IlceAdi) })));
+    const loc = locFor(REGION_COUNTRY.get(regionId));
+    return sortTr(raw.map((c) => ({ id: String(c.IlceID), name: titleTr(c.IlceAdi, loc) })));
   });
 }
 
@@ -125,6 +130,10 @@ type LookupRow = [string, string, string, string, number, number, number, string
 
 const LOOKUP = lookupData as unknown as LookupRow[];
 const LOOKUP_MAP = new Map<string, LookupRow>(LOOKUP.map((r) => [r[0], r]));
+const REGION_COUNTRY = new Map<string, string>(LOOKUP.map((r) => [r[7], r[8]]));
+
+/** Türkiye'deki yer adları Türkçe kuralıyla, yabancı yerler İngilizce kuralıyla düzenlenir. */
+const locFor = (countryId: string | undefined): "tr" | "en" => (countryId === "2" ? "tr" : "en");
 
 /** Koordinata en yakın (kesin koordinatlı) ilçeyi bulur (dünya genelinde). */
 export async function findNearest(
@@ -149,8 +158,8 @@ export async function findNearest(
   if (!best) return null;
   return {
     id: best[0],
-    name: titleTr(best[1]),
-    city: titleTr(best[2]),
+    name: titleTr(best[1], locFor(best[8])),
+    city: titleTr(best[2], locFor(best[8])),
     country: titleTr(best[3]),
     distanceKm: Math.round(bestD * 10) / 10,
   };
@@ -173,8 +182,8 @@ export async function getPlace(id: string): Promise<PlaceInfo | null> {
     const method: Method = UMMALQURA_IDS.has(id) ? "ummalqura" : "diyanet";
     return {
       id,
-      name: titleTr(ilce),
-      city: titleTr(il),
+      name: titleTr(ilce, locFor(ulkeId)),
+      city: titleTr(il, locFor(ulkeId)),
       country: titleTr(ulke),
       lat,
       lon,
