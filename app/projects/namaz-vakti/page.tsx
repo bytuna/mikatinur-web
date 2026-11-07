@@ -1,11 +1,35 @@
-export default function WorkInProgress() {
-  return (
-    <main className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center p-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold mb-4">Geliştirme Devam Ediyor</h1>
-        <p className="text-gray-500 mb-8">Bu proje şu an mutfakta, kısa süre sonra yayında olacak.</p>
-        <a href="/" className="border border-gray-800 px-6 py-2 rounded-full hover:bg-gray-800 transition">Ana Sayfaya Dön</a>
-      </div>
-    </main>
-  );
+import type { Metadata } from "next";
+import NamazVaktiClient from "./NamazVaktiClient";
+import { getMonth } from "@/lib/prayer/service";
+import { DEFAULT_ID, resolveLists } from "@/lib/prayer/places";
+import type { InitialLists, MonthResponse } from "@/lib/prayer/types";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Namaz Vakitleri",
+  description:
+    "Türkiye ve dünyanın dört bir yanı için güncel namaz vakitleri: imsak, güneş, öğle, ikindi, akşam, yatsı. Aylık vakit tablosu, hicri tarih ve kıble yönü.",
+  alternates: { canonical: "/projects/namaz-vakti/" },
+};
+
+export default async function NamazVaktiPage() {
+  let initial: MonthResponse | null = null;
+  let lists: InitialLists | null = null;
+
+  try {
+    initial = await getMonth(DEFAULT_ID);
+  } catch {
+    initial = null;
+  }
+
+  if (initial) {
+    try {
+      lists = await resolveLists(initial.place);
+    } catch {
+      lists = null;
+    }
+  }
+
+  return <NamazVaktiClient initial={initial} initialLists={lists} defaultId={DEFAULT_ID} />;
 }
