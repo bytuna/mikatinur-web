@@ -2,11 +2,11 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, Download, HardDrive, PackageCheck } from "lucide-react";
 
 const apkInfo = {
-  version: "v1.1.5",
-  sizeLabel: "59,6 MB",
-  updatedAt: "13 Eylül 2026",
-  url: "/apk/Mikat-Nur-v1.1.5.apk",
-  fileName: "Mikat-Nur-v1.1.5.apk",
+  version: "v1.1.6",
+  sizeLabel: "40,65 MB",
+  updatedAt: "8 Kasım 2026",
+  url: "/apk/Mikat-Nur-v1.1.6.apk",
+  fileName: "Mikat-Nur-v1.1.6.apk",
 };
 
 export default function DownloadPage() {
@@ -61,24 +61,38 @@ export default function DownloadPage() {
 
         <section className="mt-6 sm:mt-8 bg-gray-900/30 border border-gray-800 rounded-3xl p-4 sm:p-8">
           <h2 className="text-lg sm:text-xl font-bold text-white">Güncellemeler</h2>
-          <p className="mt-2 text-sm sm:text-base text-blue-200">v1.1.5 sürümünde yapılan iyileştirmeler</p>
+          <p className="mt-2 text-sm sm:text-base text-blue-200">v1.1.6 sürümünde yapılan iyileştirmeler</p>
           <ul className="mt-5 space-y-4 text-sm sm:text-base text-gray-300">
             <li className="rounded-xl border border-gray-800 bg-black/20 p-3 sm:p-4">
-              <h3 className="font-semibold text-white">Bildirim paneli</h3>
+              <h3 className="font-semibold text-white">Kur'an-ı Kerim</h3>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
-                <li>Bildirim paneline kalan vakit gösterimi eklendi.</li>
+                <li>Yeni Kur'an-ı Kerim modülü: sure, cüz, sayfa ve hatim sekmeleri.</li>
+                <li>13 okuyucu (5 Kâbe imamı dâhil) ve 1x–2x okuma hızı seçeneği.</li>
+                <li>Kalınan ayetten devam etme ve yazı tipi ön izlemesi.</li>
               </ul>
             </li>
             <li className="rounded-xl border border-gray-800 bg-black/20 p-3 sm:p-4">
-              <h3 className="font-semibold text-white">Akşam Namazı tesbihatı</h3>
+              <h3 className="font-semibold text-white">Zikirmatik</h3>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
-                <li>Akşam Namazı tesbihatındaki hata giderildi.</li>
+                <li>12 hazır zikir: Arapçası, Türkçe anlamı ve ne için çekildiği.</li>
+                <li>Kendi zikrinizi yazma veya yapıştırma, hedef ve tur sayacı.</li>
+                <li>Toplam sayacı sıfırlama.</li>
               </ul>
             </li>
             <li className="rounded-xl border border-gray-800 bg-black/20 p-3 sm:p-4">
-              <h3 className="font-semibold text-white">Kayıt ekranı</h3>
+              <h3 className="font-semibold text-white">Profil ve yedekleme</h3>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
-                <li>Kayıt ekranı eklendi.</li>
+                <li>Profil ekranı, haftalık özet ve kullanım serisi.</li>
+                <li>Ayarlar, hatim ve zikir bilgilerini yedekleme ve geri yükleme.</li>
+              </ul>
+            </li>
+            <li className="rounded-xl border border-gray-800 bg-black/20 p-3 sm:p-4">
+              <h3 className="font-semibold text-white">Genel iyileştirmeler</h3>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
+                <li>Güncelleme denetimi indirme sayfasından yapılıyor.</li>
+                <li>Bildirimdeki kalan dakika göstergesi düzeltildi.</li>
+                <li>Paylaşım kartlarında rastgele arka plan resimleri.</li>
+                <li>Risale-i Nur ekranı renkleri yenilendi.</li>
               </ul>
             </li>
           </ul>
