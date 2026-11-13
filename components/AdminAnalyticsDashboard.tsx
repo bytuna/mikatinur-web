@@ -15,7 +15,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Activity, BarChart3, Globe, MonitorSmartphone, Users } from 'lucide-react';
+import { Activity, BarChart3, Globe, Users } from 'lucide-react';
 
 const COLORS = ['#60a5fa', '#34d399', '#fbbf24', '#f472b6', '#a78bfa'];
 
@@ -65,7 +65,7 @@ export function AdminAnalyticsDashboard() {
 
   if (loading || !data) {
     return (
-      <div className="rounded-3xl border border-gray-800 bg-[#0d1117] p-8 text-gray-400">
+      <div className="rounded-3xl border border-slate-200 dark:border-gray-800 bg-slate-50 dark:bg-[#0d1117] p-8 text-slate-500 dark:text-gray-400">
         İstatistikler yükleniyor...
       </div>
     );
@@ -74,15 +74,15 @@ export function AdminAnalyticsDashboard() {
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="text-sm text-gray-400">{data.rangeLabel ?? 'Son 7 Gün'}</div>
-        <div className="flex gap-2 rounded-full border border-gray-800 bg-[#0b1220] p-1">
+        <div className="text-sm text-slate-600 dark:text-gray-400">{data.rangeLabel ?? 'Son 7 Gün'}</div>
+        <div className="flex gap-2 rounded-full border border-slate-200 dark:border-gray-800 bg-slate-100 dark:bg-[#0b1220] p-1">
           {RANGE_OPTIONS.map((range) => (
             <button
               key={range}
               type="button"
               onClick={() => setDays(range)}
               className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
-                days === range ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'
+                days === range ? 'bg-blue-600 text-white' : 'text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               {range === 1 ? 'Bugün' : `Son ${range} Gün`}
@@ -99,8 +99,8 @@ export function AdminAnalyticsDashboard() {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <div className="rounded-3xl border border-gray-800 bg-[#0d1117] p-5">
-          <h3 className="mb-4 text-lg font-semibold text-white">Ziyaretçi Trendi</h3>
+        <div className="rounded-3xl border border-slate-200 dark:border-gray-800 bg-slate-50 dark:bg-[#0d1117] p-5">
+          <h3 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">Ziyaretçi Trendi</h3>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data.timeSeries}>
@@ -110,9 +110,9 @@ export function AdminAnalyticsDashboard() {
                     <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.1} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="#1f2937" strokeDasharray="3 3" />
-                <XAxis dataKey="label" stroke="#9ca3af" tickLine={false} axisLine={false} />
-                <YAxis stroke="#9ca3af" tickLine={false} axisLine={false} />
+                <CartesianGrid stroke="#94a3b8" strokeOpacity={0.25} strokeDasharray="3 3" />
+                <XAxis dataKey="label" stroke="#64748b" tickLine={false} axisLine={false} />
+                <YAxis stroke="#64748b" tickLine={false} axisLine={false} />
                 <Tooltip />
                 <Area type="monotone" dataKey="visits" stroke="#60a5fa" fill="url(#visitsFill)" strokeWidth={3} />
               </AreaChart>
@@ -120,14 +120,14 @@ export function AdminAnalyticsDashboard() {
           </div>
         </div>
 
-        <div className="rounded-3xl border border-gray-800 bg-[#0d1117] p-5">
-          <h3 className="mb-4 text-lg font-semibold text-white">Ülke Dağılımı</h3>
+        <div className="rounded-3xl border border-slate-200 dark:border-gray-800 bg-slate-50 dark:bg-[#0d1117] p-5">
+          <h3 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">Ülke Dağılımı</h3>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={countryChartData.slice(0, 6)}>
-                <CartesianGrid stroke="#1f2937" strokeDasharray="3 3" />
-                <XAxis dataKey="name" stroke="#9ca3af" tickLine={false} axisLine={false} />
-                <YAxis stroke="#9ca3af" tickLine={false} axisLine={false} />
+                <CartesianGrid stroke="#94a3b8" strokeOpacity={0.25} strokeDasharray="3 3" />
+                <XAxis dataKey="name" stroke="#64748b" tickLine={false} axisLine={false} />
+                <YAxis stroke="#64748b" tickLine={false} axisLine={false} />
                 <Tooltip />
                 <Bar dataKey="count" radius={[8, 8, 0, 0]} fill="#34d399" />
               </BarChart>
@@ -148,7 +148,7 @@ export function AdminAnalyticsDashboard() {
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
-          <div className="mt-4 space-y-2 text-sm text-gray-300">
+          <div className="mt-4 space-y-2 text-sm text-slate-700 dark:text-gray-300">
             {deviceChartData.map((item, index) => (
               <div key={item.name} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -172,7 +172,7 @@ export function AdminAnalyticsDashboard() {
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
-          <div className="mt-4 space-y-2 text-sm text-gray-300">
+          <div className="mt-4 space-y-2 text-sm text-slate-700 dark:text-gray-300">
             {browserChartData.map((item, index) => (
               <div key={item.name} className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -188,13 +188,13 @@ export function AdminAnalyticsDashboard() {
         <ChartCard title="Son Ziyaretler">
           <div className="space-y-3 text-sm">
             {data.recentVisits.map((visit) => (
-              <div key={visit.id} className="rounded-xl border border-gray-800 bg-[#111827] p-3">
-                <div className="flex items-center justify-between text-xs text-gray-400">
+              <div key={visit.id} className="rounded-xl border border-slate-200 dark:border-gray-800 bg-white dark:bg-[#111827] p-3">
+                <div className="flex items-center justify-between text-xs text-slate-500 dark:text-gray-400">
                   <span>{new Date(visit.timestamp).toLocaleString('tr-TR')}</span>
                   <span>{visit.referrer}</span>
                 </div>
-                <p className="mt-2 font-medium text-white">{visit.path}</p>
-                <p className="text-xs text-gray-400">{visit.city}, {visit.country} • {visit.device} • {visit.browser}</p>
+                <p className="mt-2 font-medium text-slate-900 dark:text-white">{visit.path}</p>
+                <p className="text-xs text-slate-500 dark:text-gray-400">{visit.city}, {visit.country} • {visit.device} • {visit.browser}</p>
               </div>
             ))}
           </div>
@@ -218,19 +218,19 @@ function MetricCard({
   compact?: boolean;
 }) {
   const accentMap = {
-    blue: 'text-blue-400 border-blue-500/30 bg-blue-500/5',
-    green: 'text-green-400 border-green-500/30 bg-green-500/5',
-    purple: 'text-violet-400 border-violet-500/30 bg-violet-500/5',
-    amber: 'text-amber-400 border-amber-500/30 bg-amber-500/5',
+    blue: 'text-blue-600 dark:text-blue-400 border-blue-500/30 bg-blue-500/5',
+    green: 'text-green-600 dark:text-green-400 border-green-500/30 bg-green-500/5',
+    purple: 'text-violet-600 dark:text-violet-400 border-violet-500/30 bg-violet-500/5',
+    amber: 'text-amber-600 dark:text-amber-400 border-amber-500/30 bg-amber-500/5',
   };
 
   return (
     <div className={`rounded-2xl border p-4 ${accentMap[accent]}`}>
       <div className="mb-3 flex items-center justify-between">
-        <span className="text-sm text-gray-300">{label}</span>
-        <span className="rounded-full bg-black/30 p-2">{icon}</span>
+        <span className="text-sm text-slate-600 dark:text-gray-300">{label}</span>
+        <span className="rounded-full bg-slate-200/70 dark:bg-black/30 p-2">{icon}</span>
       </div>
-      <div className={`font-bold text-white ${compact ? 'text-lg' : 'text-3xl'}`}>
+      <div className={`font-bold text-slate-900 dark:text-white ${compact ? 'text-lg' : 'text-3xl'}`}>
         {value}
       </div>
     </div>
@@ -239,8 +239,8 @@ function MetricCard({
 
 function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-3xl border border-gray-800 bg-[#0d1117] p-5">
-      <h3 className="mb-4 text-lg font-semibold text-white">{title}</h3>
+    <div className="rounded-3xl border border-slate-200 dark:border-gray-800 bg-slate-50 dark:bg-[#0d1117] p-5">
+      <h3 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">{title}</h3>
       {children}
     </div>
   );

@@ -281,27 +281,27 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
   const calculated = todayRow?.source === "hesaplama";
 
   const selectCls =
-    "w-full appearance-none rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-3 text-sm text-gray-100 outline-none transition focus:border-emerald-400/60 focus:bg-white/[0.07] disabled:opacity-40";
+    "w-full appearance-none rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.04] px-3.5 py-3 text-sm text-slate-900 dark:text-gray-100 outline-none transition focus:border-emerald-500/60 dark:focus:border-emerald-400/60 focus:bg-white dark:focus:bg-white/[0.07] disabled:opacity-40";
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#0a0a0a] text-gray-100">
+    <main className="relative min-h-screen overflow-hidden bg-[#f8fafc] dark:bg-[#0a0a0a] text-slate-900 dark:text-gray-100 transition-colors duration-300">
       {/* arka plan ışıkları */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-40 left-1/2 h-[28rem] w-[46rem] -translate-x-1/2 rounded-full bg-emerald-500/10 blur-[120px]" />
-        <div className="absolute top-[40rem] -right-40 h-[24rem] w-[24rem] rounded-full bg-amber-400/5 blur-[110px]" />
+        <div className="absolute -top-40 left-1/2 h-[28rem] w-[46rem] -translate-x-1/2 rounded-full bg-emerald-500/15 dark:bg-emerald-500/10 blur-[120px]" />
+        <div className="absolute top-[40rem] -right-40 h-[24rem] w-[24rem] rounded-full bg-amber-400/10 dark:bg-amber-400/5 blur-[110px]" />
       </div>
 
       <div className="relative mx-auto w-full max-w-4xl px-4 sm:px-6">
         {/* ÜST BÖLÜM: sayfanın ortasında, hafif yukarıda */}
-        <section className="flex min-h-[88vh] flex-col justify-center gap-6 pb-14 pt-10 sm:pb-20">
+        <section className="flex flex-col justify-center gap-6 pb-12 pt-8 sm:pb-16 sm:pt-12">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="text-center"
           >
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-gray-300">
-              <MapPin className="h-3.5 w-3.5 text-emerald-400" />
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/[0.04] shadow-2xs dark:shadow-none px-3 py-1 text-xs text-slate-700 dark:text-gray-300">
+              <MapPin className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
               {placeInfo ? (
                 <span>
                   {placeInfo.name}
@@ -312,18 +312,18 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
               )}
             </div>
 
-            <h1 className="mt-5 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            <h1 className="mt-5 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-5xl">
               {status ? VAKITS[status.next].label : "Namaz Vakitleri"}
-              {status && <span className="text-gray-500"> vaktine</span>}
+              {status && <span className="text-slate-400 dark:text-gray-500"> vaktine</span>}
             </h1>
 
-            <div className="mt-2 font-mono text-5xl font-light tabular-nums tracking-tight text-emerald-300 sm:text-6xl">
+            <div className="mt-2 font-mono text-5xl font-light tabular-nums tracking-tight text-emerald-600 dark:text-emerald-300 sm:text-6xl">
               {status && status.remaining !== null ? fmtCountdown(status.remaining) : "--:--:--"}
             </div>
 
-            <p className="mt-3 text-sm text-gray-400">
+            <p className="mt-3 text-sm text-slate-600 dark:text-gray-400">
               {todayIso ? longDate(todayIso) : ""}
-              {todayRow?.hicri ? <span className="text-gray-500"> · {todayRow.hicri}</span> : null}
+              {todayRow?.hicri ? <span className="text-slate-500 dark:text-gray-500"> · {todayRow.hicri}</span> : null}
             </p>
           </motion.div>
 
@@ -341,23 +341,23 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
                 <div
                   key={key}
                   className={[
-                    "relative rounded-2xl border p-4 text-center transition-colors",
+                    "relative rounded-2xl border p-4 text-center transition-colors shadow-2xs dark:shadow-none",
                     isCurrent
-                      ? "border-emerald-400/50 bg-emerald-400/10 shadow-[0_0_30px_-10px_rgba(52,211,153,0.5)]"
+                      ? "border-emerald-500/60 dark:border-emerald-400/50 bg-emerald-500/10 dark:bg-emerald-400/10 shadow-[0_0_30px_-10px_rgba(16,185,129,0.35)] dark:shadow-[0_0_30px_-10px_rgba(52,211,153,0.5)]"
                       : isNext
-                        ? "border-amber-300/30 bg-amber-300/[0.06]"
-                        : "border-white/10 bg-white/[0.03]",
+                        ? "border-amber-500/40 dark:border-amber-300/30 bg-amber-500/10 dark:bg-amber-300/[0.06]"
+                        : "border-slate-200 dark:border-white/10 bg-white/90 dark:bg-white/[0.03]",
                   ].join(" ")}
                 >
                   <Icon
-                    className={`mx-auto h-5 w-5 ${isCurrent ? "text-emerald-300" : isNext ? "text-amber-300" : "text-gray-500"}`}
+                    className={`mx-auto h-5 w-5 ${isCurrent ? "text-emerald-600 dark:text-emerald-300" : isNext ? "text-amber-600 dark:text-amber-300" : "text-slate-400 dark:text-gray-500"}`}
                   />
-                  <div className="mt-2 text-xs uppercase tracking-wider text-gray-400">{label}</div>
-                  <div className="mt-1 font-mono text-2xl font-medium tabular-nums text-white">
+                  <div className="mt-2 text-xs uppercase tracking-wider text-slate-500 dark:text-gray-400">{label}</div>
+                  <div className="mt-1 font-mono text-2xl font-medium tabular-nums text-slate-900 dark:text-white">
                     {todayRow ? todayRow[key] : "--:--"}
                   </div>
-                  {isCurrent && <div className="mt-1 text-[10px] font-medium text-emerald-300">ŞU AN</div>}
-                  {isNext && !isCurrent && <div className="mt-1 text-[10px] font-medium text-amber-300">SIRADAKİ</div>}
+                  {isCurrent && <div className="mt-1 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300">ŞU AN</div>}
+                  {isNext && !isCurrent && <div className="mt-1 text-[10px] font-semibold text-amber-700 dark:text-amber-300">SIRADAKİ</div>}
                 </div>
               );
             })}
@@ -368,63 +368,63 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.16 }}
-            className="rounded-2xl border border-white/10 bg-white/[0.03] p-3 sm:p-4"
+            className="rounded-2xl border border-slate-200 dark:border-white/10 bg-white/90 dark:bg-white/[0.03] shadow-2xs dark:shadow-none p-3 sm:p-4"
           >
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <label className="block">
-                <span className="mb-1 block text-xs text-gray-500">Ülke</span>
+                <span className="mb-1 block text-xs text-slate-500 dark:text-gray-500">Ülke</span>
                 <select className={selectCls} value={countryId} onChange={(e) => void onCountry(e.target.value)}>
-                  <option value="" className="bg-neutral-900">
+                  <option value="" className="bg-white dark:bg-neutral-900">
                     Ülke seçin
                   </option>
                   {countries.map((c) => (
-                    <option key={c.id} value={c.id} className="bg-neutral-900">
+                    <option key={c.id} value={c.id} className="bg-white dark:bg-neutral-900">
                       {c.name}
                     </option>
                   ))}
                 </select>
               </label>
               <label className="block">
-                <span className="mb-1 block text-xs text-gray-500">İl / Şehir</span>
+                <span className="mb-1 block text-xs text-slate-500 dark:text-gray-500">İl / Şehir</span>
                 <select
                   className={selectCls}
                   value={regionId}
                   disabled={!countryId || listBusy}
                   onChange={(e) => void onRegion(e.target.value)}
                 >
-                  <option value="" className="bg-neutral-900">
+                  <option value="" className="bg-white dark:bg-neutral-900">
                     İl seçin
                   </option>
                   {regions.map((c) => (
-                    <option key={c.id} value={c.id} className="bg-neutral-900">
+                    <option key={c.id} value={c.id} className="bg-white dark:bg-neutral-900">
                       {c.name}
                     </option>
                   ))}
                 </select>
               </label>
               <label className="block">
-                <span className="mb-1 block text-xs text-gray-500">İlçe</span>
+                <span className="mb-1 block text-xs text-slate-500 dark:text-gray-500">İlçe</span>
                 <select
                   className={selectCls}
                   value={districtId}
                   disabled={!regionId || listBusy}
                   onChange={(e) => onDistrict(e.target.value)}
                 >
-                  <option value="" className="bg-neutral-900">
+                  <option value="" className="bg-white dark:bg-neutral-900">
                     İlçe seçin
                   </option>
                   {districts.map((c) => (
-                    <option key={c.id} value={c.id} className="bg-neutral-900">
+                    <option key={c.id} value={c.id} className="bg-white dark:bg-neutral-900">
                       {c.name}
                     </option>
                   ))}
                 </select>
               </label>
             </div>
-            <div className="mt-3 flex min-h-5 items-center justify-between gap-3 text-xs text-gray-500">
+            <div className="mt-3 flex min-h-5 items-center justify-between gap-3 text-xs text-slate-500 dark:text-gray-500">
               <span className="flex items-center gap-1.5">
                 {(loading || listBusy) && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                {error ? <span className="text-red-400">{error}</span> : null}
+                {error ? <span className="text-red-500 dark:text-red-400">{error}</span> : null}
               </span>
               <span>
                 {placeInfo?.approx === 2
@@ -441,34 +441,34 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
 
         {/* KIBLE + İNDİR */}
         <section className="grid grid-cols-1 gap-4 pb-8 sm:grid-cols-2">
-          <div className="flex items-center gap-5 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-            <div className="relative h-24 w-24 shrink-0 rounded-full border border-white/15 bg-black/30">
-              <span className="absolute left-1/2 top-1 -translate-x-1/2 text-[10px] text-gray-500">K</span>
+          <div className="flex items-center gap-5 rounded-2xl border border-slate-200 dark:border-white/10 bg-white/90 dark:bg-white/[0.03] shadow-2xs dark:shadow-none p-5">
+            <div className="relative h-24 w-24 shrink-0 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100 dark:bg-black/30">
+              <span className="absolute left-1/2 top-1 -translate-x-1/2 text-[10px] font-semibold text-slate-500 dark:text-gray-500">K</span>
               <div
                 className="absolute inset-0 flex items-center justify-center transition-transform duration-700"
                 style={{ transform: `rotate(${qibla}deg)` }}
               >
-                <div className="h-[72%] w-0.5 rounded bg-gradient-to-t from-transparent via-emerald-500/30 to-emerald-300" />
+                <div className="h-[72%] w-0.5 rounded bg-gradient-to-t from-transparent via-emerald-500/40 to-emerald-600 dark:via-emerald-500/30 dark:to-emerald-300" />
               </div>
-              <Compass className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 text-emerald-300" />
+              <Compass className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 text-emerald-600 dark:text-emerald-300" />
             </div>
             <div>
-              <div className="text-xs uppercase tracking-wider text-gray-500">Kıble yönü</div>
-              <div className="mt-1 text-2xl font-semibold text-white">{placeInfo ? qiblaText : "—"}</div>
-              <div className="mt-1 text-xs text-gray-500">Kuzeyden saat yönünde, Kâbe'ye en kısa yol</div>
+              <div className="text-xs uppercase tracking-wider text-slate-500 dark:text-gray-500">Kıble yönü</div>
+              <div className="mt-1 text-2xl font-semibold text-slate-900 dark:text-white">{placeInfo ? qiblaText : "—"}</div>
+              <div className="mt-1 text-xs text-slate-500 dark:text-gray-500">Kuzeyden saat yönünde, Kâbe&apos;ye en kısa yol</div>
             </div>
           </div>
 
-          <div className="flex flex-col justify-between rounded-2xl border border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent p-5">
+          <div className="flex flex-col justify-between rounded-2xl border border-slate-200 dark:border-white/10 bg-gradient-to-br from-emerald-500/15 via-white to-white dark:from-emerald-500/10 dark:via-transparent dark:to-transparent shadow-2xs dark:shadow-none p-5">
             <div>
-              <div className="text-sm font-medium text-white">Mikat-ı Nur uygulaması</div>
-              <p className="mt-1 text-xs leading-relaxed text-gray-400">
+              <div className="text-sm font-medium text-slate-900 dark:text-white">Mikat-ı Nur uygulaması</div>
+              <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-gray-400">
                 Ezan bildirimleri ve vakitler cebinizde. Android uygulamasını indirin.
               </p>
             </div>
             <Link
               href="/download"
-              className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-emerald-300"
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 dark:bg-emerald-400 px-4 py-2.5 text-sm font-semibold text-white dark:text-black transition hover:bg-emerald-600 dark:hover:bg-emerald-300"
             >
               <Download className="h-4 w-4" />
               Uygulamayı İndir
@@ -479,18 +479,18 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
         {/* AYLIK TABLO */}
         <section className="pb-20">
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-white">Aylık Vakitler</h2>
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Aylık Vakitler</h2>
             <div className="flex items-center gap-1">
               <button
                 type="button"
                 aria-label="Önceki ay"
                 disabled={!viewMonth}
                 onClick={() => setViewMonth((m) => shiftMonth(m, -1))}
-                className="rounded-lg border border-white/10 p-2 text-gray-300 transition hover:bg-white/10 disabled:opacity-40"
+                className="rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-transparent p-2 text-slate-700 dark:text-gray-300 transition hover:bg-slate-100 dark:hover:bg-white/10 disabled:opacity-40"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
-              <div className="min-w-36 text-center text-sm capitalize text-gray-200">
+              <div className="min-w-36 text-center text-sm capitalize text-slate-800 dark:text-gray-200 font-medium">
                 {viewMonth ? monthTitle(viewMonth) : "—"}
               </div>
               <button
@@ -498,17 +498,17 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
                 aria-label="Sonraki ay"
                 disabled={!viewMonth}
                 onClick={() => setViewMonth((m) => shiftMonth(m, 1))}
-                className="rounded-lg border border-white/10 p-2 text-gray-300 transition hover:bg-white/10 disabled:opacity-40"
+                className="rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-transparent p-2 text-slate-700 dark:text-gray-300 transition hover:bg-slate-100 dark:hover:bg-white/10 disabled:opacity-40"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           </div>
 
-          <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.02]">
+          <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-white/10 bg-white/95 dark:bg-white/[0.02] shadow-2xs dark:shadow-none">
             <table className="w-full min-w-[34rem] text-sm">
               <thead>
-                <tr className="border-b border-white/10 text-xs uppercase tracking-wider text-gray-500">
+                <tr className="border-b border-slate-200 dark:border-white/10 text-xs uppercase tracking-wider text-slate-500 dark:text-gray-500">
                   <th className="px-3 py-3 text-left font-medium">Gün</th>
                   {VAKITS.map((v) => (
                     <th key={v.key} className="px-2 py-3 text-center font-medium">
@@ -525,15 +525,17 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
                       <tr
                         key={d.date}
                         className={[
-                          "border-b border-white/5 last:border-0",
-                          isToday ? "bg-emerald-400/10 text-white" : "text-gray-300 hover:bg-white/[0.03]",
+                          "border-b border-slate-100 dark:border-white/5 last:border-0",
+                          isToday
+                            ? "bg-emerald-500/10 dark:bg-emerald-400/10 text-slate-900 dark:text-white font-medium"
+                            : "text-slate-700 dark:text-gray-300 hover:bg-slate-50 dark:hover:bg-white/[0.03]",
                         ].join(" ")}
                       >
                         <td className="whitespace-nowrap px-3 py-2 text-left">
                           <span className="font-medium">{Number(d.date.slice(8))}</span>{" "}
-                          <span className="text-xs text-gray-500">{weekdayShort(d.date)}</span>
+                          <span className="text-xs text-slate-500 dark:text-gray-500">{weekdayShort(d.date)}</span>
                           {d.source === "hesaplama" && (
-                            <span title="Hesaplanmıştır" className="ml-1 inline-block h-1.5 w-1.5 rounded-full bg-amber-300/80" />
+                            <span title="Hesaplanmıştır" className="ml-1 inline-block h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-300/80" />
                           )}
                         </td>
                         {VAKITS.map((v) => (
@@ -546,7 +548,7 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
                   })
                 ) : (
                   <tr>
-                    <td colSpan={7} className="px-3 py-10 text-center text-gray-500">
+                    <td colSpan={7} className="px-3 py-10 text-center text-slate-500 dark:text-gray-500">
                       <Loader2 className="mx-auto h-5 w-5 animate-spin" />
                     </td>
                   </tr>
@@ -554,8 +556,8 @@ export default function NamazVaktiClient({ initial, initialLists, defaultId }: P
               </tbody>
             </table>
           </div>
-          <p className="mt-3 text-xs text-gray-500">
-            <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-amber-300/80" />
+          <p className="mt-3 text-xs text-slate-500 dark:text-gray-500">
+            <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-300/80" />
             işaretli günler Diyanet kuralıyla hesaplanmıştır; diğerleri Diyanet İşleri Başkanlığı verisidir. Vakitler
             bilgilendirme amaçlıdır.
           </p>

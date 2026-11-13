@@ -20,22 +20,22 @@ export default function AdminPage() {
 
   if (!auth) {
     return (
-      <main className="min-h-screen bg-[#050505] flex items-center justify-center p-6">
-        <div className="bg-gray-900/30 border border-gray-800 p-8 rounded-3xl w-full max-w-sm text-center">
-          <Lock className="w-12 h-12 mx-auto text-gray-500 mb-6" />
+      <main className="min-h-screen bg-[#f8fafc] dark:bg-[#050505] flex items-center justify-center p-6 transition-colors duration-300">
+        <div className="bg-white dark:bg-gray-900/30 border border-slate-200 dark:border-gray-800 shadow-sm dark:shadow-none p-8 rounded-3xl w-full max-w-sm text-center">
+          <Lock className="w-12 h-12 mx-auto text-slate-400 dark:text-gray-500 mb-6" />
           <input 
             type="password" 
             onChange={(e) => setPass(e.target.value)} 
             placeholder="Şifre" 
-            className="w-full bg-black/50 border border-gray-800 rounded-xl p-4 text-white mb-4"
+            className="w-full bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-gray-800 rounded-xl p-4 text-slate-900 dark:text-white mb-4 outline-none focus:border-blue-500"
           />
           <button 
             onClick={() => pass === "Emirza120913" ? setAuth(true) : alert("Hatalı!")} 
-            className="w-full bg-blue-600 py-4 rounded-xl font-bold mb-4"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-bold mb-4 transition-colors"
           >
             Giriş Yap
           </button>
-          <Link href="/" className="flex items-center justify-center text-sm text-gray-500 hover:text-white transition-colors">
+          <Link href="/" className="flex items-center justify-center text-sm text-slate-500 dark:text-gray-500 hover:text-slate-900 dark:hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4 mr-1" /> Ana Sayfaya Dön
           </Link>
         </div>
@@ -44,15 +44,15 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white p-8">
-      <header className="flex justify-between items-center mb-12">
+    <main className="min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white p-8 transition-colors duration-300">
+      <header className="flex justify-between items-center mb-12 pr-28 sm:pr-32">
         <div className="flex items-center gap-6">
-          <h1 className="text-2xl font-bold">Yönetim Paneli</h1>
-          <Link href="/" className="text-sm text-gray-500 hover:text-white transition-colors">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Yönetim Paneli</h1>
+          <Link href="/" className="text-sm text-slate-500 dark:text-gray-500 hover:text-slate-900 dark:hover:text-white transition-colors">
             ← Ana Sayfaya Dön
           </Link>
         </div>
-        <button onClick={() => setAuth(false)} className="text-gray-400 hover:text-red-400 text-sm flex items-center">
+        <button onClick={() => setAuth(false)} className="text-slate-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 text-sm flex items-center transition-colors">
           <LogOut className="w-4 h-4 mr-1" /> Çıkış Yap
         </button>
       </header>
@@ -62,33 +62,33 @@ export default function AdminPage() {
       ) : (
         <div className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gray-900/30 border border-gray-800 p-6 rounded-2xl">
-              <p className="text-blue-400 flex items-center mb-2"><BarChart3 className="w-4 h-4 mr-2" /> Toplam Ziyaret</p>
-              <p className="text-3xl font-bold">{data.totalVisits}</p>
+            <div className="bg-white dark:bg-gray-900/30 border border-slate-200 dark:border-gray-800 shadow-sm dark:shadow-none p-6 rounded-2xl">
+              <p className="text-blue-600 dark:text-blue-400 flex items-center mb-2"><BarChart3 className="w-4 h-4 mr-2" /> Toplam Ziyaret</p>
+              <p className="text-3xl font-bold text-slate-900 dark:text-white">{data.totalVisits}</p>
             </div>
-            <div className="bg-gray-900/30 border border-gray-800 p-6 rounded-2xl">
-              <p className="text-green-400 flex items-center mb-2"><MessageSquare className="w-4 h-4 mr-2" /> Mesaj</p>
-              <p className="text-3xl font-bold">{data.messageCount}</p>
+            <div className="bg-white dark:bg-gray-900/30 border border-slate-200 dark:border-gray-800 shadow-sm dark:shadow-none p-6 rounded-2xl">
+              <p className="text-green-600 dark:text-green-400 flex items-center mb-2"><MessageSquare className="w-4 h-4 mr-2" /> Mesaj</p>
+              <p className="text-3xl font-bold text-slate-900 dark:text-white">{data.messageCount}</p>
             </div>
           </div>
 
-          <section className="bg-gray-900/30 border border-gray-800 rounded-3xl p-6">
-            <h2 className="text-xl font-bold mb-6">Ziyaretçi ve Site İstatistikleri</h2>
+          <section className="bg-white dark:bg-gray-900/30 border border-slate-200 dark:border-gray-800 shadow-sm dark:shadow-none rounded-3xl p-6">
+            <h2 className="text-xl font-bold mb-6 text-slate-900 dark:text-white">Ziyaretçi ve Site İstatistikleri</h2>
             <AdminAnalyticsDashboard />
           </section>
 
-          <section className="bg-gray-900/30 border border-gray-800 rounded-3xl p-6">
-            <h2 className="text-xl font-bold mb-6">Gelen Mesajlar</h2>
+          <section className="bg-white dark:bg-gray-900/30 border border-slate-200 dark:border-gray-800 shadow-sm dark:shadow-none rounded-3xl p-6">
+            <h2 className="text-xl font-bold mb-6 text-slate-900 dark:text-white">Gelen Mesajlar</h2>
             <div className="space-y-4">
               {data.messages && data.messages.length > 0 ? (
                 data.messages.map((msg: any, i: number) => (
-                  <div key={i} className="p-5 bg-black/40 rounded-xl border border-gray-800">
-                    <p className="text-blue-400 font-bold text-sm mb-1">{msg.email}</p>
-                    <p className="text-gray-200">{msg.message}</p>
+                  <div key={i} className="p-5 bg-slate-50 dark:bg-black/40 rounded-xl border border-slate-200 dark:border-gray-800">
+                    <p className="text-blue-600 dark:text-blue-400 font-bold text-sm mb-1">{msg.email}</p>
+                    <p className="text-slate-700 dark:text-gray-200">{msg.message}</p>
                   </div>
                 ))
               ) : (
-                <p className="text-gray-500 text-center py-4">Henüz hiç mesaj yok.</p>
+                <p className="text-slate-500 dark:text-gray-500 text-center py-4">Henüz hiç mesaj yok.</p>
               )}
             </div>
           </section>

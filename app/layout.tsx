@@ -5,6 +5,7 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { JsonLdSchema } from "../components/JsonLdSchema";
 import { AnalyticsTracker } from "../components/AnalyticsTracker";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 const siteUrl = "https://www.mikatinur.com.tr";
 const siteName = "Mikatinur";
@@ -108,17 +109,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="tr">
+    <html lang="tr" suppressHydrationWarning>
       <head>
-        <meta name="theme-color" content="#0a0a0a" />
+        <meta name="theme-color" content="#f8fafc" />
         <meta name="format-detection" content="telephone=no" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem('mikatinur_site_theme')==='dark'){document.documentElement.classList.add('dark');}else{document.documentElement.classList.remove('dark');}}catch(e){}`,
+          }}
+        />
       </head>
-      <body className="antialiased">
+      <body className="antialiased bg-[#f8fafc] text-slate-900 dark:bg-[#050505] dark:text-gray-100">
         <JsonLdSchema data={personSchema} />
         <AnalyticsTracker />
+        <ThemeToggle />
         {children}
-        <footer className="border-t border-gray-900 bg-[#050505] px-6 py-5 text-center text-xs text-gray-600">
-          <Link href="/kvkk-aydinlatma-metni" className="transition-colors hover:text-gray-300">
+        <footer className="border-t border-slate-200 dark:border-gray-900 bg-slate-100/80 dark:bg-[#050505] px-6 py-5 text-center text-xs text-slate-500 dark:text-gray-600 transition-colors">
+          <Link href="/kvkk-aydinlatma-metni" className="transition-colors hover:text-slate-900 dark:hover:text-gray-300">
             KVKK Aydınlatma Metni
           </Link>
         </footer>

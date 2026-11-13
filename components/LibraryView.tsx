@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { RisaleBook, ReadingState } from '../types';
 import { 
   BookOpen, 
@@ -13,6 +14,8 @@ import {
   Sparkles,
   Clock,
   ArrowRight,
+  ArrowLeft,
+  Compass,
   ChevronRight
 } from 'lucide-react';
 
@@ -388,6 +391,19 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
 
         {/* Canlı Arama Kutusu ve Eylemler */}
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto justify-end">
+          {/* Mîkāt-ı Nur Ana Sayfasına Dönüş Butonu */}
+          <Link
+            href="/"
+            className="group relative inline-flex items-center gap-2 rounded-full border border-[#a67c52]/60 dark:border-amber-500/40 bg-gradient-to-r from-[#f8f1e5] via-[#efe2cc] to-[#f8f1e5] dark:from-stone-900 dark:via-stone-800 dark:to-stone-900 px-4 py-2 text-xs font-serif font-semibold tracking-wide text-[#5c3a21] dark:text-amber-200 shadow-[0_4px_14px_rgba(124,76,47,0.15)] hover:shadow-[0_6px_20px_rgba(163,29,29,0.22)] hover:border-[#a31d1d]/70 dark:hover:border-amber-400 transition-all duration-300 hover:-translate-y-0.5 shrink-0"
+            title="Mîkāt-ı Nur Ana Sayfasına Dön"
+          >
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#a31d1d]/10 dark:bg-amber-500/15 text-[#a31d1d] dark:text-amber-300 transition-transform duration-300 group-hover:-translate-x-0.5">
+              <ArrowLeft className="w-3.5 h-3.5" />
+            </span>
+            <Compass className="w-3.5 h-3.5 text-[#a67c52] dark:text-amber-400 transition-transform duration-500 group-hover:rotate-45" />
+            <span>Mîkāt-ı Nur&apos;a Dön</span>
+          </Link>
+
           {/* Gelişmiş Giriş Alanı */}
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <div className="relative flex-1 sm:flex-initial sm:w-64 lg:w-72">

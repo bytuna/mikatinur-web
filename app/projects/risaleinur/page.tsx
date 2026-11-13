@@ -38,11 +38,12 @@ type TOCSection = {
   parentTitles?: string[];
 };
 
+import Link from 'next/link';
 import { Sidebar } from '../../../components/Sidebar';
 import { ReadingView } from '../../../components/ReadingView';
 import { TefekkurSettings } from '../../../components/TefekkurSettings';
 import { LibraryView } from '../../../components/LibraryView';
-import { Settings, Compass, Plus, X } from 'lucide-react';
+import { Settings, Compass, Plus, X, ArrowLeft } from 'lucide-react';
 
 const DEFAULT_STATE: ReadingState = {
   currentBookId: 'sozler',
@@ -219,12 +220,21 @@ export default function App() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedPrefs = localStorage.getItem('mikatinur_preferences');
+      const siteTheme = localStorage.getItem('mikatinur_site_theme');
       if (savedPrefs) {
         try {
-          setPreferences(JSON.parse(savedPrefs));
+          const parsed = JSON.parse(savedPrefs);
+          if (siteTheme === 'dark') {
+            parsed.theme = 'dark';
+          } else if (siteTheme === 'light' && parsed.theme === 'dark') {
+            parsed.theme = 'sepia';
+          }
+          setPreferences(parsed);
         } catch (e) {
           console.error(e);
         }
+      } else if (siteTheme === 'dark') {
+        setPreferences((prev) => ({ ...prev, theme: 'dark' }));
       }
 
       const savedState = localStorage.getItem('mikatinur_reading_state');
@@ -238,6 +248,19 @@ export default function App() {
 
       setIsHydrated(true);
     }
+  }, []);
+
+  // Genel Gece/Gündüz butonu ile Risale-i Nur temasını senkronize et
+  useEffect(() => {
+    const handleSiteThemeChange = (e: Event) => {
+      const next = (e as CustomEvent<'light' | 'dark'>).detail;
+      setPreferences((prev) => ({
+        ...prev,
+        theme: next === 'dark' ? 'dark' : prev.theme === 'dark' ? 'sepia' : prev.theme,
+      }));
+    };
+    window.addEventListener('mikatinur-theme-change', handleSiteThemeChange);
+    return () => window.removeEventListener('mikatinur-theme-change', handleSiteThemeChange);
   }, []);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -980,6 +1003,16 @@ export default function App() {
             )}
             </div>
           </div>
+
+          <Link
+            href="/"
+            className="group inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#a67c52]/50 dark:border-amber-500/35 bg-[#a67c52]/10 dark:bg-amber-500/10 px-3 py-1 text-xs font-serif font-semibold text-[#6b4423] dark:text-amber-200 transition-all hover:border-[#a31d1d]/60 hover:bg-[#a31d1d]/10 hover:text-[#a31d1d] dark:hover:border-amber-400 dark:hover:bg-amber-500/20"
+            title="Mîkāt-ı Nur Ana Sayfasına Dön"
+          >
+            <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+            <Compass className="h-3.5 w-3.5 text-[#a67c52] dark:text-amber-400 transition-transform duration-500 group-hover:rotate-45" />
+            <span className="hidden sm:inline">Mîkāt-ı Nur&apos;a Dön</span>
+          </Link>
         </div>
         
         {/* Esnek Okuma Grid / Alanı */}
