@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Image from 'next/image';
 import {
   ArrowLeft,
   BookOpen,
@@ -312,7 +312,7 @@ export default function DownloadPage() {
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-[11px] font-medium uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                  <div className="text-[11px] font-medium uppercase tracking-wider text-slate-600 dark:text-gray-300">
                     {label}
                   </div>
                   <p className="text-base font-bold text-slate-900 dark:text-white">

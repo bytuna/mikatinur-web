@@ -249,7 +249,7 @@ export default function MikatinurPage() {
             {/* Sağ Rozet / Ekosistem Özeti Kutusu */}
             <div className="shrink-0 lg:w-72 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-slate-50/90 dark:bg-white/[0.03] p-5">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-gray-500">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-gray-300">
                   Sistem Durumu
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">

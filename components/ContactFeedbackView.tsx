@@ -320,7 +320,7 @@ export default function ContactFeedbackView() {
                         Adınız Soyadınız
                       </label>
                       <div className="relative">
-                        <User className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-gray-500" />
+                        <User className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 dark:text-gray-300" />
                         <input
                           id="contact-name"
                           type="text"
@@ -342,7 +342,7 @@ export default function ContactFeedbackView() {
                         E-posta Adresiniz
                       </label>
                       <div className="relative">
-                        <Mail className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-gray-500" />
+                        <Mail className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-600 dark:text-gray-300" />
                         <input
                           id="contact-email"
                           type="email"
