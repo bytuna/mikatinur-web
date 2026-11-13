@@ -2,11 +2,11 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, Download, HardDrive, PackageCheck } from "lucide-react";
 
 const apkInfo = {
-  version: "v1.1.6",
-  sizeLabel: "40,65 MB",
-  updatedAt: "8 Kasım 2026",
-  url: "/apk/Mikat-Nur-v1.1.6.apk",
-  fileName: "Mikat-Nur-v1.1.6.apk",
+  version: "v1.1.7",
+  sizeLabel: "25,32 MB",
+  updatedAt: "12 Kasım 2026",
+  url: "/apk/Mikat-Nur-v1.1.7.apk",
+  fileName: "Mikat-Nur-v1.1.7.apk",
 };
 
 export default function DownloadPage() {
@@ -61,7 +61,32 @@ export default function DownloadPage() {
 
         <section className="mt-6 sm:mt-8 bg-gray-900/30 border border-gray-800 rounded-3xl p-4 sm:p-8">
           <h2 className="text-lg sm:text-xl font-bold text-white">Güncellemeler</h2>
-          <p className="mt-2 text-sm sm:text-base text-blue-200">v1.1.6 sürümünde yapılan iyileştirmeler</p>
+          <p className="mt-2 text-sm sm:text-base text-blue-200">v1.1.7 sürümünde yapılan iyileştirmeler</p>
+          <ul className="mt-5 space-y-4 text-sm sm:text-base text-gray-300">
+            <li className="rounded-xl border border-gray-800 bg-black/20 p-3 sm:p-4">
+              <h3 className="font-semibold text-white">Ses çalma</h3>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
+                <li>Kulaklık ve kilit ekranı çal/duraklat düğmeleri çalışır hale getirildi.</li>
+                <li>Ekran kapalıyken Kur'an sesi kesilmeden oynamaya devam eder.</li>
+              </ul>
+            </li>
+            <li className="rounded-xl border border-gray-800 bg-black/20 p-3 sm:p-4">
+              <h3 className="font-semibold text-white">Ekran ve arayüz</h3>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
+                <li>Kur'an, Risale ve Tesbihat ekranlarında ekran kararması engellendi.</li>
+                <li>AI arka plan üretimi kaldırıldı; ücretsiz statik arka planlar kullanılıyor.</li>
+              </ul>
+            </li>
+            <li className="rounded-xl border border-gray-800 bg-black/20 p-3 sm:p-4">
+              <h3 className="font-semibold text-white">Güvenlik</h3>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-gray-400">
+                <li>Şifresiz ağ trafiği kapatıldı, hassas loglar kaldırıldı, yedekleme kısıtlandı.</li>
+              </ul>
+            </li>
+          </ul>
+
+          <div className="mt-8 border-t border-gray-800 pt-6">
+            <p className="text-sm sm:text-base text-gray-500">v1.1.6 sürümünde yapılan iyileştirmeler</p>
           <ul className="mt-5 space-y-4 text-sm sm:text-base text-gray-300">
             <li className="rounded-xl border border-gray-800 bg-black/20 p-3 sm:p-4">
               <h3 className="font-semibold text-white">Kur'an-ı Kerim</h3>
@@ -96,6 +121,7 @@ export default function DownloadPage() {
               </ul>
             </li>
           </ul>
+          </div>
         </section>
         <p className="mt-6 text-xs sm:text-sm text-gray-600 text-center">
           Dosya, Hostinger sunucumuzdan güvenli şekilde indirilir.
