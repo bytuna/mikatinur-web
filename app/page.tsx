@@ -82,14 +82,23 @@ export default async function Home() {
       <header className="relative z-20 border-b border-slate-200/80 dark:border-white/10 bg-white/75 dark:bg-[#050505]/80 backdrop-blur-xl">
         <div className="mx-auto max-w-5xl px-3 sm:px-6 pt-4 pb-3">
           <div className="flex items-center justify-between gap-2 mb-3 pr-28 sm:pr-32">
-            <div className="flex items-baseline gap-2.5">
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-                Mîkāt-ı Nur
-              </h1>
-              <span className="hidden sm:inline-block text-xs text-slate-400 dark:text-gray-600">•</span>
-              <p className="hidden sm:inline-block text-xs text-slate-500 dark:text-gray-400 font-normal">
-                Dijital dünyaya taşınan manevi miras
-              </p>
+            <div className="flex items-center gap-3">
+              <img
+                src="/mikat-nur-icon.png"
+                alt="Mîkāt-ı Nur İkonu"
+                width={38}
+                height={38}
+                className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl object-cover border border-emerald-600/30 shadow-sm shrink-0"
+              />
+              <div className="flex items-baseline gap-2.5">
+                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+                  Mîkāt-ı Nur
+                </h1>
+                <span className="hidden sm:inline-block text-xs text-slate-400 dark:text-gray-600">•</span>
+                <p className="hidden sm:inline-block text-xs text-slate-500 dark:text-gray-400 font-normal">
+                  Dijital dünyaya taşınan manevi miras
+                </p>
+              </div>
             </div>
           </div>
 

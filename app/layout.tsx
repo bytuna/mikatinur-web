@@ -41,6 +41,14 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  icons: {
+    icon: [
+      { url: "/mikat-nur-icon.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: ["/mikat-nur-icon.png"],
+    apple: [{ url: "/mikat-nur-icon.png", type: "image/png" }],
+  },
   robots: {
     index: true,
     follow: true,
