@@ -23,16 +23,18 @@ import {
 export const metadata: Metadata = {
   title: "Uygulamayı İndir | Mîkāt-ı Nur Android APK",
   description:
-    "Mîkāt-ı Nur Android mobil uygulamasının (v1.1.7) resmi, reklamsız ve güvenli APK indirme merkezi, kurulum rehberi ve sürüm notları.",
+    "Mîkāt-ı Nur Android mobil uygulamasının (v1.1.8) resmi, reklamsız ve güvenli APK indirme merkezi, kurulum rehberi ve sürüm notları.",
   alternates: { canonical: "/download/" },
 };
 
 const apkInfo = {
-  version: "v1.1.7",
-  sizeLabel: "25,32 MB",
-  updatedAt: "12 Kasım 2026",
-  url: "/apk/Mikat-Nur-v1.1.7.apk",
-  fileName: "Mikat-Nur-v1.1.7.apk",
+  version: "v1.1.8",
+  versionCode: 11,
+  sizeLabel: "25.3 MB",
+  sizeBytes: "26,536,330 bayt",
+  updatedAt: "15 Kasım 2026",
+  url: "/apk/Mikat-Nur-v1.1.8.apk",
+  fileName: "Mikat-Nur-v1.1.8.apk",
   minAndroid: "Android 8.0+",
 };
 
@@ -40,7 +42,7 @@ const installSteps = [
   {
     step: "1. Adım",
     title: "APK Paketini İndirin",
-    desc: "Yukarıdaki \"APK İndir\" butonuna dokunarak resmi kurulum dosyasını (Mikat-Nur-v1.1.7.apk) cihazınıza kaydedin.",
+    desc: "Yukarıdaki \"APK İndir\" butonuna dokunarak resmi kurulum dosyasını (Mikat-Nur-v1.1.8.apk) cihazınıza kaydedin.",
     icon: Download,
     color: "text-blue-600 dark:text-blue-400 bg-blue-500/10",
   },
@@ -57,6 +59,34 @@ const installSteps = [
     desc: "Kurulum tamamlandığında uygulamayı açıp konumunuzu seçerek ezan vakitleri, Kur'ân-ı Kerîm ve Risale-i Nur Külliyatı'na reklamsız erişin.",
     icon: CheckCircle2,
     color: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10",
+  },
+];
+
+const v118Notes = [
+  {
+    title: "Yeni \"Mîkāt-ı Nur\" Teması & %100 Tema Uyumu",
+    icon: Sparkles,
+    accent: "text-amber-600 dark:text-amber-400 bg-amber-500/10",
+    items: [
+      "Yeni \"Mîkāt-ı Nur\" Teması: Asil Risale Bordosu, Tezhip Altını ve Fildişi Nur renk paletiyle hazırlanan yeni varsayılan tema eklendi.",
+      "%100 Tema Uyumu: Uygulama genelindeki tüm ekranlar, açılır pencereler (dialog/popup), butonlar, tesbihat, zikirmatik ve kütüphane bileşenleri seçilen temayla bire bir uyumlu hale getirildi.",
+    ],
+  },
+  {
+    title: "Risale-i Nur Asıl Nüsha Künyesi ve Hizmet Düsturu",
+    icon: ShieldCheck,
+    accent: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10",
+    items: [
+      "Risale-i Nur Asıl Nüsha Künyesi ve Hizmet Düsturu: Risale-i Nur Kütüphanesi \"Hakkında\" bölümüne ve \"Ayarlar > Gizlilik ve Yasal\" menüsüne \"Asıl Nüsha Kaynağı, Hizmet Düsturu ve Künye\" bilgi ekranı eklendi.",
+    ],
+  },
+  {
+    title: "Okuma Ekranı Kaynak Gösterimi",
+    icon: BookOpen,
+    accent: "text-blue-600 dark:text-blue-400 bg-blue-500/10",
+    items: [
+      "Okuma Ekranı Kaynak Gösterimi: Risale-i Nur okuma sayfalarının alt bilgisine asıl nüsha kaynak bilgisi (Hizmet Vakfı / Envâr Neşriyat) eklendi.",
+    ],
   },
 ];
 
@@ -131,15 +161,15 @@ export default function DownloadPage() {
   const infoCards = [
     {
       label: "Sürüm",
-      value: apkInfo.version,
-      sub: "Kararlı Sürüm",
+      value: `Sürüm ${apkInfo.version}`,
+      sub: `Sürüm Kodu: ${apkInfo.versionCode}`,
       icon: PackageCheck,
       color: "text-blue-600 dark:text-blue-400 bg-blue-500/10",
     },
     {
       label: "Boyut",
       value: apkInfo.sizeLabel,
-      sub: "Hızlı İndirme",
+      sub: apkInfo.sizeBytes,
       icon: HardDrive,
       color: "text-purple-600 dark:text-purple-400 bg-purple-500/10",
     },
@@ -209,7 +239,7 @@ export default function DownloadPage() {
             <div className="max-w-2xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-300 mb-4">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Son Sürüm Hazır • {apkInfo.version}</span>
+                <span>Son Sürüm Hazır • Sürüm {apkInfo.version} (Sürüm Kodu: {apkInfo.versionCode})</span>
               </div>
 
               <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
@@ -217,7 +247,7 @@ export default function DownloadPage() {
               </h1>
 
               <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-gray-300 leading-relaxed">
-                Hassas ezan vakitleri, sesli bildirimler, Kur&apos;ân-ı Kerîm tilaveti, 14+ cilt Risale-i Nur Külliyatı,
+                Hassas ezan vakitleri, sesli bildirimler, Kur&apos;ân-ı Kerîm tilaveti, 15 cilt Risale-i Nur Külliyatı,
                 Osmanlıca lügat, Kıble pusulası ve Zikirmatik modüllerini tek bir reklamsız uygulamada deneyimleyin.
               </p>
 
@@ -252,11 +282,11 @@ export default function DownloadPage() {
                       Mîkāt-ı Nur Android APK
                     </h2>
                     <span className="rounded-full bg-blue-600 text-white px-2.5 py-0.5 text-xs font-bold shrink-0">
-                      {apkInfo.version}
+                      Sürüm {apkInfo.version}
                     </span>
                   </div>
                   <p className="mt-0.5 text-xs text-slate-500 dark:text-gray-400 break-all font-mono">
-                    {apkInfo.fileName} ({apkInfo.sizeLabel})
+                    {apkInfo.fileName} ({apkInfo.sizeLabel} • {apkInfo.sizeBytes})
                   </p>
                 </div>
               </div>
@@ -382,17 +412,58 @@ export default function DownloadPage() {
             </span>
           </div>
 
-          {/* v1.1.7 Sürüm Notları */}
+          {/* v1.1.8 Sürüm Notları */}
           <div className="mt-6">
             <div className="flex items-center gap-2.5 mb-4">
               <span className="rounded-lg bg-blue-600 text-white px-2.5 py-1 text-xs font-bold">
-                v1.1.7
+                v1.1.8
               </span>
               <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
-                v1.1.7 sürümünde yapılan iyileştirmeler
+                Bu Sürümdeki Yenilikler / Sürüm Notları (v1.1.8 • Sürüm Kodu: {apkInfo.versionCode})
               </h3>
               <span className="text-xs text-slate-400 dark:text-gray-500 hidden sm:inline">
                 • {apkInfo.updatedAt}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {v118Notes.map(({ title, icon: Icon, accent, items }) => (
+                <div
+                  key={title}
+                  className="rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.02] p-5"
+                >
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${accent}`}>
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                      {title}
+                    </h4>
+                  </div>
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-gray-400">
+                    {items.map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-blue-500 shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* v1.1.7 Sürüm Notları */}
+          <div className="mt-8 pt-8 border-t border-slate-200/80 dark:border-white/10">
+            <div className="flex items-center gap-2.5 mb-4">
+              <span className="rounded-lg border border-slate-300 dark:border-white/15 bg-slate-100 dark:bg-white/[0.05] text-slate-700 dark:text-gray-300 px-2.5 py-1 text-xs font-bold">
+                v1.1.7
+              </span>
+              <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-gray-200">
+                v1.1.7 sürümünde yapılan iyileştirmeler
+              </h3>
+              <span className="text-xs text-slate-400 dark:text-gray-500 hidden sm:inline">
+                • 12 Kasım 2026
               </span>
             </div>
 

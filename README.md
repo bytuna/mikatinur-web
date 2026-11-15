@@ -13,7 +13,7 @@ Türkiye'nin **81 ili ve 973 ilçesi** ile dünya genelinde yüksek hassasiyetli
 [![React](https://img.shields.io/badge/React-19.2.4-149ECA?style=for-the-badge&logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Android APK](https://img.shields.io/badge/Android_Uygulamas%C4%B1-v1.1.7-10B981?style=for-the-badge&logo=android&logoColor=white)](https://www.mikatinur.com.tr/download/)
+[![Android APK](https://img.shields.io/badge/Android_Uygulamas%C4%B1-v1.1.8-10B981?style=for-the-badge&logo=android&logoColor=white)](https://www.mikatinur.com.tr/download/)
 
 [🌐 Canlı Web Sitesi](https://www.mikatinur.com.tr) • [📖 Risale-i Nur Külliyatı](https://www.mikatinur.com.tr/projects/risaleinur/) • [🕌 Dini Günler & İmsakiye](https://www.mikatinur.com.tr/projects/dini-gunler/) • [📱 Android APK İndir](https://www.mikatinur.com.tr/download/) • [💬 İletişim & Geri Bildirim](https://www.mikatinur.com.tr/contact/)
 
@@ -28,7 +28,7 @@ Türkiye'nin **81 ili ve 973 ilçesi** ile dünya genelinde yüksek hassasiyetli
 | 🕌 **Namaz Vakitleri & Kıble** | [`/`](https://www.mikatinur.com.tr/) | Türkiye'nin **81 ili ve 973 ilçesi** ile dünya şehirleri için canlı geri sayım sayacı, GPS ile en yakın ilçe tespiti, Büyük Daire Kıble açısı, Hicri takvim ve aylık imsakiye tablosu. |
 | 🌙 **Dini Günler & Ramazan İmsakiyesi** | [`/projects/dini-gunler/`](https://www.mikatinur.com.tr/projects/dini-gunler/) | Diyanet İşleri Başkanlığı resmi Dini Günler ve Geceler takvimi, yaklaşan mübarek gün/gece için canlı geri sayım kartı ve il/ilçe bazlı **Resmi Ramazan İmsakiyesi**. |
 | 📚 **Risale-i Nur Külliyatı Okuyucu** | [`/projects/risaleinur/`](https://www.mikatinur.com.tr/projects/risaleinur/) | **15 ciltlik tam külliyat**, tahrifatsız metin, tıklanabilir Osmanlıca-Türkçe lügat, Kur'an-ı Kerim meali eşleştirme, haşiye/dipnot ayrıştırıcı, 6 okuma teması ve Gemini AI destekli tefekkür asistanı. |
-| 📱 **Mîkāt-ı Nur Android Vitrin & İndirme** | [`/projects/mikatinur/`](https://www.mikatinur.com.tr/projects/mikatinur/) & [`/download/`](https://www.mikatinur.com.tr/download/) | Mîkāt-ı Nur Android uygulamasının (`v1.1.7`) mimari tanıtımı, sürüm notları ve doğrudan APK dağıtım merkezi. |
+| 📱 **Mîkāt-ı Nur Android Vitrin & İndirme** | [`/projects/mikatinur/`](https://www.mikatinur.com.tr/projects/mikatinur/) & [`/download/`](https://www.mikatinur.com.tr/download/) | Mîkāt-ı Nur Android uygulamasının (`v1.1.8`) mimari tanıtımı, sürüm notları ve doğrudan APK dağıtım merkezi. |
 | ✉️ **İletişim, Forum & Hata Bildirimi** | [`/contact/`](https://www.mikatinur.com.tr/contact/) & [`/forum/`](https://www.mikatinur.com.tr/forum/) | KVKK uyumlu iletişim formu ve okuma ekranı üzerinden **ekran görüntüsü üzerinde çizim yaparak** doğrudan tashih/hata bildirme sistemi. |
 
 ---
@@ -57,6 +57,18 @@ Okuma ve araştırma deneyimini geleneksel kitap estetiğiyle birleştiren özel
   - *Temalar:* Gündüz (`light`), Tefekkür (`sepia`), Saman Kağıdı (`saman`), Göz Dostu (`green`), Kitap Kağıdı (`gray`) ve Gece (`dark`).
   - *Hat Fontları:* Hamdullah, Hasenat, Osman Taha (Uthman Taha), Amiri, Scheherazade ve Noto Naskh Arabic.
 - **Çizimli Tashih / Hata Bildirimi (`BugReportModal.tsx`):** Okuyucu, sayfada gördüğü herhangi bir dizgi veya metin hatasını ekran görüntüsü üzerinde kalemle işaretleyerek doğrudan yönetici paneline iletebilir.
+
+---
+
+## 📱 3. Mîkāt-ı Nur Android Uygulaması (`v1.1.8` • Sürüm Kodu: `11`)
+
+Resmi dağıtım merkezimiz ([`/download/`](https://www.mikatinur.com.tr/download/)) üzerinden sunulan **Mîkāt-ı Nur Android (`Mikat-Nur-v1.1.8.apk` • `25.3 MB`)** sürümündeki öne çıkan yenilikler:
+
+- **Yeni "Mîkāt-ı Nur" Teması:** Asil Risale Bordosu, Tezhip Altını ve Fildişi Nur renk paletiyle hazırlanan yeni varsayılan tema.
+- **%100 Tema Uyumu:** Uygulama genelindeki tüm ekranlar, açılır pencereler (dialog/popup), butonlar, tesbihat, zikirmatik ve kütüphane bileşenleri seçilen temayla bire bir uyumlu.
+- **Risale-i Nur Asıl Nüsha Künyesi ve Hizmet Düsturu:** Risale-i Nur Kütüphanesi *"Hakkında"* bölümüne ve *"Ayarlar > Gizlilik ve Yasal"* menüsüne *"Asıl Nüsha Kaynağı, Hizmet Düsturu ve Künye"* bilgi ekranı eklendi.
+- **Okuma Ekranı Kaynak Gösterimi:** Risale-i Nur okuma sayfalarının alt bilgisine asıl nüsha kaynak bilgisi (*Hizmet Vakfı / Envâr Neşriyat*) eklendi.
+- **Doğrudan APK İndirme:** [`https://www.mikatinur.com.tr/apk/Mikat-Nur-v1.1.8.apk`](https://www.mikatinur.com.tr/apk/Mikat-Nur-v1.1.8.apk)
 
 ---
 
