@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "KVKK Aydınlatma Metni",
-  description: "6698 sayılı KVKK uyarınca Mîkāt-ı Nur kullanıcıları için aydınlatma metni.",
+  title: "KVKK Aydınlatma Metni ve Yasal Künye",
+  description: "6698 sayılı KVKK uyarınca Mîkāt-ı Nur aydınlatma metni, Hizmet Vakfı / Envâr Neşriyat asıl nüsha künyesi ve ticari olmayan hizmet beyanı.",
   alternates: {
     canonical: "/kvkk-aydinlatma-metni",
   },
@@ -19,10 +19,10 @@ export default function KvkkAydinlatmaMetniPage() {
 
         <header className="mb-12 border-b border-slate-200 dark:border-gray-800 pb-8">
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-            6698 Sayılı KVKK Uyarınca Aydınlatma Metni
+            6698 Sayılı KVKK Uyarınca Aydınlatma Metni ve Yasal Künye
           </h1>
           <div className="mt-6 space-y-2 text-sm text-slate-600 dark:text-gray-400">
-            <p><strong className="text-slate-900 dark:text-gray-200">Veri Sorumlusu:</strong> İlker Tuna (Mîkāt-ı Nur)</p>
+            <p><strong className="text-slate-900 dark:text-gray-200">Veri Sorumlusu ve Platform Yöneticisi:</strong> İlker Tuna (Mîkāt-ı Nur)</p>
             <p><strong className="text-slate-900 dark:text-gray-200">Web Sitesi:</strong>{" "}
               <a href="https://www.mikatinur.com.tr" className="text-blue-600 dark:text-blue-300 hover:text-blue-700 dark:hover:text-blue-200">
                 www.mikatinur.com.tr
@@ -33,22 +33,23 @@ export default function KvkkAydinlatmaMetniPage() {
                 ilker.tuna@mikatinur.com.tr
               </a>
             </p>
-            <p><strong className="text-slate-900 dark:text-gray-200">Tarih:</strong> 19 Eylül 2026</p>
+            <p><strong className="text-slate-900 dark:text-gray-200">Son Güncelleme:</strong> 15 Kasım 2026</p>
           </div>
         </header>
 
         <div className="space-y-10 text-[15px] sm:text-base">
           <p>
-            İşbu Aydınlatma Metni, 6698 sayılı Kişisel Verilerin Korunması Kanunu’nun (&quot;KVKK&quot;) 10. maddesi ile <em>Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ</em> kapsamında, veri sorumlusu sıfatıyla <strong className="text-slate-900 dark:text-gray-100">İlker Tuna</strong> tarafından <strong className="text-slate-900 dark:text-gray-100">Mîkāt-ı Nur</strong> mobil uygulaması ve web sitesi kullanıcılarının kişisel verilerinin işlenmesine ilişkin olarak hazırlanmıştır.
+            İşbu Aydınlatma Metni ve Yasal Künye; 6698 sayılı Kişisel Verilerin Korunması Kanunu’nun (&quot;KVKK&quot;) 10. maddesi ile <em>Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ</em> kapsamında kişisel verilerin işlenmesine ve 5846 sayılı Fikir ve Sanat Eserleri Kanunu (&quot;FSEK&quot;) uyarınca platformda sunulan eserlerin asıl nüsha künyesi ile ticari olmayan hizmet esaslarına ilişkin olarak veri sorumlusu sıfatıyla <strong className="text-slate-900 dark:text-gray-100">İlker Tuna</strong> tarafından hazırlanmıştır.
           </p>
 
           <section>
             <h2 className="mb-4 text-xl font-semibold text-slate-900 dark:text-white">1. İşlenen Kişisel Veri Kategorileri ve Türleri</h2>
             <ul className="list-disc space-y-3 pl-5">
               <li><strong className="text-slate-900 dark:text-gray-100">Lokasyon / Konum Bilgisi:</strong> Cihazın yaklaşık veya hassas coğrafi konum koordinatları (GPS ve ağ tabanlı veriler).</li>
-              <li><strong className="text-slate-900 dark:text-gray-100">Kimlik ve İletişim Bilgileri (İsteğe Bağlı):</strong> Kullanıcı hesabı oluşturulması halinde ad, soyad ve e-posta adresi.</li>
+              <li><strong className="text-slate-900 dark:text-gray-100">Kimlik ve İletişim Bilgileri (İsteğe Bağlı):</strong> İletişim formu doldurulması veya kullanıcı hesabı oluşturulması halinde ad, soyad ve e-posta adresi.</li>
               <li><strong className="text-slate-900 dark:text-gray-100">İşlem ve Kullanım Güvenliği Bilgileri:</strong> IP adresi, cihaz işletim sistemi sürümü, cihaz modeli, çökme logları ve uygulama hata kayıtları.</li>
-              <li><strong className="text-slate-900 dark:text-gray-100">Kullanıcı İşlem Verileri:</strong> Okuma geçmişi, sayfa ayraçları, favoriler ve notlar (bu veriler öncelikli olarak kullanıcının cihazında yerel veri tabanında saklanmaktadır).</li>
+              <li><strong className="text-slate-900 dark:text-gray-100">Kullanıcı İşlem Verileri:</strong> Okuma geçmişi, sayfa ayraçları, favoriler ve tefekkür notları (bu veriler öncelikli olarak kullanıcının cihazında yerel depolama alanında saklanmaktadır).</li>
+              <li><strong className="text-slate-900 dark:text-gray-100">Tashih ve Hata Bildirimi Verileri (İsteğe Bağlı):</strong> Risale-i Nur okuyucu modülünde metin sıhhatini korumak amacıyla kullanıcının kendi isteğiyle gönderdiği okuma alanı ekran görüntüsü işaretlemeleri ve açıklama notları.</li>
             </ul>
           </section>
 
@@ -58,6 +59,7 @@ export default function KvkkAydinlatmaMetniPage() {
             <ol className="list-decimal space-y-3 pl-5">
               <li>Bulunduğunuz konuma göre namaz ve ezan vakitlerinin hassas şekilde hesaplanması ve vakit bildirimlerinin sunulması,</li>
               <li>Uygulama içi oturum açma, profil yönetimi ve kullanıcı tercihlerinin senkronizasyonu (isteğe bağlı hesap açılması durumunda),</li>
+              <li>Risale-i Nur Külliyatı metinlerinde olası dizgi/aktarım hatalarının kullanıcı geri bildirimleriyle tespit edilerek asıl nüsha sıhhatinin korunması,</li>
               <li>Uygulamanın teknik kararlılığının ve performansının izlenmesi, çökme ve hata analizlerinin yapılması,</li>
               <li>5651 sayılı Kanun kapsamındaki yasal log tutma yükümlülüklerinin yerine getirilmesi,</li>
               <li>Bilgi güvenliği süreçlerinin yürütülmesi ve yetkisiz erişimlerin önlenmesi.</li>
@@ -116,6 +118,23 @@ export default function KvkkAydinlatmaMetniPage() {
               <li>Kayıtlı e-posta adresinizden <strong className="text-slate-900 dark:text-gray-100">ilker.tuna@mikatinur.com.tr</strong> adresine güvenli elektronik imzalı, mobil imzalı veya sistemimizde kayıtlı bulunan e-posta adresinizi kullanarak gönderebilirsiniz.</li>
             </ul>
             <p className="mt-4">Başvurularınız, talebin niteliğine göre en kısa sürede ve en geç <strong className="text-slate-900 dark:text-gray-100">30 (otuz) gün içinde</strong> ücretsiz olarak sonuçlandırılacaktır. Talebin ayrıca bir maliyet gerektirmesi halinde Kişisel Verileri Koruma Kurulu tarafından belirlenen tarifedeki ücret alınabilir.</p>
+          </section>
+
+          <section>
+            <h2 className="mb-4 text-xl font-semibold text-slate-900 dark:text-white">
+              8. Fikri Mülkiyet, Asıl Nüsha Kaynağı ve Ticari Olmayan Hizmet Beyanı (5846 Sayılı FSEK)
+            </h2>
+            <ul className="list-disc space-y-3 pl-5">
+              <li>
+                <strong className="text-slate-900 dark:text-gray-100">Asıl Nüsha Kaynağı ve Metin Sıhhati:</strong> Mîkāt-ı Nur web platformunda ve mobil uygulamasında yer alan 15 ciltlik <em>Risale-i Nur Külliyatı</em> metinleri; Bediüzzaman Said Nursî Hazretlerinin varisleri tarafından muhafaza edilen <strong className="text-slate-900 dark:text-gray-100">Hizmet Vakfı / Envâr Neşriyat</strong> baskıları (<em>Asıl Nüsha</em>) esas alınarak, metinlerin aslî imlâsına, sayfa düzenine ve haşiyelerine %100 sadık kalınarak, hiçbir sadeleştirme veya tahrifat yapılmaksızın dijital okuma ve tefekkür amacıyla sunulmaktadır.
+              </li>
+              <li>
+                <strong className="text-slate-900 dark:text-gray-100">İstiğna Düsturu ve %100 Ücretsiz / Ticari Amaçsız Hizmet Taahhüdü:</strong> Risale-i Nur’un temel esası olan <em>«İn ecrîye illâ alâllâh» (Benim ecrim ancak Allah’a aittir — Mektubat, İkinci Mektub, s. 13)</em> ve <em>Emirdağ Lâhikası I (s. 49)</em> düsturları gereğince; Mîkāt-ı Nur web sitesi ve mobil uygulaması <strong className="text-slate-900 dark:text-gray-100">tamamen ücretsiz ve reklamsız</strong> bir iman ve Kur’an hizmeti projesidir. Kullanıcılardan hiçbir ad altında abonelik, ücret, bağış veya uygulama içi satın alma talep edilmez ve eserler üzerinden hiçbir ticari kazanç güdülmez.
+              </li>
+              <li>
+                <strong className="text-slate-900 dark:text-gray-100">Hak Sahiplerine Saygı ve İletişim (Uyar-Kaldır İlkesi):</strong> 5846 sayılı Fikir ve Sanat Eserleri Kanunu kapsamında ilgili vakıf, yayınevi ve hak sahiplerinin tüm manevi ve mali haklarına tam riayet edilmektedir. Eser künyesi, metin tashihi veya yayım esaslarına ilişkin ilgili vakıf ve hak sahiplerinden gelecek her türlü resmi bildirim ve talep, <a href="mailto:ilker.tuna@mikatinur.com.tr" className="text-blue-600 dark:text-blue-300 hover:underline font-medium">ilker.tuna@mikatinur.com.tr</a> adresi üzerinden derhal ve öncelikle yerine getirilir.
+              </li>
+            </ul>
           </section>
         </div>
       </article>
