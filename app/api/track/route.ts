@@ -83,8 +83,6 @@ export async function POST(request: Request) {
     return response;
   } catch (error) {
     console.error('Track API error:', error);
-    // Return success to avoid breaking page load; analytics will be silently skipped.
     return NextResponse.json({ ok: true });
-    return NextResponse.json({ ok: false, error: 'Analytics tracking failed' }, { status: 500 });
   }
 }

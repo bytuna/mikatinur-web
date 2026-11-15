@@ -116,7 +116,11 @@ export function getDistricts(regionId: string): Promise<Option[]> {
   return cached("districts:" + regionId, 12 * 3600e3, async () => {
     const loc = locFor(REGION_COUNTRY.get(regionId));
     const out: Option[] = [];
-    for (const r of LOOKUP) if (r[7] === regionId) out.push({ id: r[0], name: titleTr(r[1], loc) });
+    for (const r of LOOKUP) {
+      if (r[7] === regionId && !LEGACY_METRO_CENTER_IDS.has(r[0])) {
+        out.push({ id: r[0], name: titleTr(r[1], loc) });
+      }
+    }
     return sortTr(out);
   });
 }
@@ -131,6 +135,37 @@ const LOOKUP = lookupData as unknown as LookupRow[];
 const LOOKUP_MAP = new Map<string, LookupRow>(LOOKUP.map((r) => [r[0], r]));
 const REGION_COUNTRY = new Map<string, string>(LOOKUP.map((r) => [r[7], r[8]]));
 
+/**
+ * 30 büyükşehirde eski Diyanet genel merkez kayıtları (ör. İstanbul altında "İSTANBUL", Ankara altında "ANKARA").
+ * Açılır listede resmi 973 ilçenin görünmesi için gizlenir; Android/Web geriye dönük uyumluluğu için LOOKUP_MAP'te korunur.
+ */
+const LEGACY_METRO_CENTER_IDS = new Set([
+  "9146", "9206", "9225", "9252", "9270", "9335", "9392", "9402", "9451", "9470",
+  "9479", "20089", "9541", "9560", "9577", "9620", "9654", "9676", "9703", "9716",
+  "9726", "9737", "9747", "9782", "9807", "9819", "9831", "9879", "9905", "9930",
+]);
+
+/**
+ * 81 ilin (500..580) Diyanet İşleri Başkanlığı il merkezi ID eşleştirmesi.
+ * Diyanet'te merkezle birleştirilmiş olan 134 ilçe, resmi Diyanet vakitlerini bağlı oldukları il merkezinden alır.
+ */
+const REGION_DIYANET_CENTER_ID: Record<string, string> = {
+  "500": "9146", "501": "9158", "502": "9167", "503": "9185", "504": "9193", "505": "9198",
+  "506": "9206", "507": "9225", "508": "9238", "509": "9246", "510": "9252", "511": "9270",
+  "512": "9285", "513": "9288", "514": "9295", "515": "9297", "516": "9303", "517": "9311",
+  "518": "9315", "519": "9327", "520": "9335", "521": "9352", "522": "9359", "523": "9370",
+  "524": "9392", "525": "9402", "526": "9414", "527": "9419", "528": "9432", "529": "9440",
+  "530": "9451", "531": "9470", "532": "9479", "533": "9494", "534": "9501", "535": "9507",
+  "536": "20089", "537": "9522", "538": "9528", "539": "9541", "540": "9560", "541": "9577",
+  "542": "9581", "543": "9587", "544": "9594", "545": "9609", "546": "9620", "547": "9629",
+  "548": "9635", "549": "9638", "550": "9646", "551": "9654", "552": "9676", "553": "9689",
+  "554": "9703", "555": "9716", "556": "9726", "557": "9737", "558": "9747", "559": "9755",
+  "560": "9760", "561": "9766", "562": "9782", "563": "9788", "564": "9799", "565": "9807",
+  "566": "9819", "567": "9831", "568": "9839", "569": "9847", "570": "9854", "571": "9868",
+  "572": "9879", "573": "9887", "574": "9905", "575": "9914", "576": "9919", "577": "9930",
+  "578": "9935", "579": "9949", "580": "9955",
+};
+
 /** Türkiye'deki yer adları Türkçe kuralıyla, yabancı yerler İngilizce kuralıyla düzenlenir. */
 const locFor = (countryId: string | undefined): "tr" | "en" => (countryId === "2" ? "tr" : "en");
 
@@ -143,7 +178,7 @@ export async function findNearest(
   let best: LookupRow | null = null;
   let bestD = Infinity;
   for (const r of LOOKUP) {
-    if (r[6] !== 0) continue;
+    if (r[6] !== 0 || LEGACY_METRO_CENTER_IDS.has(r[0])) continue;
     const p2 = (r[4] * Math.PI) / 180;
     const dp = p2 - p1;
     const dl = ((r[5] - lon) * Math.PI) / 180;
@@ -204,7 +239,7 @@ export async function resolveLists(place: PlaceInfo) {
   const region = regions.find((r) => norm(r.name) === norm(place.city));
   if (!region) return { countries, regions, districts: [], countryId: country.id, regionId: "", districtId: "" };
   const districts = await getDistricts(region.id);
-  const district = districts.find((d) => d.id === place.id);
+  const district = districts.find((d) => d.id === place.id) ?? districts[0];
   return {
     countries,
     regions,
@@ -230,5 +265,7 @@ export type RawVakit = {
 };
 
 export function getDiyanetWindow(id: string): Promise<RawVakit[]> {
-  return cached("vakit:" + id, 30 * 60e3, () => getJson<RawVakit[]>("/vakitler/" + id, 8000));
+  const r = LOOKUP_MAP.get(id);
+  const diyanetId = r && r[8] === "2" && Number(id) < 8000 ? (REGION_DIYANET_CENTER_ID[r[7]] ?? id) : id;
+  return cached("vakit:" + diyanetId, 30 * 60e3, () => getJson<RawVakit[]>("/vakitler/" + diyanetId, 8000));
 }
