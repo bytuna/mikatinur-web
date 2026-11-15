@@ -868,39 +868,56 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
 
       <section className="mt-14 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-2">
-          <div className="rounded-3xl border border-stone-300/70 bg-white/70 dark:bg-stone-900/45 backdrop-blur-sm p-5 sm:p-7 shadow-[0_12px_30px_rgba(0,0,0,0.06)]">
-            <div className="mb-3 inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/5 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-amber-700 dark:text-amber-300">
-              Emirdağ Lâhikası 1, s. 49
+          <div className="rounded-3xl border border-stone-300/70 dark:border-stone-800/80 bg-white/75 dark:bg-stone-900/50 backdrop-blur-sm p-6 sm:p-7 shadow-[0_12px_30px_rgba(0,0,0,0.06)]">
+            <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-amber-800 dark:text-amber-300">
+              <span>❦</span>
+              <span>Emirdağ Lâhikası I, s. 49</span>
             </div>
             <p className="text-base sm:text-lg leading-relaxed text-stone-800 dark:text-stone-100 font-serif italic">
-              “Risale-i Nur, Kur'ân'ın malıdır. Benim ne haddim var ki, sahib olayım; tâ ki kusurlarım ona sirayet etsin. Belki o Nur'un kusurlu bir hâdimi ve o elmas mücevherat dükkânının bir dellâlıyım.”
+              “Risale-i Nur, Kur&apos;ân&apos;ın malıdır. Benim ne haddim var ki, sahib olayım; tâ ki kusurlarım ona sirayet etsin. Belki o Nur&apos;un kusurlu bir hâdimi ve o elmas mücevherat dükkânının bir dellâlıyım.”
             </p>
           </div>
 
-          <div className="rounded-3xl border border-stone-300/70 bg-gradient-to-br from-stone-100 via-white to-stone-50 dark:from-stone-900 dark:via-stone-950 dark:to-stone-900 backdrop-blur-sm p-5 sm:p-7 shadow-[0_12px_30px_rgba(0,0,0,0.06)]">
-            <div className="mb-3 inline-flex items-center rounded-full border border-emerald-500/30 bg-emerald-500/5 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
-              Bu kütüphanenin ölçüsü
+          <div className="rounded-3xl border border-stone-300/70 dark:border-stone-800/80 bg-gradient-to-br from-stone-100 via-white to-stone-50 dark:from-stone-900 dark:via-stone-950 dark:to-stone-900 backdrop-blur-sm p-6 sm:p-7 shadow-[0_12px_30px_rgba(0,0,0,0.06)]">
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-emerald-800 dark:text-emerald-300">
+                <Award className="w-3.5 h-3.5" />
+                <span>İkinci Mektub, s. 13 • İstiğna Düsturu</span>
+              </span>
             </div>
             <p className="text-sm sm:text-base leading-7 text-stone-700 dark:text-stone-200 font-serif">
-              Bu kütüphane de aynı ölçüye tâbidir: <span className="font-semibold text-stone-900 dark:text-stone-50">hiçbir hakkı kendine görmez</span>. Metinler Bediüzzaman Said Nursî'ye, hakikatleri Kur'ân'a aittir. Buradaki yazılım yalnızca bir dellâllık — okumayı, aramayı ve çalışmayı kolaylaştıran bir araçtır. Ücretsizdir, kimsenin malı değildir; üyelik yalnızca çalışmalarınızı kaydetmeniz için istenir.
+              “Neşr-i hak için Enbiyaya ittiba&apos; etmekle mükellefiz. Kur&apos;an-ı Hakîm&apos;de, hakkı neşredenler: <span className="italic font-semibold text-emerald-900 dark:text-emerald-300">«İn ecrîye illâ alâllâh» (Benim ücretim ancak Allah&apos;a aittir)</span> diyerek insanlardan istiğna göstermişler.” Bu düstura binaen Mîkāt-ı Nur platformunda <span className="font-semibold text-stone-900 dark:text-stone-50">hiçbir şekilde ücret, abonelik, bağış veya reklam geliri alınmaz ve alınmayacaktır</span>; sırf Allah rızası için ücretsiz sunulur.
             </p>
           </div>
         </div>
 
-        <div className="mt-6 rounded-3xl border border-stone-300/70 bg-white/65 dark:bg-stone-900/40 backdrop-blur-sm p-5 sm:p-7 shadow-[0_12px_30px_rgba(0,0,0,0.06)]">
-          <div className="mb-3 inline-flex items-center rounded-full border border-stone-400/40 bg-stone-100/80 dark:bg-stone-800/70 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-stone-600 dark:text-stone-300">
-            Mahiyet
+        {/* Asıl Nüsha Metin Kaynağı ve Künye Kartı */}
+        <div className="mt-6 relative overflow-hidden rounded-3xl border border-amber-500/30 dark:border-amber-500/20 bg-gradient-to-r from-amber-50/90 via-white/95 to-emerald-50/70 dark:from-stone-900/90 dark:via-stone-950/95 dark:to-stone-900/90 backdrop-blur-sm p-6 sm:p-8 shadow-[0_14px_34px_rgba(0,0,0,0.07)]">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-600/30 bg-amber-500/10 px-3.5 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.16em] text-amber-800 dark:text-amber-300">
+                <BookOpen className="w-3.5 h-3.5" />
+                Asıl Nüsha Kaynağı &amp; Künye
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-600/30 bg-emerald-500/10 px-3 py-1 text-[10px] font-sans font-semibold tracking-wider text-emerald-800 dark:text-emerald-300">
+                Hizmet Vakfı / Envâr Neşriyat
+              </span>
+              <span className="inline-flex items-center rounded-full border border-stone-400/30 bg-stone-500/10 px-3 py-1 text-[10px] font-sans font-medium tracking-wider text-stone-700 dark:text-stone-300">
+                %100 Tahrifatsız &amp; Tamamen Ücretsiz Hizmet
+              </span>
+            </div>
           </div>
-          <p className="text-base sm:text-lg leading-relaxed text-stone-800 dark:text-stone-100 font-serif italic">
-            “Bu platform, metinleri taşıyan bir araçtır; asıl sahip Kur’ân ve Bediüzzaman’dır.”
+
+          <p className="text-sm sm:text-base leading-relaxed text-stone-800 dark:text-stone-200 font-serif">
+            Mîkāt-ı Nur dijital kütüphanesinde yer alan 15 ciltlik Risale-i Nur Külliyatı metinlerinde ve sayfa düzeninde (mizanpaj numaralarında); Müellif-i Muhterem <span className="font-semibold text-stone-900 dark:text-white">Bedîüzzaman Said Nursî</span> Hazretlerinin sağlığında (1956–1960) bizzat tashihinden geçen nüshaları esas alan <span className="font-semibold text-amber-900 dark:text-amber-300">Hizmet Vakfı ve Envâr Neşriyat</span> asıl nüsha baskısı esas alınmıştır. Metinlerin orijinal imlâsına, kelimelerine ve âyet/hadis ibarelerine hiçbir surette müdahale edilmemekte; kelime mealleri yalnızca kelime üzerine dokunulduğunda açılan interaktif Osmanlıca-Türkçe lügat penceresiyle sunulmaktadır. Hakâik-i îmaniye hiçbir dünyevî menfaate âlet edilmez; web sitemizde ve mobil uygulamamızda <span className="font-semibold text-stone-900 dark:text-white">hiçbir şekilde ücret talep edilmez</span>.
           </p>
         </div>
       </section>
 
       {/* Tanıtıcı Alt Footer */}
-      <footer className="mt-auto py-8 border-t border-sepia-300/30 dark:border-stone-900 text-center">
-        <p className="text-[10px] font-sans font-bold tracking-widest text-stone-400 uppercase">
-          MikatiNur Projesi © {new Date().getFullYear()} — Her Hakkı Mahfuzdur.
+      <footer className="mt-auto py-8 border-t border-sepia-300/30 dark:border-stone-900 text-center px-4">
+        <p className="text-[10px] font-sans font-bold tracking-widest text-stone-500 dark:text-stone-400 uppercase">
+          Mîkāt-ı Nur Projesi © {new Date().getFullYear()} • Metin Kaynağı: Hizmet Vakfı / Envâr Neşriyat Asıl Nüsha Baskısı
         </p>
       </footer>
     </div>

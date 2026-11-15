@@ -1327,6 +1327,7 @@ export const ReadingView: React.FC<ReadingViewProps> = ({
         <div className="flex-1 max-w-xl">
           <div className="flex justify-between text-[8px] sm:text-[9px] font-sans uppercase tracking-wider opacity-80 mb-1 text-[#1f1a17] dark:text-stone-300">
             <span>Süre: {formatReadingTime(readingSeconds)}</span>
+            <span className="hidden md:inline opacity-75">Asıl Nüsha: Hizmet Vakfı / Envâr Neşriyat</span>
           </div>
           <div className="flex justify-between text-[9px] sm:text-[10px] font-sans uppercase tracking-widest opacity-70 mb-1.5 text-[#1f1a17] dark:text-stone-300">
             <span>İlerleme</span>
