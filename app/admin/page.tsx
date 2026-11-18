@@ -85,10 +85,10 @@ const SYSTEM_MODULES = [
     icon: Compass,
   },
   {
-    title: "Resmi APK İndirme Merkezi (v1.1.8)",
+    title: "Resmi APK İndirme Merkezi (v1.1.9)",
     path: "/download",
     type: "Dağıtım & Karekod",
-    desc: "Mikat-Nur-v1.1.8.apk doğrudan indirme, karekod (QR) ve sürüm geçmişi.",
+    desc: "Mikat-Nur-v1.1.9.apk doğrudan indirme, karekod (QR) ve sürüm geçmişi.",
     icon: Download,
   },
   {

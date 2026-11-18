@@ -25,14 +25,14 @@ import {
 export const metadata: Metadata = {
   title: "Mîkāt-ı Nur | Android Uygulaması ve Web Ekosistemi",
   description:
-    "Mîkāt-ı Nur Android mobil uygulaması (v1.1.7) ve Web platformu (mikatinur.com.tr): Hassas ezan vakitleri, Risale-i Nur Külliyatı, Kur'ân-ı Kerîm, Osmanlıca lügat, Kıble pusulası ve Dini Günler takvimi.",
+    "Mîkāt-ı Nur Android mobil uygulaması (v1.1.9) ve Web platformu (mikatinur.com.tr): Hassas ezan vakitleri, Risale-i Nur Külliyatı, Kur'ân-ı Kerîm, Osmanlıca lügat, Kıble pusulası ve Dini Günler takvimi.",
   alternates: { canonical: "/projects/mikatinur/" },
 };
 
 const ecosystemStats = [
   {
     label: "Mobil Platform",
-    value: "Android v1.1.7",
+    value: "Android v1.1.9",
     sub: "Kotlin & Jetpack Compose",
     icon: Smartphone,
     color: "text-purple-600 dark:text-purple-400 bg-purple-500/10",
@@ -144,7 +144,7 @@ const interactiveModules = [
   },
   {
     title: "Android APK İndir",
-    subtitle: "Mîkāt-ı Nur Mobil v1.1.7 (25,32 MB)",
+    subtitle: "Mîkāt-ı Nur Mobil v1.1.9 (25,3 MB)",
     href: "/download",
     badge: "Resmi Sürüm",
     accent: "from-purple-500/15 via-fuchsia-500/5 to-transparent border-purple-500/30 hover:border-purple-500/60",
@@ -225,7 +225,7 @@ export default function MikatinurPage() {
                   className="inline-flex items-center gap-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold px-5 py-3 text-sm shadow-sm transition-all hover:-translate-y-0.5"
                 >
                   <Download className="h-4 w-4" />
-                  Android Uygulamayı İndir (v1.1.7)
+                  Android Uygulamayı İndir (v1.1.9)
                 </Link>
 
                 <Link
@@ -262,7 +262,7 @@ export default function MikatinurPage() {
                 <div className="rounded-xl border border-slate-200/70 dark:border-white/10 bg-white dark:bg-[#111622] p-3">
                   <div className="text-slate-400 dark:text-gray-500">Android Sürümü</div>
                   <div className="font-bold text-slate-900 dark:text-white mt-0.5">
-                    v1.1.7 • 25,32 MB APK
+                    v1.1.9 • 25,3 MB APK
                   </div>
                 </div>
                 <div className="rounded-xl border border-slate-200/70 dark:border-white/10 bg-white dark:bg-[#111622] p-3">
@@ -332,7 +332,7 @@ export default function MikatinurPage() {
                 </div>
 
                 <span className="rounded-full border border-purple-500/30 bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-700 dark:text-purple-300">
-                  v1.1.7 APK
+                  v1.1.9 APK
                 </span>
               </div>
 

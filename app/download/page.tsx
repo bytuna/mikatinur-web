@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowLeft,
+  BatteryCharging,
   BookOpen,
   Calendar,
   CheckCircle2,
@@ -23,18 +24,18 @@ import {
 export const metadata: Metadata = {
   title: "Uygulamayı İndir | Mîkāt-ı Nur Android APK",
   description:
-    "Mîkāt-ı Nur Android mobil uygulamasının (v1.1.8) resmi, reklamsız ve güvenli APK indirme merkezi, kurulum rehberi ve sürüm notları.",
+    "Mîkāt-ı Nur Android mobil uygulamasının (v1.1.9) resmi, reklamsız ve güvenli APK indirme merkezi, kurulum rehberi ve sürüm notları.",
   alternates: { canonical: "/download/" },
 };
 
 const apkInfo = {
-  version: "v1.1.8",
-  versionCode: 11,
+  version: "v1.1.9",
+  versionCode: 12,
   sizeLabel: "25.3 MB",
-  sizeBytes: "26,536,330 bayt",
-  updatedAt: "15 Kasım 2026",
-  url: "/apk/Mikat-Nur-v1.1.8.apk",
-  fileName: "Mikat-Nur-v1.1.8.apk",
+  sizeBytes: "26,536,382 bayt",
+  updatedAt: "18 Kasım 2026",
+  url: "/apk/Mikat-Nur-v1.1.9.apk",
+  fileName: "Mikat-Nur-v1.1.9.apk",
   minAndroid: "Android 8.0+",
 };
 
@@ -42,7 +43,7 @@ const installSteps = [
   {
     step: "1. Adım",
     title: "APK Paketini İndirin",
-    desc: "Yukarıdaki \"APK İndir\" butonuna dokunarak resmi kurulum dosyasını (Mikat-Nur-v1.1.8.apk) cihazınıza kaydedin.",
+    desc: "Yukarıdaki \"APK İndir\" butonuna dokunarak resmi kurulum dosyasını (Mikat-Nur-v1.1.9.apk) cihazınıza kaydedin.",
     icon: Download,
     color: "text-blue-600 dark:text-blue-400 bg-blue-500/10",
   },
@@ -59,6 +60,35 @@ const installSteps = [
     desc: "Kurulum tamamlandığında uygulamayı açıp konumunuzu seçerek ezan vakitleri, Kur'ân-ı Kerîm ve Risale-i Nur Külliyatı'na reklamsız erişin.",
     icon: CheckCircle2,
     color: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10",
+  },
+];
+
+const v119Notes = [
+  {
+    title: "Android 15/16/17 Kararlılık Düzeltmesi",
+    icon: ShieldCheck,
+    accent: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10",
+    items: [
+      "Canlı vakit sayacı ön plan servisinde 6 saatlik çalışma kotası dolunca oluşan kendiliğinden çökme sorunu (ForegroundServiceDidNotStopInTimeException) specialUse servis tipine geçilerek kalıcı olarak giderildi.",
+      "Güvenli onTimeout zaman aşımı yönetimi ve boş veri koruması eklenerek kesintisiz çalışma sağlandı.",
+    ],
+  },
+  {
+    title: "Akıllı Pil Optimizasyonu",
+    icon: BatteryCharging,
+    accent: "text-amber-600 dark:text-amber-400 bg-amber-500/10",
+    items: [
+      "Ekran kapalıyken bildirim sayacı güncelleme sıklığı 30 saniyeye düşürülerek arka plan pil tüketimi önemli ölçüde azaltıldı.",
+      "Telefon ekranı açıldığında bildirim panelindeki canlı saniye sayacı anında akmaya devam eder.",
+    ],
+  },
+  {
+    title: "Kesintisiz Arka Plan Takibi",
+    icon: Compass,
+    accent: "text-blue-600 dark:text-blue-400 bg-blue-500/10",
+    items: [
+      "Ezan vakitleri, durum çubuğu kalan dakika göstergesi ve ana ekran widget senkronizasyonu 24 saat kararlı hale getirildi.",
+    ],
   },
 ];
 
@@ -412,17 +442,58 @@ export default function DownloadPage() {
             </span>
           </div>
 
-          {/* v1.1.8 Sürüm Notları */}
+          {/* v1.1.9 Sürüm Notları */}
           <div className="mt-6">
             <div className="flex items-center gap-2.5 mb-4">
               <span className="rounded-lg bg-blue-600 text-white px-2.5 py-1 text-xs font-bold">
-                v1.1.8
+                v1.1.9
               </span>
               <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
-                Bu Sürümdeki Yenilikler / Sürüm Notları (v1.1.8 • Sürüm Kodu: {apkInfo.versionCode})
+                Bu Sürümdeki Yenilikler / Sürüm Notları (v1.1.9 • Sürüm Kodu: {apkInfo.versionCode})
               </h3>
               <span className="text-xs text-slate-400 dark:text-gray-500 hidden sm:inline">
                 • {apkInfo.updatedAt}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {v119Notes.map(({ title, icon: Icon, accent, items }) => (
+                <div
+                  key={title}
+                  className="rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-slate-50/80 dark:bg-white/[0.02] p-5"
+                >
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${accent}`}>
+                      <Icon className="h-4 w-4" />
+                    </div>
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                      {title}
+                    </h4>
+                  </div>
+                  <ul className="space-y-2 text-xs sm:text-sm text-slate-600 dark:text-gray-400">
+                    {items.map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-blue-500 shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* v1.1.8 Sürüm Notları */}
+          <div className="mt-8 pt-8 border-t border-slate-200/80 dark:border-white/10">
+            <div className="flex items-center gap-2.5 mb-4">
+              <span className="rounded-lg border border-slate-300 dark:border-white/15 bg-slate-100 dark:bg-white/[0.05] text-slate-700 dark:text-gray-300 px-2.5 py-1 text-xs font-bold">
+                v1.1.8
+              </span>
+              <h3 className="text-base sm:text-lg font-bold text-slate-800 dark:text-gray-200">
+                v1.1.8 sürümünde yapılan iyileştirmeler (Sürüm Kodu: 11)
+              </h3>
+              <span className="text-xs text-slate-400 dark:text-gray-500 hidden sm:inline">
+                • 15 Kasım 2026
               </span>
             </div>
 
