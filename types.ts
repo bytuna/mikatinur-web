@@ -57,10 +57,13 @@ export interface FihristItem {
   children: FihristItem[];
 }
 
+export type BookCategory = 'kulliyat' | 'evrad' | 'muhtelif' | 'kutub';
+
 export interface RisaleBook {
   id: string;
   title: string;
   author: string;
+  category?: BookCategory;
   startingPage: number; // Mektubat ve Lemalar için 5, diğerleri için 1 veya belirtilen sayfa
   totalPages: number;
   sections: TOCSection[];

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { RisaleBook, ReadingState } from '../types';
+import { RisaleBook, ReadingState, BookCategory } from '../types';
 import { 
   BookOpen, 
   Search, 
@@ -16,7 +16,9 @@ import {
   ArrowRight,
   ArrowLeft,
   Compass,
-  ChevronRight
+  ChevronRight,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 
 const DEFAULT_VECIZELER = [
@@ -163,6 +165,27 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
   const [hasSearched, setHasSearched] = useState(false);
   const [selectedBookFilter, setSelectedBookFilter] = useState('all');
   const [visibleResultsCount, setVisibleResultsCount] = useState(20);
+  const [activeCategory, setActiveCategory] = useState<'all' | BookCategory>('all');
+  const [expandedShelves, setExpandedShelves] = useState<Record<string, boolean>>({});
+  const [rowLimit, setRowLimit] = useState<number>(6);
+
+  useEffect(() => {
+    const updateRowLimit = () => {
+      const w = window.innerWidth;
+      if (w >= 1280) setRowLimit(6);
+      else if (w >= 1024) setRowLimit(5);
+      else if (w >= 768) setRowLimit(4);
+      else if (w >= 640) setRowLimit(3);
+      else setRowLimit(2);
+    };
+    updateRowLimit();
+    window.addEventListener('resize', updateRowLimit);
+    return () => window.removeEventListener('resize', updateRowLimit);
+  }, []);
+
+  const toggleShelf = (id: string) => {
+    setExpandedShelves((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const bookCache = useRef<Record<string, any>>({});
   const searchCanceledRef = useRef(false);
@@ -366,6 +389,39 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
       : theme === 'sepia'
       ? 'text-[#5c5045]'
       : 'text-stone-500';
+
+  const categorySections: { id: BookCategory; title: string; subtitle: string }[] = [
+    {
+      id: 'kulliyat',
+      title: 'Risale-i Nur Külliyatı',
+      subtitle: 'Bedîüzzaman Said Nursî Hazretlerinin 15 Ciltlik Asıl Nüsha Külliyatı',
+    },
+    {
+      id: 'evrad',
+      title: "Kur'an, Evrad ve Ezkâr",
+      subtitle: "Kur'an-ı Kerîm, Cevşen-ül Kebîr, Hizb-ül Hakaik, Tesbihat ve Dualar",
+    },
+    {
+      id: 'muhtelif',
+      title: 'Muhtelif Eserler',
+      subtitle: 'Esasat-ı Nuriye, Mufassal Tarihçe, İlmihal ve İslâmî Kaynak Eserler',
+    },
+    {
+      id: 'kutub',
+      title: 'Kütüb-i Sitte',
+      subtitle: 'Prof. Dr. İbrahim Canan Tercüme ve Şerhi ile Hadis Külliyatı',
+    },
+  ];
+
+  const groupedBooks = categorySections.map((section) => {
+    const items = books.filter((book) => (book.category ?? 'kulliyat') === section.id);
+    return { ...section, items };
+  });
+
+  const visibleSections =
+    activeCategory === 'all'
+      ? groupedBooks.filter((s) => s.items.length > 0)
+      : groupedBooks.filter((s) => s.id === activeCategory && s.items.length > 0);
 
   return (
     <div className={`min-h-screen ${bgClass} ${textClass} flex flex-col transition-colors duration-300 overflow-y-auto no-scrollbar pb-16`}>
@@ -730,7 +786,7 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
                     }}
                     className="px-4 py-2 text-xs font-sans font-bold uppercase tracking-wider rounded-lg border border-sepia-300 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:bg-sepia-accent hover:border-sepia-accent hover:text-stone-950 transition-all cursor-pointer bg-white/80 dark:bg-stone-950/80"
                   >
-                    ❦ {term}
+                    {term}
                   </button>
                 ))}
               </div>
@@ -761,103 +817,195 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
               <div className="h-px w-24 bg-sepia-accent/30 mx-auto" />
             </div>
 
-            {/* Kitap Grid Listesi */}
+            {/* Kategori Filtre Sekmeleri */}
+            <div className="mb-10 flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+              <button
+                type="button"
+                onClick={() => setActiveCategory('all')}
+                className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-serif font-semibold tracking-wide transition-all cursor-pointer ${
+                  activeCategory === 'all'
+                    ? 'border-[#a31d1d]/70 bg-[#a31d1d] text-white shadow-[0_6px_18px_rgba(163,29,29,0.28)] dark:border-amber-400 dark:bg-amber-400 dark:text-stone-950'
+                    : 'border-[#d8c4a6] bg-white/75 text-[#4f3824] hover:border-[#a67c52] hover:bg-[#f7efe3] dark:border-stone-800 dark:bg-stone-900/70 dark:text-stone-300 dark:hover:border-amber-500/40 dark:hover:text-amber-200'
+                }`}
+              >
+                <span>Tümü</span>
+                <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-mono ${activeCategory === 'all' ? 'bg-white/20 text-white dark:bg-stone-950/20 dark:text-stone-950' : 'bg-stone-200/70 text-stone-600 dark:bg-stone-800 dark:text-stone-400'}`}>
+                  {books.length}
+                </span>
+              </button>
+
+              {groupedBooks.map((sec) => {
+                const isActive = activeCategory === sec.id;
+                return (
+                  <button
+                    key={sec.id}
+                    type="button"
+                    onClick={() => setActiveCategory(sec.id)}
+                    className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-serif font-semibold tracking-wide transition-all cursor-pointer ${
+                      isActive
+                        ? 'border-[#a31d1d]/70 bg-[#a31d1d] text-white shadow-[0_6px_18px_rgba(163,29,29,0.28)] dark:border-amber-400 dark:bg-amber-400 dark:text-stone-950'
+                        : 'border-[#d8c4a6] bg-white/75 text-[#4f3824] hover:border-[#a67c52] hover:bg-[#f7efe3] dark:border-stone-800 dark:bg-stone-900/70 dark:text-stone-300 dark:hover:border-amber-500/40 dark:hover:text-amber-200'
+                    }`}
+                  >
+                    <span>{sec.title}</span>
+                    <span className={`rounded-full px-1.5 py-0.5 text-[10px] font-mono ${isActive ? 'bg-white/20 text-white dark:bg-stone-950/20 dark:text-stone-950' : 'bg-stone-200/70 text-stone-600 dark:bg-stone-800 dark:text-stone-400'}`}>
+                      {sec.items.length}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Kitap Rafları ve Grid Listesi */}
             {books.length === 0 ? (
               <div className="text-center py-20 bg-white/30 dark:bg-stone-950/30 rounded-2xl border border-dashed border-sepia-300 dark:border-stone-900 p-8">
                 <BookOpen className="w-12 h-12 text-stone-300 mx-auto mb-3" />
                 <p className="text-sm font-sans font-medium text-stone-400">Aradığınız kriterde bir kitap bulunamadı.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-6 gap-y-10">
-                {books.map((book) => {
-                  const badge = getBookBadge(book.id);
-                  const coverState = coverStatus[book.id] ?? 'loading';
-                  const hasImage = Boolean(book.coverImage) && coverState !== 'failed';
-                  const isImageLoaded = coverState === 'loaded';
+              <div className="space-y-14">
+                {visibleSections.map((section) => {
+                  const isExpanded = Boolean(expandedShelves[section.id]);
+                  const hasMore = section.items.length > rowLimit;
+                  const displayedItems = isExpanded ? section.items : section.items.slice(0, rowLimit);
+                  const remainingCount = Math.max(0, section.items.length - rowLimit);
 
                   return (
-                    <div
-                      key={book.id}
-                      onClick={() => onSelectBook(book.id, badge?.page)}
-                      className="group flex flex-col items-center cursor-pointer relative"
-                    >
-                      {/* Kitap Görseli / 3D Cilt Efekti */}
-                      <div className={`relative w-36 h-52 sm:w-40 sm:h-56 rounded-r-lg shadow-[4px_6px_16px_rgba(0,0,0,0.35)] hover:shadow-[10px_16px_28px_rgba(0,0,0,0.5)] group-hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col justify-between select-none ${
-                        isImageLoaded
-                          ? 'bg-transparent border-l-0 p-0'
-                          : 'bg-gradient-to-br from-stone-800 via-stone-700 to-stone-900 border-l-[6px] border-stone-900 p-3'
-                      }`}>
+                  <section key={section.id} className="space-y-7">
+                    {/* Raf / Kategori Başlığı */}
+                    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 border-b border-[#d9c5a6]/80 dark:border-stone-800/90 pb-3.5">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-serif text-xl sm:text-2xl font-bold tracking-wide text-[#2e1e12] dark:text-amber-100">
+                            {section.title}
+                          </h3>
+                        </div>
+                        <p className={`mt-1 text-xs sm:text-sm font-serif italic ${subtextClass}`}>
+                          {section.subtitle}
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-[#cfa97e]/50 bg-[#f6ead7]/80 dark:border-amber-500/25 dark:bg-amber-500/10 px-3 py-1 text-[11px] font-sans font-semibold text-[#6b4423] dark:text-amber-300">
+                          <BookOpen className="w-3.5 h-3.5" />
+                          <span>{section.items.length} Eser</span>
+                        </span>
 
-                        {/* Yüklenen Gerçek Kitap Kapak Resmi */}
-                        {hasImage && (
-                          <img
-                            src={book.coverImage}
-                            alt={book.title}
-                            referrerPolicy="no-referrer"
-                            onLoad={() => setCoverStatus((prev) => ({ ...prev, [book.id]: 'loaded' }))}
-                            onError={() => setCoverStatus((prev) => ({ ...prev, [book.id]: 'failed' }))}
-                            className="absolute inset-0 w-full h-full object-cover rounded-r-xs z-0 opacity-100 transition-opacity duration-300"
-                          />
-                        )}
-
-                        {/* Kitap Sırtı Parlama ve Gölge Efekti */}
-                        <div className="absolute top-0 left-0 bottom-0 w-[8px] bg-gradient-to-r from-black/40 via-transparent to-white/10 z-10" />
-                        <div className="absolute top-0 left-2 bottom-0 w-[1px] bg-white/20 z-10" />
-
-                        {/* Altın Yaldızlı Kenarlık */}
-                        {!isImageLoaded && (
-                          <div className="absolute inset-2 border border-amber-400/40 p-0.5 rounded-sm z-10 pointer-events-none">
-                            <div className="w-full h-full border border-amber-400/50 rounded-xs" />
-                          </div>
-                        )}
-
-                        {/* Üst Kısım: Küçük Yaldızlı Yıldız / Motif */}
-                        {!isImageLoaded && (
-                          <div className="z-10 text-center pt-2">
-                            <div className="text-[7px] text-amber-400/80 font-serif tracking-[0.3em] uppercase">
-                              RİSALE-İ NUR
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Orta Kısım: Kitap İsmi */}
-                        {!isImageLoaded && (
-                          <div className="z-10 text-center flex-1 flex flex-col items-center justify-center px-2 py-4">
-                            {/* Geleneksel Çiçeksi / Geometrik Altın Madalyon */}
-                            <div className="w-8 h-8 rounded-full border border-amber-400/30 flex items-center justify-center mb-1 bg-amber-400/5">
-                              <span className="text-amber-400 text-xs font-serif">❦</span>
-                            </div>
-
-                            <h3 className="font-serif font-bold text-sm sm:text-base text-amber-100 text-center leading-snug tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                              {book.title}
-                            </h3>
-
-                            <div className="w-10 h-[1px] bg-amber-400/40 my-1" />
-                          </div>
-                        )}
-
-                        {/* Alt Kısım: Müellif İsmi */}
-                        {!isImageLoaded && (
-                          <div className="z-10 text-center pb-1">
-                            <span className="text-[6px] text-amber-400/60 font-serif uppercase tracking-widest">
-                              Said Nursî
-                            </span>
-                          </div>
-                        )}
-
-                        {/* S.8 gibi Yeşil/Lila Badge */}
-                        {badge && (
-                          <div className="absolute top-3 right-3 z-20 bg-[#4d7c0f] text-white text-[8px] font-mono font-bold py-0.5 px-1.5 rounded-sm shadow-md animate-fade-in border border-lime-300/30">
-                            s.{badge.page}
-                          </div>
+                        {hasMore && (
+                          <button
+                            type="button"
+                            onClick={() => toggleShelf(section.id)}
+                            aria-expanded={isExpanded}
+                            className="inline-flex items-center gap-1.5 rounded-full border border-[#a31d1d]/35 bg-[#a31d1d]/10 hover:bg-[#a31d1d] text-[#8b1818] hover:text-white dark:border-amber-400/40 dark:bg-amber-500/15 dark:text-amber-200 dark:hover:bg-amber-400 dark:hover:text-stone-950 px-3.5 py-1 text-[11px] font-sans font-bold tracking-wide transition-all cursor-pointer shadow-xs"
+                          >
+                            {isExpanded ? (
+                              <>
+                                <span>Daralt</span>
+                                <ChevronUp className="w-3.5 h-3.5" />
+                              </>
+                            ) : (
+                              <>
+                                <span>Tümünü Gör (+{remainingCount})</span>
+                                <ChevronDown className="w-3.5 h-3.5" />
+                              </>
+                            )}
+                          </button>
                         )}
                       </div>
-
-                      {/* Kitap İsmi Alt Etiket */}
-                      <span className="mt-4 font-serif font-semibold text-xs text-center group-hover:text-sepia-accent transition-colors duration-200">
-                        {book.title}
-                      </span>
                     </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-6 gap-y-10">
+                      {displayedItems.map((book) => {
+                        const badge = getBookBadge(book.id);
+                        const coverState = coverStatus[book.id] ?? 'loading';
+                        const hasImage = Boolean(book.coverImage) && coverState !== 'failed';
+                        const isImageLoaded = coverState === 'loaded';
+
+                        return (
+                          <div
+                            key={book.id}
+                            onClick={() => onSelectBook(book.id, badge?.page)}
+                            className="group flex flex-col items-center cursor-pointer relative"
+                          >
+                            {/* Kitap Görseli / 3D Cilt Efekti */}
+                            <div className={`relative w-36 h-52 sm:w-40 sm:h-56 rounded-r-lg shadow-[4px_6px_16px_rgba(0,0,0,0.35)] hover:shadow-[10px_16px_28px_rgba(0,0,0,0.5)] group-hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col justify-between select-none ${
+                              isImageLoaded
+                                ? 'bg-transparent border-l-0 p-0'
+                                : 'bg-gradient-to-br from-stone-800 via-stone-700 to-stone-900 border-l-[6px] border-stone-900 p-3'
+                            }`}>
+
+                              {/* Yüklenen Gerçek Kitap Kapak Resmi */}
+                              {hasImage && (
+                                <img
+                                  src={book.coverImage}
+                                  alt={book.title}
+                                  referrerPolicy="no-referrer"
+                                  onLoad={() => setCoverStatus((prev) => ({ ...prev, [book.id]: 'loaded' }))}
+                                  onError={() => setCoverStatus((prev) => ({ ...prev, [book.id]: 'failed' }))}
+                                  className="absolute inset-0 w-full h-full object-cover rounded-r-xs z-0 opacity-100 transition-opacity duration-300"
+                                />
+                              )}
+
+                              {/* Kitap Sırtı Parlama ve Gölge Efekti */}
+                              <div className="absolute top-0 left-0 bottom-0 w-[8px] bg-gradient-to-r from-black/40 via-transparent to-white/10 z-10" />
+                              <div className="absolute top-0 left-2 bottom-0 w-[1px] bg-white/20 z-10" />
+
+                              {/* Altın Yaldızlı Kenarlık */}
+                              {!isImageLoaded && (
+                                <div className="absolute inset-2 border border-amber-400/40 p-0.5 rounded-sm z-10 pointer-events-none">
+                                  <div className="w-full h-full border border-amber-400/50 rounded-xs" />
+                                </div>
+                              )}
+
+                              {/* Üst Kısım: Küçük Yaldızlı Yıldız / Motif */}
+                              {!isImageLoaded && (
+                                <div className="z-10 text-center pt-2">
+                                  <div className="text-[7px] text-amber-400/80 font-serif tracking-[0.3em] uppercase">
+                                    MÎKĀT-I NUR
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Orta Kısım: Kitap İsmi */}
+                              {!isImageLoaded && (
+                                <div className="z-10 text-center flex-1 flex flex-col items-center justify-center px-2 py-4">
+                                  <div className="w-8 h-8 rounded-full border border-amber-400/30 flex items-center justify-center mb-1 bg-amber-400/5">
+                                    <BookOpen className="w-3.5 h-3.5 text-amber-400" />
+                                  </div>
+
+                                  <h3 className="font-serif font-bold text-sm sm:text-base text-amber-100 text-center leading-snug tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                                    {book.title}
+                                  </h3>
+
+                                  <div className="w-10 h-[1px] bg-amber-400/40 my-1" />
+                                </div>
+                              )}
+
+                              {/* Alt Kısım: Müellif İsmi */}
+                              {!isImageLoaded && (
+                                <div className="z-10 text-center pb-1">
+                                  <span className="text-[6px] text-amber-400/60 font-serif uppercase tracking-widest line-clamp-1">
+                                    {book.author}
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* S.8 gibi Yeşil/Lila Badge */}
+                              {badge && (
+                                <div className="absolute top-3 right-3 z-20 bg-[#4d7c0f] text-white text-[8px] font-mono font-bold py-0.5 px-1.5 rounded-sm shadow-md animate-fade-in border border-lime-300/30">
+                                  s.{badge.page}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Kitap İsmi Alt Etiket */}
+                            <span className="mt-4 font-serif font-semibold text-xs text-center group-hover:text-sepia-accent transition-colors duration-200 line-clamp-2 max-w-[10rem]">
+                              {book.title}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </section>
                   );
                 })}
               </div>
@@ -870,7 +1018,6 @@ export const LibraryView: React.FC<LibraryViewProps> = ({
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="rounded-3xl border border-stone-300/70 dark:border-stone-800/80 bg-white/75 dark:bg-stone-900/50 backdrop-blur-sm p-6 sm:p-7 shadow-[0_12px_30px_rgba(0,0,0,0.06)]">
             <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-[0.18em] text-amber-800 dark:text-amber-300">
-              <span>❦</span>
               <span>Emirdağ Lâhikası I, s. 49</span>
             </div>
             <p className="text-base sm:text-lg leading-relaxed text-stone-800 dark:text-stone-100 font-serif italic">

@@ -1,0 +1,19 @@
+Tesbihat|1
+	SABAH NAMAZI@SABAH|1
+		Ecirna duası|4
+		Haşir Suresinin Ahiri|7
+	ÖĞLE NAMAZI@ÖĞLE|8
+		Esmalar|10
+		Fetih Suresinin Ahiri|11
+	İKİNDİ NAMAZI@İKİNDİ|12
+		Ecirna duası|14
+		Nebe' Suresi|18
+	AKŞAM NAMAZI@AKŞAM|21
+		Esmalar|25
+		Haşir Suresinin Ahiri|26
+	YATSI NAMAZI@YATSI|27
+		Esmalar|30
+		Âmenerrasûlu|31
+	Sabah namazının sünneti ile farzı arasında okunacak dua|32
+	Namazın son teşehhüdünde selamdan evvel bu dua okunur|32
+	Akşam ve Yatsı arasında okunacak dualar@Namazın son teşehhüdünde|32

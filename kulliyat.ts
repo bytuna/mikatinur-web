@@ -1,4 +1,5 @@
 import { RisaleBook, DictionaryTerm } from './types';
+import { EXTRA_KULLIYAT_BOOKS } from './kulliyat-extra';
 
 export const DICTIONARY: { [key: string]: DictionaryTerm } = {
   bismillah: { word: 'Bismillah', definition: 'Allah\'ın adıyla. Her hayrın başıdır. Biz dahi başta ona başlarız.', origin: 'Arapça' },
@@ -210,7 +211,8 @@ export const KULLIYAT: RisaleBook[] = [
       { id: 'unsur-ul-belagat', title: 'Unsur-ul Belâgat ve İfade', startPage: 5 }
     ],
     pages: {}
-  }
+  },
+  ...EXTRA_KULLIYAT_BOOKS
 ];
 
 export const turkishToLower = (str: string): string => {

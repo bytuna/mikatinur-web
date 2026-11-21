@@ -44,3 +44,6 @@
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local downloads
+/_downloads/

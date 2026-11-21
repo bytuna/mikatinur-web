@@ -1,0 +1,268 @@
+KURAN-I KERİM VE MEALİ@Kur'an-ı Kerim|0
+	Sûre|1
+		1. Fâtiha@Fâtiha|0
+		2. Bakara@Bakara|1
+		3. Âl-i İmrân@Âl-i İmrân|49
+		4. Nisâ@Nisâ|76
+		5. Mâide@Mâide|105
+		6. En’âm@En’âm|127
+		7. A’râf@A’râf|150
+		8. Enfâl@Enfâl|176
+		9. Tevbe@Tevbe|186
+		10. Yunus@Yunus|207
+		11. Hûd@Hûd|220
+		12. Yusuf@Yusuf|234
+		13. Ra’d@Ra’d|248
+		14. İbrahim@İbrahim|254
+		15. Hicr@Hicr|261
+		16. Nahl@Nahl|266
+		17. İsrâ@İsrâ|281
+		18. Kehf@Kehf|292
+		19. Meryem@Meryem|304
+		20. Tâ-Hâ@Tâ-Hâ|311
+		21. Enbiyâ@Enbiyâ|321
+		22. Hac@Hac|331
+		23. Mü’minûn@Mü’minûn|341
+		24. Nûr@Nûr|349
+		25. Furkan@Furkan|358
+		26. Şuarâ@Şuarâ|366
+		27. Neml@Neml|376
+		28. Kasas@Kasas|384
+		29. Ankebût@Ankebût|395
+		30. Rûm@Rûm|403
+		31. Lokman@Lokman|410
+		32. Secde@Secde|414
+		33. Ahzâb@Ahzâb|417
+		34. Sebe’@Sebe’|427
+		35. Fâtır@Fâtır|433
+		36. Yâsin@Yâsin|439
+		37. Sâffât@Sâffât|445
+		38. Sâd@Sâd|452
+		39. Zümer@Zümer|457
+		40. Mü’min@Mü’min|466
+		41. Fussilet@Fussilet|476
+		42. Şûrâ@Şûrâ|482
+		43. Zuhruf@Zuhruf|488
+		44. Duhân@Duhân|495
+		45. Câsiye@Câsiye|498
+		46. Ahkaf@Ahkaf|501
+		47. Muhammed@Muhammed|506
+		48. Fetih@Fetih|510
+		49. Hucurât@Hucurât|514
+		50. Kaf@Kaf|517
+		51. Zâriyât@Zâriyât|519
+		52. Tûr@Tûr|522
+		53. Necm@Necm|525
+		54. Kamer@Kamer|527
+		55. Rahmân@Rahmân|530
+		56. Vâkıa@Vâkıa|533
+		57. Hadid@Hadid|536
+		58. Mücâdele@Mücâdele|541
+		59. Haşr@Haşr|544
+		60. Mümtehine@Mümtehine|548
+		61. Saf@Saf|550
+		62. Cum’a@Cum’a|552
+		63. Münâfikûn@Münâfikûn|553
+		64. Teğabün@Teğabün|555
+		65. Talâk@Talâk|557
+		66. Tahrim@Tahrim|559
+		67. Mülk@Mülk|561
+		68. Kalem@Kalem|563
+		69. Hâkka@Hâkka|565
+		70. Meâric@Meâric|567
+		71. Nuh@Nuh|569
+		72. Cin@Cin|571
+		73. Müzzemmil@Müzzemmil|573
+		74. Müddessir@Müddessir|574
+		75. Kıyamet@Kıyamet|576
+		76. İnsan@İnsan|577
+		77. Mürselât@Mürselât|579
+		78. Nebe’@Nebe’|581
+		79. Nâziât@Nâziât|582
+		80. Abese@Abese|584
+		81. Tekvir@Tekvir|585
+		82. İnfitâr@İnfitâr|586
+		83. Mutaffifin@Mutaffifin|587
+		84. İnşikak@İnşikak|588
+		85. Bürûc@Bürûc|589
+		86. Târık@Târık|590
+		87. A’lâ@A’lâ|591
+		88. Gâşiye@Gâşiye|591
+		89. Fecr@Fecr|592
+		90. Beled@Beled|593
+		91. Şems@Şems|594
+		92. Leyl@Leyl|595
+		93. Duhâ@Duhâ|595
+		94. İnşirâh@İnşirâh|596
+		95. Tin@Tin|596
+		96. Alak@Alak|596
+		97. Kadir@Kadir|598
+		98. Beyyine@Beyyine|598
+		99. Zilzâl@Zilzâl|599
+		100. Âdiyât@Âdiyât|599
+		101. Kâria@Kâria|600
+		102. Tekâsür@Tekâsür|600
+		103. Asr@Asr|601
+		104. Hümeze@Hümeze|601
+		105. Fil@Fil|601
+		106. Kureyş@Kureyş|602
+		107. Mâûn@Mâûn|602
+		108. Kevser@Kevser|602
+		109. Kâfirûn@Kâfirûn|603
+		110. Nasr@Nasr|603
+		111. Tebbet@Tebbet|603
+		112. İhlâs@İhlâs|604
+		113. Felâk@Felâk|604
+		114. Nâs@Nâs|604
+	Cüz|0
+		Cüz-1|0
+			Hizb-1@Cüz-1|0
+			Hizb-2@ڝ|6
+			Hizb-3@ڞ|10
+			Hizb-4@ڟ|16
+		Cüz-2|21
+			Hizb-1@Cüz-2|21
+			Hizb-2@ڝ|26
+			Hizb-3@ڞ|31
+			Hizb-4@ڟ|36
+		Cüz-3|41
+			Hizb-1@Cüz-3|41
+			Hizb-2@ڝ|45
+			Hizb-3@ڞ|50
+			Hizb-4@ڟ|55
+		Cüz-4|61
+			Hizb-1@Cüz-4|61
+			Hizb-2@ڝ|66
+			Hizb-3@ڞ|71
+			Hizb-4@ڟ|76
+		Cüz-5|81
+			Hizb-1@Cüz-5|81
+			Hizb-2@ڝ|86
+			Hizb-3@ڞ|91
+			Hizb-4@ڟ|96
+		Cüz-6|101
+			Hizb-1@Cüz-6|101
+			Hizb-2@ڝ|106
+			Hizb-3@ڞ|111
+			Hizb-4@ڟ|116
+		Cüz-7|121
+			Hizb-1@Cüz-7|121
+			Hizb-2@ڝ|125
+			Hizb-3@ڞ|131
+			Hizb-4@ڟ|136
+		Cüz-8|141
+			Hizb-1@Cüz-8|141
+			Hizb-2@ڝ|145
+			Hizb-3@ڞ|150
+			Hizb-4@ڟ|155
+		Cüz-9|161
+			Hizb-1@Cüz-9|161
+			Hizb-2@ڝ|166
+			Hizb-3@ڞ|172
+			Hizb-4@ڟ|176
+		Cüz-10|181
+			Hizb-1@Cüz-10|181
+			Hizb-2@ڝ|186
+			Hizb-3@ڞ|191
+			Hizb-4@|196
+		Cüz-11|201
+			Hizb-1@Cüz-11|201
+			Hizb-2@ڝ|206
+			Hizb-3@ڞ|211
+			Hizb-4@ڟ|216
+		Cüz-12|221
+			Hizb-1@Cüz-12|221
+			Hizb-2@ڝ|225
+			Hizb-3@ڞ|230
+			Hizb-4@ڟ|235
+		Cüz-13|241
+			Hizb-1@Cüz-13|241
+			Hizb-2@ڝ|246
+			Hizb-3@ڞ|250
+			Hizb-4@ڟ|256
+		Cüz-14|261
+			Hizb-1@Cüz-14|261
+			Hizb-2@ڝ|266
+			Hizb-3@ڞ|271
+			Hizb-4@ڟ|276
+		Cüz-15|281
+			Hizb-1@Cüz-15|281
+			Hizb-2@ڝ|286
+			Hizb-3@ڞ|291
+			Hizb-4@ڟ|296
+		Cüz-16|301
+			Hizb-1@Cüz-16|301
+			Hizb-2@ڝ|306
+			Hizb-3@ڞ|311
+			Hizb-4@ڟ|316
+		Cüz-17|321
+			Hizb-1@Cüz-17|321
+			Hizb-2@ڝ|325
+			Hizb-3@ڞ|331
+			Hizb-4@ڟ|335
+		Cüz-18|341
+			Hizb-1@Cüz-18|341
+			Hizb-2@ڝ|346
+			Hizb-3@ڞ|351
+			Hizb-4@ڟ|355
+		Cüz-19|361
+			Hizb-1@Cüz-19|361
+			Hizb-2@ڝ|366
+			Hizb-3@ڞ|370
+			Hizb-4@ڟ|376
+		Cüz-20|381
+			Hizb-1@Cüz-20|381
+			Hizb-2@ڝ|385
+			Hizb-3@ڞ|391
+			Hizb-4@ڟ|395
+		Cüz-21|401
+			Hizb-1@Cüz-21|401
+			Hizb-2@ڝ|406
+			Hizb-3@ڞ|412
+			Hizb-4@ڟ|417
+		Cüz-22|421
+			Hizb-1@Cüz-22|421
+			Hizb-2@ڝ|425
+			Hizb-3@ڞ|430
+			Hizb-4@ڟ|435
+		Cüz-23|441
+			Hizb-1@Cüz-23|441
+			Hizb-2@ڝ|445
+			Hizb-3@ڞ|450
+			Hizb-4@ڟ|455
+		Cüz-24|461
+			Hizb-1@Cüz-24|461
+			Hizb-2@ڝ|466
+			Hizb-3@ڞ|471
+			Hizb-4@ڟ|476
+		Cüz-25|481
+			Hizb-1@Cüz-25|481
+			Hizb-2@ڝ|486
+			Hizb-3@ڞ|491
+			Hizb-4@ڟ|496
+		Cüz-26|501
+			Hizb-1@Cüz-26|501
+			Hizb-2@ڝ|506
+			Hizb-3@ڞ|512
+			Hizb-4@ڟ|517
+		Cüz-27|521
+			Hizb-1@Cüz-27|521
+			Hizb-2@ڝ|526
+			Hizb-3@ڞ|530
+			Hizb-4@ڟ|535
+		Cüz-28|541
+			Hizb-1@Cüz-28|541
+			Hizb-2@ڝ|546
+			Hizb-3@ڞ|551
+			Hizb-4@ڟ|557
+		Cüz-29|561
+			Hizb-1@Cüz-29|561
+			Hizb-2@ڝ|565
+			Hizb-3@ڞ|571
+			Hizb-4@ڟ|576
+		Cüz-30|581
+			Hizb-1@Cüz-30|581
+			Hizb-2@ڝ|587
+			Hizb-3@ڞ|592
+			Hizb-4@ڟ|598
+	Hatim Duası|605

@@ -2,6 +2,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { UserPreferences, UserNote } from '../../../types';
 import { KULLIYAT, DICTIONARY } from '../../../kulliyat';
+import { EXTRA_FIHRIST_FILES } from '../../../kulliyat-extra';
 
 type ReadingTheme = 'sepia' | 'dark' | 'light' | 'saman' | 'green' | 'gray';
 
@@ -313,7 +314,8 @@ export default function App() {
       'tarihce-i-hayat': 'tarihcef.txt',
       'asa-yi-musa': 'asamusaf.txt',
       'iman-ve-kufur-muvazeneleri': 'imankufurf.txt',
-      'muhakemat': 'muhakematf.txt'
+      'muhakemat': 'muhakematf.txt',
+      ...EXTRA_FIHRIST_FILES
     };
 
     const filename = bookIdToFihristFile[state.currentBookId];
