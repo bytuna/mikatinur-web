@@ -8,34 +8,35 @@ import { ThemeToggle } from "../components/ThemeToggle";
 import { SiteFooter } from "../components/SiteFooter";
 
 const siteUrl = "https://www.mikatinur.com.tr";
-const siteName = "Mikatinur";
-const defaultTitle = "Mikatinur | Yazılım Geliştirici, Dijital Projeler ve Teknoloji";
-const defaultDescription = "Mikatinur, yazılım geliştirme, dijital projeler, mobil ve web teknolojileri üzerine uzmanlaşmış kişisel teknoloji ekosistemidir.";
+const siteName = "Mîkāt-ı Nur";
+const defaultTitle = "Mîkāt-ı Nur | Namaz Vakitleri, Kıble Tayini ve Risale-i Nur Külliyatı";
+const defaultDescription =
+  "Mîkāt-ı Nur; Diyanet uyumlu namaz vakitleri, hassas Kıble pusulası, Hicrî takvim, dinî günler ve Osmanlıca-Türkçe lügatlı Risale-i Nur Külliyatı ile Evrad ve Hadis kütüphanesini ücretsiz sunan İslâmî dijital platformdur.";
 const defaultKeywords = [
+  "Mîkāt-ı Nur",
   "Mikatinur",
-  "yazılım geliştirici",
-  "web geliştirme",
-  "next.js",
-  "react",
-  "typescript",
-  "mobil uygulama",
-  "dijital proje",
-  "teknoloji",
-  "software developer",
-  "full stack developer",
-  "Mikatinur web sitesi"
+  "namaz vakitleri",
+  "ezan vakitleri",
+  "kıble pusulası",
+  "risale-i nur külliyatı",
+  "risale-i nur oku",
+  "osmanlıca lügat",
+  "hicri takvim",
+  "dini günler",
+  "cevşen",
+  "kütüb-i sitte"
 ].join(", ");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: defaultTitle,
-    template: "%s | Mikatinur",
+    template: "%s | Mîkāt-ı Nur",
   },
   description: defaultDescription,
   keywords: defaultKeywords,
-  authors: [{ name: "Mikatinur", url: siteUrl }],
-  creator: "Mikatinur",
+  authors: [{ name: "Mîkāt-ı Nur", url: siteUrl }],
+  creator: "Mîkāt-ı Nur",
   applicationName: siteName,
   generator: "Next.js",
   alternates: {
@@ -72,7 +73,7 @@ export const metadata: Metadata = {
         url: "/og-image.svg",
         width: 1200,
         height: 630,
-        alt: "Mikatinur - Yazılım Geliştirici ve Dijital Projeler",
+        alt: "Mîkāt-ı Nur - Namaz Vakitleri ve Risale-i Nur Külliyatı",
       },
     ],
   },
@@ -88,26 +89,13 @@ export const metadata: Metadata = {
   },
 };
 
-const personSchema = {
+const websiteSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Mikatinur',
+  '@type': 'WebSite',
+  name: 'Mîkāt-ı Nur',
+  alternateName: 'Mikatinur',
   url: siteUrl,
-  sameAs: [
-    'https://github.com/mikatinur',
-    'https://www.linkedin.com/in/mikatinur',
-    'https://www.instagram.com/mikatinur',
-  ],
-  jobTitle: 'Yazılım Geliştirici',
-  knowsAbout: [
-    'Web Geliştirme',
-    'Yazılım Mimarisi',
-    'Next.js',
-    'React',
-    'TypeScript',
-    'Mobil Uygulama Geliştirme',
-    'Dijital Projeler'
-  ],
+  inLanguage: 'tr-TR',
   description: defaultDescription,
 };
 
@@ -128,7 +116,7 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased bg-[#f8fafc] text-slate-900 dark:bg-[#050505] dark:text-gray-100">
-        <JsonLdSchema data={personSchema} />
+        <JsonLdSchema data={websiteSchema} />
         <AnalyticsTracker />
         <ThemeToggle />
         {children}
