@@ -10,6 +10,7 @@ export function ThemeToggle() {
   const pathname = usePathname();
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [mounted, setMounted] = useState(false);
+  const [risaleSettingsOpen, setRisaleSettingsOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -22,6 +23,17 @@ export function ThemeToggle() {
       setTheme("light");
       document.documentElement.classList.remove("dark");
     }
+  }, []);
+
+  useEffect(() => {
+    const handleSettingsToggle = (event: Event) => {
+      const customEvent = event as CustomEvent<{ open?: boolean }>;
+      setRisaleSettingsOpen(Boolean(customEvent.detail?.open));
+    };
+    window.addEventListener("mikatinur-settings-toggle", handleSettingsToggle);
+    return () => {
+      window.removeEventListener("mikatinur-settings-toggle", handleSettingsToggle);
+    };
   }, []);
 
   const toggleTheme = () => {
@@ -37,7 +49,7 @@ export function ThemeToggle() {
     }
   };
 
-  // Risale-i Nur okuyucusunda sekme/ayar barıyla çakışmaması için hafif aşağıda konumlandırılır
+  // Risale-i Nur okuyucusunda üst sekme/araç barının hemen altında konumlandırılır
   const isRisale = pathname?.startsWith("/projects/risaleinur");
 
   if (!mounted) {
@@ -54,7 +66,7 @@ export function ThemeToggle() {
       title={isDark ? "Gündüz moduna geç" : "Gece moduna geç"}
       className={[
         isRisale
-          ? "fixed bottom-5 right-5 z-50"
+          ? `fixed top-[116px] z-30 ${risaleSettingsOpen ? "right-4 lg:right-[21.5rem]" : "right-4 sm:right-6"}`
           : "fixed right-4 top-4 z-50 sm:right-6 sm:top-6",
         "group flex items-center gap-2 rounded-full border px-3.5 py-2 text-xs font-semibold shadow-lg backdrop-blur-md transition-all duration-300 cursor-pointer",
         "hover:scale-105 active:scale-95",

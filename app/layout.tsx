@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Analytics } from '@vercel/analytics/react';
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { JsonLdSchema } from "../components/JsonLdSchema";
 import { AnalyticsTracker } from "../components/AnalyticsTracker";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { SiteFooter } from "../components/SiteFooter";
 
 const siteUrl = "https://www.mikatinur.com.tr";
 const siteName = "Mikatinur";
@@ -132,11 +132,7 @@ export default function RootLayout({
         <AnalyticsTracker />
         <ThemeToggle />
         {children}
-        <footer className="border-t border-slate-200 dark:border-gray-900 bg-slate-100/80 dark:bg-[#050505] px-6 py-5 text-center text-xs text-slate-500 dark:text-gray-600 transition-colors">
-          <Link href="/kvkk-aydinlatma-metni" className="transition-colors hover:text-slate-900 dark:hover:text-gray-300">
-            KVKK Aydınlatma Metni ve Yasal Künye
-          </Link>
-        </footer>
+        <SiteFooter />
         <Analytics />
         <SpeedInsights />
       </body>

@@ -276,6 +276,14 @@ export default function App() {
   });
   const [fihristClickTrigger, setFihristClickTrigger] = useState<number>(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  useEffect(() => {
+    const isOpen = viewMode === 'reader' && settingsOpen;
+    window.dispatchEvent(new CustomEvent('mikatinur-settings-toggle', { detail: { open: isOpen } }));
+    return () => {
+      window.dispatchEvent(new CustomEvent('mikatinur-settings-toggle', { detail: { open: false } }));
+    };
+  }, [viewMode, settingsOpen]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [dynamicBooks, setDynamicBooks] = useState<Record<string, {
     startingPage?: number;
@@ -1059,6 +1067,15 @@ export default function App() {
                 </div>
                 <span>Ayarlar</span>
               </div>
+              <button
+                type="button"
+                onClick={() => setSettingsOpen(false)}
+                aria-label="Ayarları kapat"
+                title="Kapat"
+                className="p-1.5 rounded-lg text-stone-500 hover:text-stone-800 hover:bg-[#e8decb]/60 transition-colors cursor-pointer dark:text-stone-400 dark:hover:text-stone-100 dark:hover:bg-stone-800"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
             {/* Tefekkür Ayarları Paneli */}
